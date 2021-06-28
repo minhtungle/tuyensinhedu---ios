@@ -164,7 +164,7 @@ export default function Dangkytuyensinh({ navigation }) {
               backgroundColor: "#000000a0",
             }}
           >
-            Hệ thống đang cập nhật chức năng này
+            Hệ thống đang trong quá trình cập nhật
           </Text>
         </ImageBackground>
       </SafeAreaView>

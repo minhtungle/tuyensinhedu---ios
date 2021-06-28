@@ -236,9 +236,8 @@ export default function ComboBox() {
             >
               {checkboxValue.some((item) => item.checked) && (
                 <Button
-                  info
+                  success
                   style={styles.button}
-                  color="#61b15a"
                   onPress={() => {
                     Keyboard.dismiss();
                     Tracuu();

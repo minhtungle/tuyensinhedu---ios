@@ -1,14 +1,13 @@
 import React, { useLayoutEffect } from "react";
+import { Button, Text, View } from "native-base";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
 //import { Button } from "galio-framework";
 import {
   SafeAreaView,
-  Text,
   KeyboardAvoidingView,
   Platform,
   Keyboard,
   StyleSheet,
-  View,
   TextInput,
 } from "react-native";
 function Gopy({ navigation }) {
@@ -50,17 +49,16 @@ function Gopy({ navigation }) {
             multiline={true}
             numberOfLines={4}
           />
-          {/* <Button
-            round
+          <Button
+            success
             style={styles.button}
             color="#61b15a"
             onPress={() => {
               Keyboard.dismiss();
-              GuiLienHe();
             }}
           >
-            Gửi liên hệ
-          </Button> */}
+            <Text>Gửi liên hệ</Text>
+          </Button>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

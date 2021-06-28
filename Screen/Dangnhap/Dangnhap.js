@@ -159,7 +159,7 @@ export default function Dangnhap({ navigation }) {
           </View>
           {data.Tinh !== "Chọn Tỉnh/Thành phố" && (
             <Button
-              round
+              success
               style={styles.button}
               onPress={() =>
                 navigation.navigate("Trang chủ", { Tinh: data.Tinh })
@@ -211,12 +211,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   button: {
-    height: 50,
-    width: 150,
-    borderRadius: 25,
+    marginBottom: "5%",
     alignSelf: "center",
-    textShadowColor: "black",
-    backgroundColor: "#61b15a",
+    borderRadius: 25,
+    textShadowColor: "#bbbbbb",
+
     shadowColor: "rgba(0, 0, 0, 0.1)",
     shadowOpacity: 0.8,
     elevation: 6,

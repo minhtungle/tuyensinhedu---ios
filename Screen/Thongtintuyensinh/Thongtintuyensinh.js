@@ -632,12 +632,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
       </View>
       {Trangthai() ? (
         <View style-={{}}>
-          <Button
-            info
-            style={styles.button}
-            color="#61b15a"
-            onPress={() => Tracuu()}
-          >
+          <Button success style={styles.button} onPress={() => Tracuu()}>
             <Text style={{ color: "#FFF" }}>Tra cứu</Text>
           </Button>
           <Modal
@@ -730,12 +725,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
                 >
                   <Button
                     info
-                    style={[
-                      styles.button,
-                      {
-                        alignSelf: "flex-end",
-                      },
-                    ]}
+                    style={[styles.button, { alignSelf: "flex-end" }]}
                     color="#61b15a"
                     onPress={() => {
                       setModalVisible(!modalVisible);
@@ -802,10 +792,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   button: {
+    marginBottom: "5%",
     alignSelf: "center",
     borderRadius: 25,
-    textShadowColor: "black",
-    backgroundColor: "#61b15a",
+    textShadowColor: "#bbbbbb",
+
     shadowColor: "rgba(0, 0, 0, 0.1)",
     shadowOpacity: 0.8,
     elevation: 6,
