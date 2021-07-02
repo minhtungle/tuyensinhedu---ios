@@ -170,14 +170,14 @@ export default function Dangkytuyensinh({ navigation }) {
       </SafeAreaView>
     );
   };
-  // return status === 0 ? (
-  //   <Load_View />
-  // ) : status === 1 ? (
-  //   <Success_View />
-  // ) : (
-  //   <Error_View />
-  // );
-  return <Error_View />;
+  return status === 0 ? (
+    <Load_View />
+  ) : status === 1 ? (
+    <Success_View />
+  ) : (
+    <Error_View />
+  );
+  // return <Error_View />;
 }
 const styles = StyleSheet.create({
   container: {
