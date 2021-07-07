@@ -11,7 +11,15 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import { View, Text, Button, Picker, CheckBox, Radio, Icon } from "native-base";
+import {
+  View,
+  Text,
+  Button,
+  Picker,
+  CheckBox,
+  DatePicker,
+  Icon,
+} from "native-base";
 import { BlurView } from "expo-blur";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import RadioButtonRN from "radio-buttons-react-native";
@@ -37,35 +45,6 @@ LogBox.ignoreLogs([
 
 //* hàm chuyển đổi ngày tháng
 const date = require("s-date");
-
-//* Hàm xử lý picker ngày tháng
-function useInput() {
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(false);
-
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-  const showDatepicker = () => {
-    showMode("date");
-  };
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === "ios");
-    setDate(currentDate);
-  };
-  return {
-    date,
-    showDatepicker,
-    show,
-    mode,
-    onChange,
-  };
-}
-
 // Minh chứng
 function FileDinhKem({ DoiTuongTuyenSinh }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -272,18 +251,12 @@ export default function Trangdangky({ route, navigation }) {
       title: "Đăng ký tuyển sinh",
     });
   });
-  //#region DatePicker
-  const inputMe = useInput(new Date());
-  const inputCon = useInput(new Date());
-  const inputCha = useInput(new Date());
-  const inputNGH = useInput(new Date());
-  //#endregion
 
   const [data, setData] = useState({
     MaHocSinh: "",
     MatKhau: "",
     HoTen: "",
-    NgaySinh: "",
+    NgaySinh: new Date(),
     DanToc: "",
     GioiTinh: false,
     // Nơi sinh
@@ -329,23 +302,23 @@ export default function Trangdangky({ route, navigation }) {
     CoGiaiThuongQuocGia: false,
     DanhSachFileDinhKem: [],
 
-    HoTenMe: "",
-    NgaySinhMe: "",
-    CMNDMe: "",
-    NgheNghiepMe: "",
-    SDTMe: "",
+    HoTen_Me: "",
+    Tuoi_Me: "",
+    DonViCongTac_Me: "",
+    NgheNghiep_Me: "",
+    SDT_Me: "",
 
-    HoTenCha: "",
-    NgaySinhCha: "",
-    CMNDCha: "",
-    NgheNgiepCha: "",
-    SDTCha: "",
+    HoTen_Cha: "",
+    Tuoi_Cha: "",
+    DonViCongTac_Cha: "",
+    NgheNgiep_Cha: "",
+    SDT_Cha: "",
 
-    HoTenNguoiGiamHo: "",
-    NgaySinhNguoiGiamHo: "",
-    CMNDNguoiGiamHo: "",
-    NgheNghiep: "",
-    SDTNGH: "",
+    HoTen_NGH: "",
+    Tuoi_NGH: "",
+    DonViCongTac_NGH: "",
+    NgheNghiep_NGH: "",
+    SDT_NGH: "",
 
     DienThoaiLienHe: "",
     MailLienHe: "",
@@ -1646,9 +1619,7 @@ export default function Trangdangky({ route, navigation }) {
             TenLoai: itemParent.TenLoai,
             lstDanhSach: itemParent.lstDanhSach.map(
               (itemChild, indexChild) => ({
-                Ma: itemChild.Ma,
-                Ten: itemChild.Ten,
-                ID: itemChild.ID,
+                ...itemChild,
                 check: false,
               })
             ),
@@ -1665,6 +1636,7 @@ export default function Trangdangky({ route, navigation }) {
 
   //#region Đối tượng ưu tiên
   const Check = (indexParent, indexChild, value) => {
+    // console.log(typeof value);
     let arr = DSdoituonguutien.map(
       (item_DSdoituonguutien, index_DSdoituonguutien) =>
         index_DSdoituonguutien === indexParent
@@ -1675,7 +1647,7 @@ export default function Trangdangky({ route, navigation }) {
                   lstDanhSach_index === indexChild
                     ? {
                         ...lstDanhSach_item,
-                        check: value,
+                        check: !value,
                       }
                     : lstDanhSach_item
               ),
@@ -1723,50 +1695,56 @@ export default function Trangdangky({ route, navigation }) {
           </Text>
           {itemParent.lstDanhSach.map((itemChild, indexChild) => {
             return (
-              <View
-                style={{
-                  marginVertical: 5,
-                  backgroundColor: "#FFFFFF",
-                  width: "90%",
-                  borderColor: "#f1f1f1",
-                  padding: 5,
-                  flexDirection: "row",
-                  alignSelf: "center",
-                  justifyContent: "flex-start",
-                  padding: 5,
-                  paddingRight: 10,
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 5,
-                  },
-                  shadowOpacity: 0.34,
-                  shadowRadius: 6.27,
-
-                  elevation: 10,
-                }}
+              <TouchableOpacity
                 key={indexChild.toString()}
+                onPress={() => {
+                  Check(indexParent, indexChild, itemChild.check);
+                }}
               >
-                <CheckBox
-                  style={{ alignSelf: "center" }}
-                  checked={itemChild.check}
-                  color={itemChild.check ? "#ff4646" : "#008577"}
-                  onPress={(value) => {
-                    Check(indexParent, indexChild, value);
-                  }}
-                />
-                <Text
+                <View
                   style={{
-                    fontSize: 15,
-                    flexShrink: 1,
-                    textAlign: "justify",
-                    flexGrow: 1,
-                    paddingLeft: 15,
+                    marginVertical: 5,
+                    backgroundColor: "#FFFFFF",
+                    width: "90%",
+                    borderColor: "#f1f1f1",
+                    padding: 5,
+                    flexDirection: "row",
+                    alignSelf: "center",
+                    justifyContent: "flex-start",
+                    padding: 5,
+                    paddingRight: 10,
+                    shadowColor: "#000",
+                    shadowOffset: {
+                      width: 0,
+                      height: 5,
+                    },
+                    shadowOpacity: 0.34,
+                    shadowRadius: 6.27,
+
+                    elevation: 10,
                   }}
                 >
-                  {itemChild.Ma}-{itemChild.Ten}
-                </Text>
-              </View>
+                  <CheckBox
+                    style={{ alignSelf: "center" }}
+                    checked={itemChild.check}
+                    color={itemChild.check ? "#ff4646" : "#008577"}
+                    onPress={() => {
+                      Check(indexParent, indexChild, itemChild.check);
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      flexShrink: 1,
+                      textAlign: "justify",
+                      flexGrow: 1,
+                      paddingLeft: 15,
+                    }}
+                  >
+                    {itemChild.Ma}-{itemChild.Ten}
+                  </Text>
+                </View>
+              </TouchableOpacity>
             );
           })}
         </View>
@@ -1783,8 +1761,9 @@ export default function Trangdangky({ route, navigation }) {
       itemParent.map((item) => lstDiemHocBa.push(item));
     });
     const DataPush = {
-      MaHocSinh: data.MaHocSinh || "", //string
-      MatKhau: data.MatKhau || "", //string
+      // MaHocSinh: data.MaHocSinh || "", //string
+      // MatKhau: data.MatKhau || "", //string
+
       HoTen: data.HoTen || "", //string
       NgaySinh: date("{dd}/{mm}/{yyyy}", inputCon.date), //string
       DanToc: data.DanToc || "", //string
@@ -1826,22 +1805,25 @@ export default function Trangdangky({ route, navigation }) {
       lstFileDinhKem: [],
 
       HoTenMe: data.HoTenMe || "", //string
-      NamSinhMe: date("{dd}/{mm}/{yyyy}", inputMe.date), //string
-      CMNDMe: data.CMNDMe || "", //string
-      NgheNghiepMe: data.NgheNghiepMe || "", //string
-      SDTMe: data.SDTMe || "", //string
+      // NamSinhMe: date("{dd}/{mm}/{yyyy}", inputMe.date), //string
+      TuoiMe: data.Tuoi_Me || "",
+      DonViCongTac_Me: data.DonViCongTac_Me || "", //string
+      NgheNghiepMe: data.NgheNghiep_Me || "", //string
+      SDTMe: data.SDT_Me || "", //string
 
       HoTenCha: data.HoTenCha || "", //string
-      NamSinhCha: date("{dd}/{mm}/{yyyy}", inputCha.date), //string
-      CMNDCha: data.CMNDCha || "", //string
-      NgheNghiepCha: data.NgheNghiepCha || "", //string
-      SDTCha: data.SDTCha || "", //string
+      // NamSinhCha: date("{dd}/{mm}/{yyyy}", inputCha.date), //string
+      TuoiCha: data.Tuoi_Cha || "",
+      DonViCongTac_Cha: data.DonViCongTac_Cha || "", //string
+      NgheNghiepCha: data.NgheNgiep_Cha || "", //string
+      SDTCha: data.SDT_Cha || "", //string
 
-      HoTenNguoiGiamHo: data.HoTenNguoiGiamHo || "", //string
-      NamSinhNguoiGiamHo: date("{dd}/{mm}/{yyyy}", inputNGH.date), //string
-      CMNDNguoiGiamHo: data.CMNDNguoiGiamHo || "", //string
-      NgheNghiepNGH: data.NgheNghiepNGH || "", //string
-      SDTNGH: data.SDTNGH || "", //string
+      HoTenNguoiGiamHo: data.HoTen_NGH || "", //string
+      // NamSinhNguoiGiamHo: date("{dd}/{mm}/{yyyy}", inputNGH.date), //string
+      TuoiNGH: data.Tuoi_NGH || "",
+      DonViCongTac_NGH: data.DonViCongTac_NGH || "", //string
+      NgheNghiepNGH: data.NgheNghiep_NGH || "", //string
+      SDTNGH: data.SDT_NGH || "", //string
 
       DienThoai: data.DienThoaiLienHe || "", //string
       Email: data.MailLienHe || "", //string
@@ -1876,8 +1858,8 @@ export default function Trangdangky({ route, navigation }) {
                 type: "success",
               }),
               changeValuePicker({
-                MaHocSinh: "",
-                MatKhau: "",
+                // MaHocSinh: "",
+                // MatKhau: "",
                 HoTen: "",
                 NgaySinh: "",
                 // Nơi sinh
@@ -1917,17 +1899,17 @@ export default function Trangdangky({ route, navigation }) {
                 NgheNghiepMe: "",
                 SDTMe: "",
 
-                HoTenCha: "",
-                NgaySinhCha: "",
-                CMNDCha: "",
-                NgheNghiepCha: "",
-                SDTCha: "",
+                HoTen_Cha: "",
+                Tuoi_Cha: "",
+                DonViCongTac_Cha: "",
+                NgheNghiep_Cha: "",
+                SDT_Cha: "",
 
-                HoTenNguoiGiamHo: "",
-                NgaySinhNguoiGiamHo: "",
-                CMNDNguoiGiamHo: "",
-                NgheNghiepNGH: "",
-                SDTNGH: "",
+                HoTen_NGH: "",
+                Tuoi_NGH: "",
+                DonViCongTac_NGH: "",
+                NgheNghiep_NGH: "",
+                SDT_NGH: "",
 
                 DienThoaiLienHe: "",
                 MailLienHe: "",
@@ -2391,14 +2373,14 @@ export default function Trangdangky({ route, navigation }) {
                   </View>
                   {/* Ngày sinh */}
                   <View style={styles.field}>
-                    {date("{dd}/{mm}/{yyyy}", inputCon.date) === "" && (
+                    {/* {date("{dd}/{mm}/{yyyy}", data.NgaySinh) === "" && (
                       <IconButton
                         icon="menu-right"
                         color={Colors.red500}
                         size={30}
                         style={{ position: "absolute", left: -42, top: -12 }}
                       />
-                    )}
+                    )} */}
                     <Text>
                       Ngày sinh <Text style={{ color: "red" }}>*</Text>
                     </Text>
@@ -2409,7 +2391,27 @@ export default function Trangdangky({ route, navigation }) {
                         borderBottomWidth: 0.5,
                       }}
                     >
-                      <Text
+                      <DatePicker
+                        defaultDate={new Date(2018, 4, 4)}
+                        minimumDate={new Date(2018, 1, 1)}
+                        maximumDate={new Date(2018, 4, 4)}
+                        locale={"vi"}
+                        timeZoneOffsetInMinutes={undefined}
+                        modalTransparent={false}
+                        animationType={"fade"}
+                        androidMode={"default"}
+                        placeHolderText="Chọn ngày sinh"
+                        textStyle={{ color: "green" }}
+                        placeHolderTextStyle={{ color: "#d3d3d3" }}
+                        onDateChange={(value) =>
+                          changeValuePicker({
+                            NgaySinh: date("{dd}/{mm}/{yyyy}", value),
+                          })
+                        }
+                        value={data.NgaySinh}
+                        disabled={false}
+                      />
+                      {/* <Text
                         style={{
                           flexGrow: 1,
                           alignSelf: "center",
@@ -2417,9 +2419,9 @@ export default function Trangdangky({ route, navigation }) {
                           paddingLeft: 5,
                         }}
                       >
-                        {date("{dd}/{mm}/{yyyy}", inputCon.date)}
-                      </Text>
-                      <IconButton
+                        {date("{dd}/{mm}/{yyyy}", data.NgaySinh)}
+                      </Text> */}
+                      {/* <IconButton
                         icon="calendar"
                         color={Colors.red500}
                         size={18}
@@ -2434,7 +2436,7 @@ export default function Trangdangky({ route, navigation }) {
                           display="default"
                           onChange={inputCon.onChange}
                         />
-                      )}
+                      )} */}
                     </View>
                   </View>
                   {/* Dân tộc */}
@@ -3175,33 +3177,34 @@ export default function Trangdangky({ route, navigation }) {
                   {/* Đối tượng ưu tiên */}
                   <View style={styles.field}>
                     <Text>Đối tượng ưu tiên</Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        borderLeftWidth: 0.5,
-                        borderBottomWidth: 0.5,
-                      }}
-                    >
-                      <Text
+                    <TouchableOpacity onPress={() => setModalVisible(true)}>
+                      <View
                         style={{
-                          flexGrow: 1,
-                          alignSelf: "center",
-
-                          fontSize: 18,
-
-                          paddingLeft: 5,
+                          flexDirection: "row",
+                          borderLeftWidth: 0.5,
+                          borderBottomWidth: 0.5,
                         }}
                       >
-                        {data.DoiTuongUuTien.length} mục đã chọn
-                      </Text>
-                      <IconButton
-                        icon="file"
-                        color={Colors.red500}
-                        size={20}
-                        onPress={() => setModalVisible(true)}
-                      />
-                    </View>
+                        <Text
+                          style={{
+                            flexGrow: 1,
+                            alignSelf: "center",
 
+                            fontSize: 18,
+
+                            paddingLeft: 5,
+                          }}
+                        >
+                          {data.DoiTuongUuTien.length} mục đã chọn
+                        </Text>
+                        <IconButton
+                          icon="file"
+                          color={Colors.red500}
+                          size={20}
+                          onPress={() => setModalVisible(true)}
+                        />
+                      </View>
+                    </TouchableOpacity>
                     <Modal
                       animationType="slide"
                       transparent={true}
@@ -3266,50 +3269,61 @@ export default function Trangdangky({ route, navigation }) {
                     </Modal>
 
                     {/* Checkbox */}
-                    <View
-                      style={{
-                        margin: 5,
-                        backgroundColor: "#FFFFFF",
-                        width: "100%",
-                        padding: 5,
-                        borderColor: "#f1f1f1",
-                        alignItems: "stretch",
-                        flexDirection: "row",
-                        alignSelf: "center",
-                        shadowColor: "#000",
-                        shadowOffset: {
-                          width: 0,
-                          height: 5,
-                        },
-                        shadowOpacity: 0.34,
-                        shadowRadius: 6.27,
-
-                        elevation: 10,
-                      }}
+                    <TouchableOpacity
+                      onPress={() =>
+                        setData((prevState) => ({
+                          ...prevState,
+                          CoGiaiThuongQuocGia: !prevState.CoGiaiThuongQuocGia,
+                        }))
+                      }
                     >
-                      <CheckBox
-                        checked={data.CoGiaiThuongQuocGia}
-                        color={data.CoGiaiThuongQuocGia ? "#ff4646" : "#008577"}
-                        // onValueChange={setData(false)}
-                        onPress={() =>
-                          setData((prevState) => ({
-                            ...prevState,
-                            CoGiaiThuongQuocGia: !prevState.CoGiaiThuongQuocGia,
-                          }))
-                        }
-                      />
-                      <Text
+                      <View
                         style={{
-                          fontSize: 14,
+                          margin: 5,
+                          backgroundColor: "#FFFFFF",
+                          width: "100%",
+                          padding: 5,
+                          borderColor: "#f1f1f1",
+                          alignItems: "stretch",
+                          flexDirection: "row",
                           alignSelf: "center",
-                          paddingLeft: 15,
+                          shadowColor: "#000",
+                          shadowOffset: {
+                            width: 0,
+                            height: 5,
+                          },
+                          shadowOpacity: 0.34,
+                          shadowRadius: 6.27,
+
+                          elevation: 10,
                         }}
                       >
-                        Có giải thưởng cấp quốc gia
-                      </Text>
-                    </View>
+                        <CheckBox
+                          checked={data.CoGiaiThuongQuocGia}
+                          color={
+                            data.CoGiaiThuongQuocGia ? "#ff4646" : "#008577"
+                          }
+                          onPress={() =>
+                            setData((prevState) => ({
+                              ...prevState,
+                              CoGiaiThuongQuocGia:
+                                !prevState.CoGiaiThuongQuocGia,
+                            }))
+                          }
+                        />
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            alignSelf: "center",
+                            paddingLeft: 15,
+                          }}
+                        >
+                          Có giải thưởng cấp quốc gia
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
                   </View>
-                  <View style={styles.field}>
+                  <View style={[styles.field, { display: "none" }]}>
                     {data.DanhSachFileDinhKem.length === 0 && (
                       <IconButton
                         icon="menu-right"
@@ -3434,27 +3448,27 @@ export default function Trangdangky({ route, navigation }) {
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(value) =>
-                        changeValuePicker({ HoTenMe: value })
+                        changeValuePicker({ HoTen_Me: value })
                       }
                     >
-                      {data.HoTenMe}
+                      {data.HoTen_Me}
                     </TextInput>
                   </View>
-                  {/* Số CMND/Thẻ căn cước */}
+                  {/* Đơn vị công tác */}
                   <View style={styles.field}>
-                    <Text>Số CMND/Thẻ căn cước</Text>
+                    <Text>Đơn vị công tác</Text>
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(value) =>
-                        changeValuePicker({ CMNDMe: value })
+                        changeValuePicker({ DonViCongTac_Me: value })
                       }
                     >
-                      {data.CMNDMe}
+                      {data.DonViCongTac_Me}
                     </TextInput>
                   </View>
-                  {/* Ngày sinh */}
+                  {/* Tuổi*/}
                   <View style={styles.field}>
-                    <Text>Ngày sinh</Text>
+                    <Text>Tuổi</Text>
                     <View
                       style={{
                         flexDirection: "row",
@@ -3462,19 +3476,28 @@ export default function Trangdangky({ route, navigation }) {
                         borderBottomWidth: 0.5,
                       }}
                     >
-                      <Text
-                        style={{
-                          flexGrow: 1,
-                          alignSelf: "center",
+                      <TextInput
+                        // style={{
+                        //   flexGrow: 1,
+                        //   alignSelf: "center",
 
-                          fontSize: 18,
+                        //   fontSize: 18,
 
-                          paddingLeft: 5,
-                        }}
+                        //   paddingLeft: 5,
+                        // }}
+                        style={styles.textInput}
+                        keyboardType={"number-pad"}
+                        multiline={false}
+                        onChangeText={(value) =>
+                          changeValuePicker({ Tuoi_Me: value })
+                        }
                       >
-                        {date("{dd}/{mm}/{yyyy}", inputMe.date)}
-                      </Text>
-                      <IconButton
+                        {
+                          //date("{dd}/{mm}/{yyyy}", inputMe.date)
+                          data.Tuoi_Me
+                        }
+                      </TextInput>
+                      {/* <IconButton
                         icon="calendar"
                         color={Colors.red500}
                         size={18}
@@ -3489,7 +3512,7 @@ export default function Trangdangky({ route, navigation }) {
                           display="default"
                           onChange={inputMe.onChange}
                         />
-                      )}
+                      )} */}
                     </View>
                   </View>
                   {/* Nghề nghiệp */}
@@ -3498,10 +3521,10 @@ export default function Trangdangky({ route, navigation }) {
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(value) =>
-                        changeValuePicker({ NgheNghiepMe: value })
+                        changeValuePicker({ NgheNghiep_Me: value })
                       }
                     >
-                      {data.NgheNghiepMe}
+                      {data.NgheNghiep_Me}
                     </TextInput>
                   </View>
                   {/* Số điện thoại */}
@@ -3512,10 +3535,10 @@ export default function Trangdangky({ route, navigation }) {
                       keyboardType={"number-pad"}
                       multiline={false}
                       onChangeText={(value) =>
-                        changeValuePicker({ SDTMe: value })
+                        changeValuePicker({ SDT_Me: value })
                       }
                     >
-                      {data.SDTMe}
+                      {data.SDT_Me}
                     </TextInput>
                   </View>
                   {/*//? THÔNG TIN CHA ---------------------------------*/}
@@ -3530,27 +3553,27 @@ export default function Trangdangky({ route, navigation }) {
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(value) =>
-                        changeValuePicker({ HoTenCha: value })
+                        changeValuePicker({ HoTen_Cha: value })
                       }
                     >
-                      {data.HoTenCha}
+                      {data.HoTen_Cha}
                     </TextInput>
                   </View>
-                  {/* Số CMND/Thẻ căn cước */}
+                  {/* Đơn vị công tác */}
                   <View style={styles.field}>
-                    <Text>Số CMND/Thẻ căn cước</Text>
+                    <Text>ĐƠn vị công tác</Text>
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(value) =>
-                        changeValuePicker({ CMNDCha: value })
+                        changeValuePicker({ DonViCongTac_Cha: value })
                       }
                     >
-                      {data.CMNDCha}
+                      {data.DonViCongTac_Cha}
                     </TextInput>
                   </View>
-                  {/* Ngày sinh */}
+                  {/* Tuổi */}
                   <View style={styles.field}>
-                    <Text>Ngày sinh</Text>
+                    <Text>Tuổi</Text>
                     <View
                       style={{
                         flexDirection: "row",
@@ -3558,19 +3581,28 @@ export default function Trangdangky({ route, navigation }) {
                         borderBottomWidth: 0.5,
                       }}
                     >
-                      <Text
-                        style={{
-                          flexGrow: 1,
-                          alignSelf: "center",
+                      <TextInput
+                        // style={{
+                        //   flexGrow: 1,
+                        //   alignSelf: "center",
 
-                          fontSize: 18,
+                        //   fontSize: 18,
 
-                          paddingLeft: 5,
-                        }}
+                        //   paddingLeft: 5,
+                        // }}
+                        style={styles.textInput}
+                        keyboardType={"number-pad"}
+                        multiline={false}
+                        onChangeText={(value) =>
+                          changeValuePicker({ Tuoi_Cha: value })
+                        }
                       >
-                        {date("{dd}/{mm}/{yyyy}", inputCha.date)}
-                      </Text>
-                      <IconButton
+                        {
+                          //date("{dd}/{mm}/{yyyy}", inputCha.date)
+                          data.Tuoi_Cha
+                        }
+                      </TextInput>
+                      {/* <IconButton
                         icon="calendar"
                         color={Colors.red500}
                         size={18}
@@ -3585,7 +3617,7 @@ export default function Trangdangky({ route, navigation }) {
                           display="default"
                           onChange={inputCha.onChange}
                         />
-                      )}
+                      )} */}
                     </View>
                   </View>
                   {/* Nghề nghiệp */}
@@ -3594,10 +3626,10 @@ export default function Trangdangky({ route, navigation }) {
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(value) =>
-                        changeValuePicker({ NgheNghiepCha: value })
+                        changeValuePicker({ NgheNghiep_Cha: value })
                       }
                     >
-                      {data.NgheNghiepCha}
+                      {data.NgheNghiep_Cha}
                     </TextInput>
                   </View>
                   {/* Số điện thoại */}
@@ -3608,10 +3640,10 @@ export default function Trangdangky({ route, navigation }) {
                       keyboardType={"number-pad"}
                       multiline={false}
                       onChangeText={(value) =>
-                        changeValuePicker({ SDTCha: value })
+                        changeValuePicker({ SDT_Cha: value })
                       }
                     >
-                      {data.SDTCha}
+                      {data.SDT_Cha}
                     </TextInput>
                   </View>
                   {/*//? THÔNG TIN NGƯỜI GIÁM HỘ ---------------------------------*/}
@@ -3626,27 +3658,27 @@ export default function Trangdangky({ route, navigation }) {
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(value) =>
-                        changeValuePicker({ HoTenNguoiGiamHo: value })
+                        changeValuePicker({ HoTen_NGH: value })
                       }
                     >
-                      {data.HoTenNguoiGiamHo}
+                      {data.HoTen_NGH}
                     </TextInput>
                   </View>
-                  {/* Số CMND/Thẻ căn cước */}
+                  {/* Đơn vị công tác*/}
                   <View style={styles.field}>
-                    <Text>Số CMND/Thẻ căn cước</Text>
+                    <Text>Đơn vị công tác</Text>
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(value) =>
-                        changeValuePicker({ CMNDNguoiGiamHo: value })
+                        changeValuePicker({ DonViCongTac_NGH: value })
                       }
                     >
-                      {data.CMNDNguoiGiamHo}
+                      {data.DonViCongTac_NGH}
                     </TextInput>
                   </View>
-                  {/* Ngày sinh */}
+                  {/* Tuỏi */}
                   <View style={styles.field}>
-                    <Text>Ngày sinh</Text>
+                    <Text>Tuổi</Text>
                     <View
                       style={{
                         flexDirection: "row",
@@ -3654,19 +3686,28 @@ export default function Trangdangky({ route, navigation }) {
                         borderBottomWidth: 0.5,
                       }}
                     >
-                      <Text
-                        style={{
-                          flexGrow: 1,
-                          alignSelf: "center",
+                      <TextInput
+                        // style={{
+                        //   flexGrow: 1,
+                        //   alignSelf: "center",
 
-                          fontSize: 18,
+                        //   fontSize: 18,
 
-                          paddingLeft: 5,
-                        }}
+                        //   paddingLeft: 5,
+                        // }}
+                        style={styles.textInput}
+                        keyboardType={"number-pad"}
+                        multiline={false}
+                        onChangeText={(value) =>
+                          changeValuePicker({ Tuoi_NGH: value })
+                        }
                       >
-                        {date("{dd}/{mm}/{yyyy}", inputNGH.date)}
-                      </Text>
-                      <IconButton
+                        {
+                          //date("{dd}/{mm}/{yyyy}", inputNGH.date)
+                          data.Tuoi_NGH
+                        }
+                      </TextInput>
+                      {/* <IconButton
                         icon="calendar"
                         color={Colors.red500}
                         size={18}
@@ -3681,7 +3722,7 @@ export default function Trangdangky({ route, navigation }) {
                           display="default"
                           onChange={inputNGH.onChange}
                         />
-                      )}
+                      )} */}
                     </View>
                   </View>
                   {/* Nghề nghiệp */}
@@ -3690,10 +3731,10 @@ export default function Trangdangky({ route, navigation }) {
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(value) =>
-                        changeValuePicker({ NgheNghiepNGH: value })
+                        changeValuePicker({ NgheNghiep_NGH: value })
                       }
                     >
-                      {data.NgheNghiepNGH}
+                      {data.NgheNghiep_NGH}
                     </TextInput>
                   </View>
                   {/* Số điện thoại */}
@@ -3704,10 +3745,10 @@ export default function Trangdangky({ route, navigation }) {
                       keyboardType={"number-pad"}
                       multiline={false}
                       onChangeText={(value) =>
-                        changeValuePicker({ SDTNGH: value })
+                        changeValuePicker({ SDT_NGH: value })
                       }
                     >
-                      {data.SDTNGH}
+                      {data.SDT_NGH}
                     </TextInput>
                   </View>
                 </View>
@@ -3822,52 +3863,60 @@ export default function Trangdangky({ route, navigation }) {
             {/* -------------Cam kết khai báo đúng thông tin------------- */}
             <View style={[styles.block, { width: "94%", borderRadius: 10 }]}>
               <View style={styles.box}>
-                {/* Đối tượng ưu tiên */}
                 <View style={[styles.field, { borderWidth: 0 }]}>
                   {/* Checkbox */}
-                  <View
-                    style={{
-                      borderRadius: 10,
-                      margin: 5,
-                      backgroundColor: "#FFFFFF",
-                      width: "100%",
-                      padding: 5,
-                      borderColor: "#f1f1f1",
-                      alignItems: "stretch",
-                      flexDirection: "row",
-                      alignSelf: "center",
-                      shadowColor: "#000",
-                      shadowOffset: {
-                        width: 0,
-                        height: 5,
-                      },
-                      shadowOpacity: 0.34,
-                      shadowRadius: 6.27,
-
-                      elevation: 10,
-                    }}
+                  <TouchableOpacity
+                    onPress={() =>
+                      setData((prevState) => ({
+                        ...prevState,
+                        Xacnhanthongtin: !prevState.Xacnhanthongtin,
+                      }))
+                    }
                   >
-                    <CheckBox
-                      checked={data.Xacnhanthongtin}
-                      color={data.Xacnhanthongtin ? "#ff4646" : "#008577"}
-                      // onValueChange={setData(false)}
-                      onPress={() =>
-                        setData((prevState) => ({
-                          ...prevState,
-                          Xacnhanthongtin: !prevState.Xacnhanthongtin,
-                        }))
-                      }
-                    />
-                    <Text
+                    <View
                       style={{
-                        fontSize: 14,
+                        borderRadius: 10,
+                        margin: 5,
+                        backgroundColor: "#FFFFFF",
+                        width: "100%",
+                        padding: 5,
+                        borderColor: "#f1f1f1",
+                        alignItems: "stretch",
+                        flexDirection: "row",
                         alignSelf: "center",
-                        paddingLeft: 15,
+                        shadowColor: "#000",
+                        shadowOffset: {
+                          width: 0,
+                          height: 5,
+                        },
+                        shadowOpacity: 0.34,
+                        shadowRadius: 6.27,
+
+                        elevation: 10,
                       }}
                     >
-                      Tôi xin cam kết khai báo đúng thông tin
-                    </Text>
-                  </View>
+                      <CheckBox
+                        checked={data.Xacnhanthongtin}
+                        color={data.Xacnhanthongtin ? "#ff4646" : "#008577"}
+                        // onValueChange={setData(false)}
+                        onPress={() =>
+                          setData((prevState) => ({
+                            ...prevState,
+                            Xacnhanthongtin: !prevState.Xacnhanthongtin,
+                          }))
+                        }
+                      />
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          alignSelf: "center",
+                          paddingLeft: 15,
+                        }}
+                      >
+                        Tôi xin cam kết khai báo đúng thông tin
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -3879,7 +3928,7 @@ export default function Trangdangky({ route, navigation }) {
                 alignItems: "center",
               }}
             >
-              {TrangThai() ? (
+              {TrangThai() && (
                 <View>
                   <Button
                     success
@@ -3890,7 +3939,7 @@ export default function Trangdangky({ route, navigation }) {
                   </Button>
                   <ModalKiemTraThongTin />
                 </View>
-              ) : null}
+              )}
             </View>
           </View>
         </ScrollView>
@@ -4029,7 +4078,6 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   button: {
-    width: 150,
     height: 50,
     borderRadius: 25,
     textShadowColor: "#bbbbbb",
@@ -4040,6 +4088,7 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
     shadowOffset: { width: 1, height: 13 },
   },
+
   tableHead: { height: 50, backgroundColor: "#cee5d0" },
   tableText: { textAlign: "center", fontWeight: "100" },
   tableTitle: { backgroundColor: "#f6f8fa" },
