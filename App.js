@@ -30,9 +30,9 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Đăng nhập" screenOptions={ScreenStyle}>
+      <Stack.Navigator initialRouteName="Trang chủ" screenOptions={ScreenStyle}>
         {/* <Stack.Navigator
-        initialRouteName="Ảnh minh chứng"
+        initialRouteName="FileDinhKem"
         screenOptions={ScreenStyle}
       > */}
         {/* Đăng nhập */}
@@ -49,6 +49,7 @@ export default function App() {
         {/* Đăng ký tuyển sinh */}
         <Stack.Screen name="Đăng ký tuyển sinh" component={Dangkytuyensinh} />
         <Stack.Screen name="Trang đăng ký" component={Trangdangky} />
+        <Stack.Screen name="FileDinhKem" component={FileDinhKem} />
         {/* Tra cứu kết quả tuyển sinh */}
         <Stack.Screen
           name="Tra cứu kết quả tuyển sinh"

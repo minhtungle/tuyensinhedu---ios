@@ -35,10 +35,10 @@ const cards = [
     index: "5",
     type: Cards.Card5,
   },
-  {
-    index: "6",
-    type: Cards.Card6,
-  },
+  // {
+  //   index: "6",
+  //   type: Cards.Card6,
+  // },
 ];
 const y = new Animated.Value(0);
 const Wallet = ({ Tinh }) => {

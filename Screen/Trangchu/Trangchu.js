@@ -9,7 +9,8 @@ function Trangchu({ route, navigation }) {
       headerShown: false,
     });
   });
-  const { Tinh } = route.params;
+  // const { Tinh } = route.params;
+  const Tinh = "Vĩnh Phúc";
   return (
     <View>
       <View
@@ -31,6 +32,7 @@ function Trangchu({ route, navigation }) {
             backgroundColor: "#FFF",
             alignSelf: "flex-end",
             justifyContent: "center",
+            paddingRight: 10, // nếu có X thì xoá
           }}
         >
           <IconButton icon="factory" color={Colors.red500} size={16} />
@@ -46,7 +48,7 @@ function Trangchu({ route, navigation }) {
           >
             {Tinh}
           </Text>
-          <IconButton
+          {/* <IconButton
             icon="close"
             color={Colors.red500}
             size={18}
@@ -63,7 +65,7 @@ function Trangchu({ route, navigation }) {
               elevation: 1.5,
             }}
             onPress={() => navigation.goBack()}
-          />
+          /> */}
         </View>
       </View>
 

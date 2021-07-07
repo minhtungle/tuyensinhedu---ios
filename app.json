@@ -25,7 +25,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.minhtungle.TraCuuTuyenSinh1",
-      "permissions": ["CAMERA"]
+      "permissions": ["CAMERA", "MEDIA_LIBRARY", "MEDIA_LIBRARY_WRITE_ONLY"]
     },
     "web": {
       "favicon": "./assets/favicon.png"

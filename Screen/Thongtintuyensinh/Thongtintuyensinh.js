@@ -7,8 +7,10 @@ import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { Colors, IconButton } from "react-native-paper";
+const { height, width } = Dimensions.get("window");
 
 export default function Thongtintuyensinh({ navigation, route }) {
   useLayoutEffect(() => {
@@ -482,9 +484,6 @@ export default function Thongtintuyensinh({ navigation, route }) {
             onValueChange={(itemValue, itemIndex) =>
               changeValuePicker({ IDTinh: itemValue })
             }
-            dropdownIconColor={
-              data.IDTinh == "" || null ? Colors.red500 : "#61b15a"
-            }
           >
             {picker.IDTinh.map((item, index) => {
               return (
@@ -514,9 +513,6 @@ export default function Thongtintuyensinh({ navigation, route }) {
             style={styles.picker}
             onValueChange={(itemValue, itemIndex) =>
               changeValuePicker({ IDHuyen: itemValue })
-            }
-            dropdownIconColor={
-              data.IDHuyen == "" || null ? Colors.red500 : "#61b15a"
             }
           >
             {picker.IDHuyen.map((item, index) => {
@@ -548,9 +544,6 @@ export default function Thongtintuyensinh({ navigation, route }) {
             onValueChange={(itemValue, itemIndex) =>
               changeValuePicker({ IDXa: itemValue })
             }
-            dropdownIconColor={
-              data.IDXa == "" || null ? Colors.red500 : "#61b15a"
-            }
           >
             {picker.IDXa.map((item, index) => {
               return (
@@ -581,9 +574,6 @@ export default function Thongtintuyensinh({ navigation, route }) {
             onValueChange={(itemValue, itemIndex) =>
               changeValuePicker({ CapTS: itemValue })
             }
-            dropdownIconColor={
-              data.CapTS == "" || null ? Colors.red500 : "#61b15a"
-            }
           >
             {picker.CapTS.map((item, index) => {
               return (
@@ -613,9 +603,6 @@ export default function Thongtintuyensinh({ navigation, route }) {
             style={styles.picker}
             onValueChange={(itemValue, itemIndex) =>
               changeValuePicker({ IDTruong: itemValue })
-            }
-            dropdownIconColor={
-              data.IDTruong == "" || null ? Colors.red500 : "#61b15a"
             }
           >
             {picker.IDTruong.map((item, index) => {
@@ -770,7 +757,6 @@ const styles = StyleSheet.create({
     padding: 5,
     marginBottom: "2%",
     flexDirection: "row",
-
     borderRadius: 16,
     backgroundColor: "white",
     shadowColor: "#000",
@@ -790,6 +776,7 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     flexGrow: 1,
+    width: width * (95 / 100),
   },
   button: {
     marginBottom: "5%",

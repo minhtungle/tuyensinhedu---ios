@@ -8,6 +8,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { Colors, IconButton } from "react-native-paper";
+import * as Font from "expo-font";
 
 const height = Dimensions.get("window").height;
 
@@ -17,6 +18,13 @@ export default function Dangnhap({ navigation }) {
       headerShown: false,
     });
   });
+  useEffect(() => {
+    (async () =>
+      await Font.loadAsync({
+        Roboto: require("native-base/Fonts/Roboto.ttf"),
+        Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      }))();
+  }, []);
   const [data, setData] = useState({
     Tinh: "Chọn Tỉnh/Thành phố",
   });
@@ -141,9 +149,6 @@ export default function Dangnhap({ navigation }) {
               style={styles.picker}
               onValueChange={(itemValue, itemIndex) =>
                 changeValuePicker({ Tinh: itemValue })
-              }
-              dropdownIconColor={
-                data.IDTinh == "" || null ? Colors.red500 : "#61b15a"
               }
             >
               {picker.IDTinh.map((item, index) => {
