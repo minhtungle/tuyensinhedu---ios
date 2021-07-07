@@ -2372,7 +2372,7 @@ export default function Trangdangky({ route, navigation }) {
                     </TextInput>
                   </View>
                   {/* Ngày sinh */}
-                  <View style={styles.field}>
+                  <View style={styles.field} style={{ display: "none" }}>
                     {/* {date("{dd}/{mm}/{yyyy}", data.NgaySinh) === "" && (
                       <IconButton
                         icon="menu-right"
@@ -2391,26 +2391,6 @@ export default function Trangdangky({ route, navigation }) {
                         borderBottomWidth: 0.5,
                       }}
                     >
-                      <DatePicker
-                        defaultDate={new Date(2018, 4, 4)}
-                        minimumDate={new Date(2018, 1, 1)}
-                        maximumDate={new Date(2018, 4, 4)}
-                        locale={"vi"}
-                        timeZoneOffsetInMinutes={undefined}
-                        modalTransparent={false}
-                        animationType={"fade"}
-                        androidMode={"default"}
-                        placeHolderText="Chọn ngày sinh"
-                        textStyle={{ color: "green" }}
-                        placeHolderTextStyle={{ color: "#d3d3d3" }}
-                        onDateChange={(value) =>
-                          changeValuePicker({
-                            NgaySinh: date("{dd}/{mm}/{yyyy}", value),
-                          })
-                        }
-                        value={data.NgaySinh}
-                        disabled={false}
-                      />
                       {/* <Text
                         style={{
                           flexGrow: 1,
@@ -3217,7 +3197,7 @@ export default function Trangdangky({ route, navigation }) {
                             flex: 1,
                             justifyContent: "center",
                             alignItems: "center",
-                            marginTop: 50,
+                            paddingTop: 0,
                           },
                         ]}
                         intensity={200}
@@ -3242,7 +3222,7 @@ export default function Trangdangky({ route, navigation }) {
                           <ScrollView
                             nestedScrollEnabled
                             style={{
-                              maxHeight: 700,
+                              maxHeight: (height * 70) / 100,
                               padding: 20,
                               paddingBottom: 0,
                             }}
@@ -3472,8 +3452,6 @@ export default function Trangdangky({ route, navigation }) {
                     <View
                       style={{
                         flexDirection: "row",
-                        borderLeftWidth: 0.5,
-                        borderBottomWidth: 0.5,
                       }}
                     >
                       <TextInput
@@ -3488,6 +3466,7 @@ export default function Trangdangky({ route, navigation }) {
                         style={styles.textInput}
                         keyboardType={"number-pad"}
                         multiline={false}
+                        maxLength={2}
                         onChangeText={(value) =>
                           changeValuePicker({ Tuoi_Me: value })
                         }
@@ -3561,7 +3540,7 @@ export default function Trangdangky({ route, navigation }) {
                   </View>
                   {/* Đơn vị công tác */}
                   <View style={styles.field}>
-                    <Text>ĐƠn vị công tác</Text>
+                    <Text>Đơn vị công tác</Text>
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(value) =>
@@ -3577,8 +3556,6 @@ export default function Trangdangky({ route, navigation }) {
                     <View
                       style={{
                         flexDirection: "row",
-                        borderLeftWidth: 0.5,
-                        borderBottomWidth: 0.5,
                       }}
                     >
                       <TextInput
@@ -3593,6 +3570,7 @@ export default function Trangdangky({ route, navigation }) {
                         style={styles.textInput}
                         keyboardType={"number-pad"}
                         multiline={false}
+                        maxLength={2}
                         onChangeText={(value) =>
                           changeValuePicker({ Tuoi_Cha: value })
                         }
@@ -3682,8 +3660,6 @@ export default function Trangdangky({ route, navigation }) {
                     <View
                       style={{
                         flexDirection: "row",
-                        borderLeftWidth: 0.5,
-                        borderBottomWidth: 0.5,
                       }}
                     >
                       <TextInput
@@ -3698,6 +3674,7 @@ export default function Trangdangky({ route, navigation }) {
                         style={styles.textInput}
                         keyboardType={"number-pad"}
                         multiline={false}
+                        maxLength={2}
                         onChangeText={(value) =>
                           changeValuePicker({ Tuoi_NGH: value })
                         }

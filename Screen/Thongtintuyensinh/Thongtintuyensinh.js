@@ -8,8 +8,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import { Colors, IconButton } from "react-native-paper";
+import { BlurView } from "expo-blur";
 const { height, width } = Dimensions.get("window");
 
 export default function Thongtintuyensinh({ navigation, route }) {
@@ -627,15 +629,17 @@ export default function Thongtintuyensinh({ navigation, route }) {
             transparent={true}
             visible={modalVisible}
           >
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: headerHeight,
-                backgroundColor: "#DEEBFE",
-                //opacity: 0.5,
-              }}
+            <BlurView
+              style={[
+                StyleSheet.absoluteFill,
+                {
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 0,
+                },
+              ]}
+              intensity={200}
             >
               <View
                 style={{
@@ -657,10 +661,10 @@ export default function Thongtintuyensinh({ navigation, route }) {
                   elevation: 5,
                 }}
               >
-                <View
+                <ScrollView
                   style={{
-                    flexGrow: 2,
                     width: "100%",
+                    maxHeight: (height * 70) / 100,
                     flexDirection: "column",
                   }}
                 >
@@ -703,7 +707,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
                       </TouchableOpacity>
                     </View>
                   )}
-                </View>
+                </ScrollView>
                 <View
                   style={{
                     flexGrow: 1,
@@ -722,7 +726,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
                   </Button>
                 </View>
               </View>
-            </View>
+            </BlurView>
           </Modal>
         </View>
       ) : null}

@@ -9,6 +9,7 @@ import {
   Animated,
   KeyboardAvoidingView,
   Easing,
+  TouchableOpacity,
 } from "react-native";
 import { View, Text, CheckBox, Button } from "native-base";
 import { useHeaderHeight } from "@react-navigation/stack";
@@ -212,7 +213,11 @@ export default function ComboBox() {
             <View style={styles.checkBoxContainer}>
               {/* Checkbox */}
               {checkboxValue.map((checkbox, i) => (
-                <View key={i} style={styles.perCheckContainer}>
+                <TouchableOpacity
+                  key={i}
+                  style={styles.perCheckContainer}
+                  onPress={(value) => checkboxHandler(value, i)}
+                >
                   <CheckBox
                     style={styles.checkbox}
                     checked={checkbox.checked}
@@ -220,7 +225,7 @@ export default function ComboBox() {
                     onPress={(value) => checkboxHandler(value, i)}
                   />
                   <Text style={styles.label}>{"" + checkbox.label + ""}</Text>
-                </View>
+                </TouchableOpacity>
               ))}
             </View>
             {/* Input */}
