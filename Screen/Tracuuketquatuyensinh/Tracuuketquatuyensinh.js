@@ -1,14 +1,4 @@
 import React, { useLayoutEffect } from "react";
-import {
-  Container,
-  Header,
-  Content,
-  ListItem,
-  CheckBox,
-  View,
-  Body,
-  Text,
-} from "native-base";
 import { StyleSheet } from "react-native";
 import ComboBox from "./ComboBox";
 

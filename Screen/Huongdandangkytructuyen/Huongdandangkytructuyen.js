@@ -10,6 +10,7 @@ import {
   Image,
 } from "react-native";
 import Carousel from "pinar";
+import { marginBottom } from "styled-system";
 
 function Huongdandangkytructuyen({ navigation }) {
   useLayoutEffect(() => {
@@ -55,7 +56,7 @@ function Huongdandangkytructuyen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         {/*Bước 1*/}
-        <View style={[styles.main, { height: 600 }]}>
+        <View style={styles.main}>
           <View style={styles.block}>
             <View>
               <View style={styles.title}>
@@ -66,19 +67,24 @@ function Huongdandangkytructuyen({ navigation }) {
                   &emsp;Tại màn hình trang chủ, chọn{" "}
                   <Text style={{ fontWeight: "bold" }}>Đăng ký tuyển sinh</Text>
                 </Text>
-                <Carousel index={0} height={400} style={styles.carousel}>
-                  {images.b1.uri.map((item, index) => (
-                    <View key={index.toString()} style={styles.imageContainer}>
-                      <Image source={item} style={styles.image} />
-                    </View>
-                  ))}
-                </Carousel>
+                <ScrollView style={{ maxHeight: 450 }}>
+                  <Carousel index={0} height={400} style={styles.carousel}>
+                    {images.b1.uri.map((item, index) => (
+                      <View
+                        key={index.toString()}
+                        style={styles.imageContainer}
+                      >
+                        <Image source={item} style={styles.image} />
+                      </View>
+                    ))}
+                  </Carousel>
+                </ScrollView>
               </View>
             </View>
           </View>
         </View>
         {/*Bước 2*/}
-        <View style={[styles.main, { height: 600 }]}>
+        <View style={styles.main}>
           <View style={styles.block}>
             <View>
               <View style={styles.title}>
@@ -89,19 +95,24 @@ function Huongdandangkytructuyen({ navigation }) {
                   &emsp;Trang tuyển sinh hiển thị danh sách các kỳ thi tuyển
                   sinh hiện có, phụ huynh click chọn kỳ tuyển sinh muốn đăng ký
                 </Text>
-                <Carousel index={0} height={400} style={styles.carousel}>
-                  {images.b2.uri.map((item, index) => (
-                    <View key={index.toString()} style={styles.imageContainer}>
-                      <Image source={item} style={styles.image} />
-                    </View>
-                  ))}
-                </Carousel>
+                <ScrollView style={{ maxHeight: 450 }}>
+                  <Carousel index={0} height={400} style={styles.carousel}>
+                    {images.b2.uri.map((item, index) => (
+                      <View
+                        key={index.toString()}
+                        style={styles.imageContainer}
+                      >
+                        <Image source={item} style={styles.image} />
+                      </View>
+                    ))}
+                  </Carousel>
+                </ScrollView>
               </View>
             </View>
           </View>
         </View>
         {/*Bước 3*/}
-        <View style={[styles.main, { height: 600 }]}>
+        <View style={styles.main}>
           <View style={styles.block}>
             <View>
               <View style={styles.title}>
@@ -112,19 +123,24 @@ function Huongdandangkytructuyen({ navigation }) {
                   &emsp;Phụ huynh/học sinh nhấn vào ô "
                   <Text style={{ fontWeight: "bold" }}>Chọn trường</Text>"
                 </Text>
-                <Carousel index={0} height={400} style={styles.carousel}>
-                  {images.b3.uri.map((item, index) => (
-                    <View key={index.toString()} style={styles.imageContainer}>
-                      <Image source={item} style={styles.image} />
-                    </View>
-                  ))}
-                </Carousel>
+                <ScrollView style={{ maxHeight: 450 }}>
+                  <Carousel index={0} height={400} style={styles.carousel}>
+                    {images.b3.uri.map((item, index) => (
+                      <View
+                        key={index.toString()}
+                        style={styles.imageContainer}
+                      >
+                        <Image source={item} style={styles.image} />
+                      </View>
+                    ))}
+                  </Carousel>
+                </ScrollView>
               </View>
             </View>
           </View>
         </View>
         {/*Bước 4*/}
-        <View style={[styles.main, { height: 780 }]}>
+        <View style={styles.main}>
           <View style={styles.block}>
             <View>
               <View style={styles.title}>
@@ -135,13 +151,18 @@ function Huongdandangkytructuyen({ navigation }) {
                   &emsp;Chọn trường muốn đăng ký trong danh sách trường tuyển
                   sinh
                 </Text>
-                <Carousel index={0} height={400} style={styles.carousel}>
-                  {images.b4.uri.map((item, index) => (
-                    <View key={index.toString()} style={styles.imageContainer}>
-                      <Image source={item} style={styles.image} />
-                    </View>
-                  ))}
-                </Carousel>
+                <ScrollView style={{ maxHeight: 450 }}>
+                  <Carousel index={0} height={400} style={styles.carousel}>
+                    {images.b4.uri.map((item, index) => (
+                      <View
+                        key={index.toString()}
+                        style={styles.imageContainer}
+                      >
+                        <Image source={item} style={styles.image} />
+                      </View>
+                    ))}
+                  </Carousel>
+                </ScrollView>
                 <Text style={styles.boxText}>
                   &emsp;<Text style={{ fontWeight: "bold" }}>Lưu ý </Text>
                   (Đối với Trường chuyên/chất lượng cao) :
@@ -165,7 +186,7 @@ function Huongdandangkytructuyen({ navigation }) {
           </View>
         </View>
         {/*Bước 5*/}
-        <View style={[styles.main, { height: 820 }]}>
+        <View style={styles.main}>
           <View style={styles.block}>
             <View>
               <View style={styles.title}>
@@ -176,13 +197,18 @@ function Huongdandangkytructuyen({ navigation }) {
                   &emsp;Phụ huynh nhập đầy đủ các trường thông tin vào form đăng
                   ký
                 </Text>
-                <Carousel index={0} height={400} style={styles.carousel}>
-                  {images.b5.uri.map((item, index) => (
-                    <View key={index.toString()} style={styles.imageContainer}>
-                      <Image source={item} style={styles.image} />
-                    </View>
-                  ))}
-                </Carousel>
+                <ScrollView style={{ maxHeight: 450 }}>
+                  <Carousel index={0} height={400} style={styles.carousel}>
+                    {images.b5.uri.map((item, index) => (
+                      <View
+                        key={index.toString()}
+                        style={styles.imageContainer}
+                      >
+                        <Image source={item} style={styles.image} />
+                      </View>
+                    ))}
+                  </Carousel>
+                </ScrollView>
                 <Text style={styles.boxText}>
                   &emsp;<Text style={{ fontWeight: "bold" }}>Lưu ý :</Text>
                 </Text>
@@ -207,7 +233,7 @@ function Huongdandangkytructuyen({ navigation }) {
           </View>
         </View>
         {/*Bước 6*/}
-        <View style={[styles.main, { height: 900 }]}>
+        <View style={[styles.main, { marginBottom: 200 }]}>
           <View style={styles.block}>
             <View>
               <View style={styles.title}>
@@ -218,13 +244,18 @@ function Huongdandangkytructuyen({ navigation }) {
                   &emsp;Phụ huynh kiểm tra lại thông tin sau đó tích chọn cam
                   kết, nhấn <Text style={{ fontWeight: "bold" }}>Đăng ký</Text>
                 </Text>
-                <Carousel index={0} height={400} style={styles.carousel}>
-                  {images.b6.uri.map((item, index) => (
-                    <View key={index.toString()} style={styles.imageContainer}>
-                      <Image source={item} style={styles.image} />
-                    </View>
-                  ))}
-                </Carousel>
+                <ScrollView style={{ maxHeight: 450 }}>
+                  <Carousel index={0} height={400} style={styles.carousel}>
+                    {images.b6.uri.map((item, index) => (
+                      <View
+                        key={index.toString()}
+                        style={styles.imageContainer}
+                      >
+                        <Image source={item} style={styles.image} />
+                      </View>
+                    ))}
+                  </Carousel>
+                </ScrollView>
                 <Text style={styles.boxText}>
                   &emsp;<Text style={{ fontWeight: "bold" }}>Lưu ý :</Text>
                 </Text>
@@ -263,14 +294,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#DEEBFE",
   },
   main: {
-    flex: 1,
+    width: "100%",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#DEEBFE",
+    paddingVertical: 20,
+    // borderWidth: 1,
   },
   block: {
     width: "95%",
-    height: "90%",
     backgroundColor: "white",
     alignItems: "center",
     //* bóng mờ

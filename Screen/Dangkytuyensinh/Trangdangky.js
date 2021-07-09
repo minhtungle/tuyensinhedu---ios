@@ -20,6 +20,8 @@ import {
   DatePicker,
   Icon,
 } from "native-base";
+import AnimatedEllipsis from "react-native-animated-ellipsis";
+
 import { BlurView } from "expo-blur";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import RadioButtonRN from "radio-buttons-react-native";
@@ -251,6 +253,7 @@ export default function Trangdangky({ route, navigation }) {
       title: "Đăng ký tuyển sinh",
     });
   });
+  const [loading, setLoading] = useState(true);
 
   const [data, setData] = useState({
     MaHocSinh: "",
@@ -284,6 +287,8 @@ export default function Trangdangky({ route, navigation }) {
     IDHuyenCT: "",
     IDXaCT: "",
     TenLopCT: "",
+    TenTruongCT: "",
+    NamHoanThanhCT: "",
 
     HanhKiem: "",
     HocLuc: "",
@@ -340,9 +345,14 @@ export default function Trangdangky({ route, navigation }) {
       ],
     ],
   });
+
   //console.log(data.NguyenVong);
 
   //#region Học bạ: Table - Call API
+  const XuLy_Input_DiemHocBa = (number) => {
+    number.includes(",");
+  };
+
   //* Tạo bảng
   const inputTable = (indexRow, indexCell, value) => (
     <TextInput
@@ -1765,7 +1775,9 @@ export default function Trangdangky({ route, navigation }) {
       // MatKhau: data.MatKhau || "", //string
 
       HoTen: data.HoTen || "", //string
-      NgaySinh: date("{dd}/{mm}/{yyyy}", inputCon.date), //string
+      //NgaySinh: date("{dd}/{mm}/{yyyy}", inputCon.date) || "", //string
+      NgaySinh: "", //string
+
       DanToc: data.DanToc || "", //string
       GioiTinh: data.GioiTinh, //bool
       // TỈnh
@@ -1793,6 +1805,8 @@ export default function Trangdangky({ route, navigation }) {
       IDQuanCT: parseInt(data.IDHuyenCT, 10) || 0,
       IDPhuongCT: parseInt(data.IDXaCT, 10) || 0,
       TenLopCT: data.TenLopCT || "", //string
+      TenTruongCT: data.TenTruongCT || "",
+      NamHoanThanhCT: data.NamHoanThanhCT || 0,
 
       CoGiaiThuongQuocGia: data.CoGiaiThuongQuocGia,
 
@@ -1804,14 +1818,14 @@ export default function Trangdangky({ route, navigation }) {
       lstDoiTuongUuTien: data.DoiTuongUuTien || [],
       lstFileDinhKem: [],
 
-      HoTenMe: data.HoTenMe || "", //string
+      HoTenMe: data.HoTen_Me || "", //string
       // NamSinhMe: date("{dd}/{mm}/{yyyy}", inputMe.date), //string
       TuoiMe: data.Tuoi_Me || "",
       DonViCongTac_Me: data.DonViCongTac_Me || "", //string
       NgheNghiepMe: data.NgheNghiep_Me || "", //string
       SDTMe: data.SDT_Me || "", //string
 
-      HoTenCha: data.HoTenCha || "", //string
+      HoTenCha: data.HoTen_Cha || "", //string
       // NamSinhCha: date("{dd}/{mm}/{yyyy}", inputCha.date), //string
       TuoiCha: data.Tuoi_Cha || "",
       DonViCongTac_Cha: data.DonViCongTac_Cha || "", //string
@@ -1830,11 +1844,12 @@ export default function Trangdangky({ route, navigation }) {
 
       IDKyThi: IDKyThi,
     };
-    //console.log(DataPush);
-    //console.log(JSON.stringify(DataPush));
+    // console.log(DataPush);
+    // console.log(JSON.stringify(DataPush));
     try {
       await fetch(
         "http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/dangkytuyensinh",
+        // "https://localhost:44384//api/TSAPIService/dangkytuyensinh",
         {
           method: "POST",
           mode: "no-cors",
@@ -1847,9 +1862,9 @@ export default function Trangdangky({ route, navigation }) {
       )
         .then((response) => response.json())
         .then((responseJson) => {
-          // console.log(responseJson.Result);
-          // console.log(responseJson.Result.status);
-          // console.log(responseJson.Result.message);
+          console.log(responseJson.Result);
+          console.log(responseJson.Result.status);
+          console.log(responseJson.Result.message);
           responseJson.Result.status
             ? (showMessage({
                 message: "Thành công",
@@ -1887,17 +1902,19 @@ export default function Trangdangky({ route, navigation }) {
                 IDHuyenCT: "",
                 IDXaCT: "",
                 TenLopCT: "",
+                NamHoanThanhCT: "",
+                TenTruongCT: "",
 
                 HanhKiem: "",
                 HocLuc: "",
 
                 CoGiaiThuongQuocGia: false,
 
-                HoTenMe: "",
-                NgaySinhMe: "",
-                CMNDMe: "",
-                NgheNghiepMe: "",
-                SDTMe: "",
+                HoTen_Me: "",
+                Tuoi_Me: "",
+                DonViCongTac_Me: "",
+                NgheNghiep_Me: "",
+                SDT_Me: "",
 
                 HoTen_Cha: "",
                 Tuoi_Cha: "",
@@ -1914,7 +1931,10 @@ export default function Trangdangky({ route, navigation }) {
                 DienThoaiLienHe: "",
                 MailLienHe: "",
                 Xacnhanthongtin: false,
-              }))
+              }),
+              setTimeout(() => {
+                navigation.goBack();
+              }, 2000))
             : showMessage({
                 message: "Thất bại",
                 description: `${responseJson.Result.message}`,
@@ -2079,7 +2099,9 @@ export default function Trangdangky({ route, navigation }) {
                       <View style={{ marginTop: "5%", width: "100%" }}>
                         <Text style={{ fontSize: 16 }}>Ngày sinh:</Text>
                         <Text style={{ fontSize: 16 }}>
-                          {date("{dd}/{mm}/{yyyy}", inputCon.date)}
+                          {
+                            //date("{dd}/{mm}/{yyyy}", inputCon.date)
+                          }
                         </Text>
                       </View>
                       {/*Dân tộc*/}
@@ -2194,6 +2216,9 @@ export default function Trangdangky({ route, navigation }) {
     );
   };
   //#endregion
+  setTimeout(() => {
+    setLoading(false);
+  }, 5000);
   return (
     <SafeAreaView
       style={{
@@ -2202,6 +2227,32 @@ export default function Trangdangky({ route, navigation }) {
         backgroundColor: "#eff8ff",
       }}
     >
+      {loading && (
+        <BlurView
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              position: "absolute",
+              zIndex: 4000,
+            },
+          ]}
+          intensity={100}
+        >
+          <AnimatedEllipsis
+            numberOfDots={3}
+            minOpacity={0.4}
+            animationDelay={200}
+            style={{
+              color: "#61b15a",
+              fontSize: 100,
+              letterSpacing: -15,
+            }}
+          />
+        </BlurView>
+      )}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{
@@ -2304,7 +2355,7 @@ export default function Trangdangky({ route, navigation }) {
                 </View>
                 <View style={styles.box}>
                   {/* Mã học sinh */}
-                  <View style={styles.field}>
+                  <View style={[styles.field, { display: "none" }]}>
                     <Text>Mã học sinh</Text>
                     <TextInput
                       style={styles.textInput}
@@ -2316,7 +2367,12 @@ export default function Trangdangky({ route, navigation }) {
                     </TextInput>
                   </View>
                   {/* Mật khẩu */}
-                  <View style={[styles.field, { marginBottom: "5%" }]}>
+                  <View
+                    style={[
+                      styles.field,
+                      { marginBottom: "5%", display: "none" },
+                    ]}
+                  >
                     <Text>Mật khẩu</Text>
                     <View
                       style={{
@@ -3111,6 +3167,32 @@ export default function Trangdangky({ route, navigation }) {
                         }
                       >
                         {data.TenLopCT}
+                      </TextInput>
+                    </View>
+                    {/*// Tên trường */}
+                    <View style={styles.field}>
+                      <Text>Tên trường</Text>
+                      <TextInput
+                        style={styles.textInput}
+                        onChangeText={(value) =>
+                          changeValuePicker({ TenTruongCT: value })
+                        }
+                      >
+                        {data.TenTruongCT}
+                      </TextInput>
+                    </View>
+                    {/*// Năm tốt nghiệp */}
+                    <View style={styles.field}>
+                      <Text>Năm tốt nghiệp</Text>
+                      <TextInput
+                        style={styles.textInput}
+                        keyboardType={"number-pad"}
+                        maxLength={4}
+                        onChangeText={(value) =>
+                          changeValuePicker({ NamHoanThanhCT: value })
+                        }
+                      >
+                        {data.NamHoanThanhCT}
                       </TextInput>
                     </View>
                   </View>
@@ -3978,7 +4060,7 @@ export default function Trangdangky({ route, navigation }) {
                 textAlign: "center",
               }}
             >
-              Lưu ý: Chỉ có thể đăng ký khi các thông tin bắt buộc {"\n"}
+              Lưu ý: Chỉ có thể đăng ký khi các thông tin bắt buộc{" "}
               <Text
                 style={{
                   fontSize: 13.5,

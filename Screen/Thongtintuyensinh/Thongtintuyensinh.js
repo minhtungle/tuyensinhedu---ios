@@ -13,6 +13,7 @@ import {
 import { Colors, IconButton } from "react-native-paper";
 import { BlurView } from "expo-blur";
 const { height, width } = Dimensions.get("window");
+import * as Font from "expo-font";
 
 export default function Thongtintuyensinh({ navigation, route }) {
   useLayoutEffect(() => {
@@ -20,6 +21,14 @@ export default function Thongtintuyensinh({ navigation, route }) {
       title: "Thông tin tuyển sinh",
     });
   });
+  useEffect(() => {
+    (async () =>
+      await Font.loadAsync({
+        Roboto: require("native-base/Fonts/Roboto.ttf"),
+        Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      }))();
+  }, []);
+
   const { Tinh } = route.params;
   const headerHeight = useHeaderHeight();
   const [data, setData] = useState({
@@ -379,7 +388,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
   //#endregion
   //#region Button: Ẩn hiện - Tra cứu - Lấy API Tra cứu
   const Trangthai = () => {
-    if (((data.IDHuyen && data.IDXa && data.IDTruong) || data.IDTruong) != "") {
+    if ((data.IDHuyen || data.IDTruong) != "") {
       return true;
     }
     return false;
@@ -442,7 +451,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
           >
             <Text>
               {props.index}
-              {". "}
+              {".  "}
               {props.title.toUpperCase()}
             </Text>
           </View>
@@ -619,117 +628,112 @@ export default function Thongtintuyensinh({ navigation, route }) {
           </Picker>
         </View>
       </View>
-      {Trangthai() ? (
-        <View style-={{}}>
-          <Button success style={styles.button} onPress={() => Tracuu()}>
-            <Text style={{ color: "#FFF" }}>Tra cứu</Text>
-          </Button>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
+      {/* {Trangthai() && */}
+      <View style-={{}}>
+        <Button success style={styles.button} onPress={() => Tracuu()}>
+          <Text style={{ color: "#FFF" }}>Tra cứu</Text>
+        </Button>
+        <Modal animationType="slide" transparent={true} visible={modalVisible}>
+          <BlurView
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                paddingTop: 0,
+              },
+            ]}
+            intensity={200}
           >
-            <BlurView
-              style={[
-                StyleSheet.absoluteFill,
-                {
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  paddingTop: 0,
+            <View
+              style={{
+                flexDirection: "column",
+                width: "90%",
+                minHeight: 300,
+                margin: 20,
+                backgroundColor: "white",
+                borderRadius: 20,
+                padding: 10,
+                alignItems: "center",
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
                 },
-              ]}
-              intensity={200}
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+              }}
             >
-              <View
+              <ScrollView
                 style={{
+                  width: "100%",
+                  maxHeight: (height * 70) / 100,
                   flexDirection: "column",
-                  width: "90%",
-                  minHeight: 300,
-                  margin: 20,
-                  backgroundColor: "white",
-                  borderRadius: 20,
-                  padding: 10,
-                  alignItems: "center",
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
-                  elevation: 5,
                 }}
               >
-                <ScrollView
-                  style={{
-                    width: "100%",
-                    maxHeight: (height * 70) / 100,
-                    flexDirection: "column",
-                  }}
-                >
-                  {data.ketqua.length !== 0 ? (
-                    <View
-                      style={{
-                        marginVertical: 5,
-                        borderBottomWidth: 0.5,
-                        width: "100%",
-                      }}
-                    >
-                      {data.ketqua.map((item, index) => {
-                        return (
-                          <ExternalLinkBtn
-                            index={item.ID}
-                            title={item.TieuDe}
-                            url={item.DuongDan}
-                            key={index}
-                          />
-                        );
-                      })}
-                    </View>
-                  ) : (
-                    <View
-                      style={{
-                        justifyContent: "center",
-                        paddingHorizontal: 10,
-                        width: "100%",
-                      }}
-                    >
-                      <TouchableOpacity>
-                        <View
-                          style={{
-                            alignItems: "center",
-                            padding: 10,
-                          }}
-                        >
-                          <Text>Không có thông tin phù hợp</Text>
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                </ScrollView>
-                <View
-                  style={{
-                    flexGrow: 1,
-                    flexDirection: "row",
-                  }}
-                >
-                  <Button
-                    info
-                    style={[styles.button, { alignSelf: "flex-end" }]}
-                    color="#61b15a"
-                    onPress={() => {
-                      setModalVisible(!modalVisible);
+                {data.ketqua.length !== 0 ? (
+                  <View
+                    style={{
+                      marginVertical: 5,
+                      borderBottomWidth: 0.5,
+                      width: "100%",
                     }}
                   >
-                    <Text style={{ textAlign: "center" }}>Đóng</Text>
-                  </Button>
-                </View>
+                    {data.ketqua.map((item, index) => {
+                      return (
+                        <ExternalLinkBtn
+                          index={item.ID}
+                          title={item.TieuDe}
+                          url={item.DuongDan}
+                          key={index}
+                        />
+                      );
+                    })}
+                  </View>
+                ) : (
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      paddingHorizontal: 10,
+                      width: "100%",
+                    }}
+                  >
+                    <TouchableOpacity>
+                      <View
+                        style={{
+                          alignItems: "center",
+                          padding: 10,
+                        }}
+                      >
+                        <Text>Không có thông tin phù hợp</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </ScrollView>
+              <View
+                style={{
+                  flexGrow: 1,
+                  flexDirection: "row",
+                }}
+              >
+                <Button
+                  info
+                  style={[styles.button, { alignSelf: "flex-end" }]}
+                  color="#61b15a"
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                  }}
+                >
+                  <Text style={{ textAlign: "center" }}>Đóng</Text>
+                </Button>
               </View>
-            </BlurView>
-          </Modal>
-        </View>
-      ) : null}
+            </View>
+          </BlurView>
+        </Modal>
+      </View>
     </SafeAreaView>
   );
 }

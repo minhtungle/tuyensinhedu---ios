@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from "react-native";
 
 const { width } = Dimensions.get("window");
@@ -16,26 +17,23 @@ const styles = StyleSheet.create({
   card: {
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
-    // justifyContent: "center",
+    justifyContent: "center",
   },
-  textMain: {
+  title: {
     color: "white",
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: "bold",
     textAlign: "center",
-    marginTop: "2%",
-    padding: "2%",
     textShadowColor: "rgba(0, 0, 0, 1)",
     textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 10,
+    textShadowRadius: 15,
   },
-  textSub: {
+  sub_title: {
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
     margin: "5%",
-    padding: "2%",
     textShadowColor: "rgba(0, 0, 0, 1)",
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
@@ -89,13 +87,13 @@ export default ({ type, Tinh }) => {
       page = "Hướng dẫn đăng ký trực tuyến";
       title = "Hướng dẫn đăng ký trực tuyến";
       textSub = "Hướng dẫn đăng ký trực tuyến";
-      source = require("../assets/550x271_Skyblue.jpg");
+      source = require("../assets/550x271_Brown.jpg");
       break;
     case Cards.Card6:
       page = "Góp ý";
       title = "Góp ý";
       textSub = "Tổng hợp các ý kiến phản ánh của công dân";
-      source = require("../assets/550x271_Brown.jpg");
+      source = require("../assets/550x271_Skyblue.jpg");
       break;
     default:
       throw Error("Không nhận diện được ảnh");
@@ -110,10 +108,10 @@ export default ({ type, Tinh }) => {
         style={styles.card}
         {...{ source }}
         imageStyle={styles.image}
-        blurRadius={1.5}
+        blurRadius={1}
       >
-        <Text style={styles.textMain}>{title}</Text>
-        <Text style={styles.textSub}>{textSub}</Text>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.sub_title}>{textSub}</Text>
       </ImageBackground>
     </TouchableOpacity>
   );

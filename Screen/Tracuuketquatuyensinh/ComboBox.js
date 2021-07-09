@@ -86,24 +86,26 @@ export default function ComboBox() {
     }
     await fetch(
       `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/tracuuketqua?type=${type}&mahoso=${mahoso}&mahocsinh=${mahocsinh}&matkhau=${matkhau}&sobaodanh=${sbd}&namhoc=${namhoc}`
+      // `https://localhost:44384/api/TSAPIService/tracuuketqua?type=${type}&mahoso=${mahoso}&mahocsinh=${mahocsinh}&matkhau=${matkhau}&sobaodanh=${sbd}&namhoc=${namhoc}`
     )
       .then((response) => response.json())
       .then((responseJson) => {
         let result = responseJson.Result.data;
-        //console.log(result);
+        // console.log(result);
         result.ThongTinHoSo == null
           ? (Alert.alert(
               "Không tồn tại kết quả tra cứu ! Vui lòng kiểm tra lại thông tin đã nhập "
             ),
             setData(null))
           : (setData(result), Appear());
-      })
-      .catch(() => {
-        Alert.alert(
-          "Không tồn tại kết quả tra cứu ! Vui lòng kiểm tra lại thông tin đã nhập "
-        );
-        setData(null);
       });
+    // .catch(() => { //02102VT5689
+    //   console.log(responseJson);
+    //   Alert.alert(
+    //     "Không tồn tại kết quả tra cứu ! Vui lòng kiểm tra lại thông tin đã nhập "
+    //   );
+    //   setData(null);
+    // });
     setLoading(false);
   };
   //#endregion
@@ -180,7 +182,14 @@ export default function ComboBox() {
   return (
     <SafeAreaView style={styles.container}>
       {loading && (
-        <View style={{ position: "absolute", top: 5 }}>
+        <View
+          style={{
+            position: "absolute",
+            top: 5,
+            zIndex: 100,
+            alignSelf: "center",
+          }}
+        >
           <AnimatedEllipsis
             numberOfDots={3}
             minOpacity={0.4}

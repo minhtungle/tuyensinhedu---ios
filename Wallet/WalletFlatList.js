@@ -16,6 +16,10 @@ import { useNavigation } from "@react-navigation/native";
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const cards = [
   {
+    index: "5",
+    type: Cards.Card5,
+  },
+  {
     index: "1",
     type: Cards.Card1,
   },
@@ -31,10 +35,7 @@ const cards = [
     index: "4",
     type: Cards.Card4,
   },
-  {
-    index: "5",
-    type: Cards.Card5,
-  },
+
   // {
   //   index: "6",
   //   type: Cards.Card6,

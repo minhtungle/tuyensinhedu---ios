@@ -87,7 +87,7 @@ const DataWithSearchBar = () => {
           >
             <Text style={styles.itemStyle}>
               {item.id}
-              {". "}
+              {".  "}
               {item.title.toUpperCase()}
             </Text>
           </View>
