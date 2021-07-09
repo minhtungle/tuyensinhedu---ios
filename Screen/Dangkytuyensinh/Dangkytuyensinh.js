@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
+import NetInfo from "@react-native-community/netinfo";
+import { useHeaderHeight } from "@react-navigation/stack";
 
 export default function Dangkytuyensinh({ navigation }) {
   useLayoutEffect(() => {
@@ -164,12 +166,47 @@ export default function Dangkytuyensinh({ navigation }) {
               backgroundColor: "#000000a0",
             }}
           >
-            Hệ thống đang trong quá trình cập nhật
+            Sự cố kết nôi
           </Text>
         </ImageBackground>
       </SafeAreaView>
     );
   };
+  //#region Kiểm tra kết nối mạng
+  const [connected, setConnected] = useState(false);
+  const headerHeight = useHeaderHeight();
+  useEffect(() => {
+    NetInfo.fetch().then((state) => {
+      setConnected(state.isConnected);
+    });
+  });
+  if (!connected) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#DEEBFE",
+          paddingBottom: headerHeight,
+        }}
+      >
+        <AnimatedEllipsis
+          numberOfDots={3}
+          minOpacity={0.4}
+          animationDelay={200}
+          style={{
+            color: "#61b15a",
+            fontSize: 100,
+            letterSpacing: -15,
+          }}
+        />
+        <Text>Vui lòng kiểm tra kết nối mạng</Text>
+      </View>
+    );
+  }
+  //#endregion
+
   return status === 0 ? (
     <Load_View />
   ) : status === 1 ? (

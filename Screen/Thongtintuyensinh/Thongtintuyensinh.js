@@ -1,4 +1,3 @@
-import { useHeaderHeight } from "@react-navigation/stack";
 import { Button, Picker, Text, View } from "native-base";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
@@ -9,11 +8,15 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
+  ImageBackground,
 } from "react-native";
 import { Colors, IconButton } from "react-native-paper";
 import { BlurView } from "expo-blur";
 const { height, width } = Dimensions.get("window");
 import * as Font from "expo-font";
+import NetInfo from "@react-native-community/netinfo";
+import { useHeaderHeight } from "@react-navigation/stack";
+import AnimatedEllipsis from "react-native-animated-ellipsis";
 
 export default function Thongtintuyensinh({ navigation, route }) {
   useLayoutEffect(() => {
@@ -21,6 +24,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
       title: "Thông tin tuyển sinh",
     });
   });
+
   useEffect(() => {
     (async () =>
       await Font.loadAsync({
@@ -474,6 +478,41 @@ export default function Thongtintuyensinh({ navigation, route }) {
       </TouchableOpacity>
     );
   };
+
+  //#region Kiểm tra kết nối mạng
+  const [connected, setConnected] = useState(false);
+  useEffect(() => {
+    NetInfo.fetch().then((state) => {
+      setConnected(state.isConnected);
+    });
+  });
+  if (!connected) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#DEEBFE",
+          paddingBottom: headerHeight,
+        }}
+      >
+        <AnimatedEllipsis
+          numberOfDots={3}
+          minOpacity={0.4}
+          animationDelay={200}
+          style={{
+            color: "#61b15a",
+            fontSize: 100,
+            letterSpacing: -15,
+          }}
+        />
+        <Text>Vui lòng kiểm tra kết nối mạng</Text>
+      </View>
+    );
+  }
+  //#endregion
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.block}>

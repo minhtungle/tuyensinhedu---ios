@@ -1,7 +1,10 @@
-import React, { useLayoutEffect } from "react";
-import { ImageBackground, SafeAreaView, Text, View } from "react-native";
+import React, { useLayoutEffect, useState, useEffect } from "react";
+import { Text, View, ImageBackground } from "react-native";
 import { Colors, IconButton } from "react-native-paper";
 import Wallet from "../../Wallet/Trangchu";
+import NetInfo from "@react-native-community/netinfo";
+import AnimatedEllipsis from "react-native-animated-ellipsis";
+import { useHeaderHeight } from "@react-navigation/stack";
 
 function Trangchu({ route, navigation }) {
   useLayoutEffect(() => {
@@ -11,6 +14,41 @@ function Trangchu({ route, navigation }) {
   });
   // const { Tinh } = route.params;
   const Tinh = "Vĩnh Phúc";
+  //#region Kiểm tra kết nối mạng
+  const [connected, setConnected] = useState(false);
+  const headerHeight = useHeaderHeight();
+  useEffect(() => {
+    NetInfo.fetch().then((state) => {
+      setConnected(state.isConnected);
+    });
+  });
+  if (!connected) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#DEEBFE",
+          paddingBottom: headerHeight,
+        }}
+      >
+        <AnimatedEllipsis
+          numberOfDots={3}
+          minOpacity={0.4}
+          animationDelay={200}
+          style={{
+            color: "#61b15a",
+            fontSize: 100,
+            letterSpacing: -15,
+          }}
+        />
+        <Text>Vui lòng kiểm tra kết nối mạng</Text>
+      </View>
+    );
+  }
+  //#endregion
+
   return (
     <View>
       <View

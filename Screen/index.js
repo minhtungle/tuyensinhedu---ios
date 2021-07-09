@@ -18,6 +18,9 @@ import Huongdandangkytructuyen from "./Huongdandangkytructuyen/Huongdandangkytru
 //* Góp ý
 import Gopy from "./Gopy/Gopy";
 
+//* Test
+import Test from "./Test";
+
 export {
   Dangnhap,
   Trangchu,
@@ -30,4 +33,5 @@ export {
   Ketqua,
   Huongdandangkytructuyen,
   Gopy,
+  Test,
 };

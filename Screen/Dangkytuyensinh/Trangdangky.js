@@ -20,7 +20,6 @@ import {
   DatePicker,
   Icon,
 } from "native-base";
-import AnimatedEllipsis from "react-native-animated-ellipsis";
 
 import { BlurView } from "expo-blur";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -41,6 +40,10 @@ import {
 import FlashMessage from "react-native-flash-message";
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { LogBox } from "react-native";
+import AnimatedEllipsis from "react-native-animated-ellipsis";
+import NetInfo from "@react-native-community/netinfo";
+import { useHeaderHeight } from "@react-navigation/stack";
+
 LogBox.ignoreLogs([
   "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.",
 ]);
@@ -248,6 +251,8 @@ function FileDinhKem({ DoiTuongTuyenSinh }) {
 }
 export default function Trangdangky({ route, navigation }) {
   const { DoiTuongTuyenSinh, IDKyThi } = route.params;
+  const headerHeight = useHeaderHeight();
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Đăng ký tuyển sinh",
@@ -260,7 +265,7 @@ export default function Trangdangky({ route, navigation }) {
     MatKhau: "",
     HoTen: "",
     NgaySinh: new Date(),
-    DanToc: "",
+    DanToc: "Chọn dân tộc",
     GioiTinh: false,
     // Nơi sinh
     IDTinhNS: "",
@@ -630,6 +635,9 @@ export default function Trangdangky({ route, navigation }) {
           ...prevState,
           NguyenVong_Picker: [arrData],
         }));
+        setTimeout(() => {
+          setLoading(false);
+        }, 3000);
       })
       .catch((error) => {
         setData((prevState) => ({
@@ -2216,9 +2224,41 @@ export default function Trangdangky({ route, navigation }) {
     );
   };
   //#endregion
-  setTimeout(() => {
-    setLoading(false);
-  }, 5000);
+
+  //#region Kiểm tra kết nối mạng
+  const [connected, setConnected] = useState(false);
+  useEffect(() => {
+    NetInfo.fetch().then((state) => {
+      setConnected(state.isConnected);
+    });
+  });
+  if (!connected) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#DEEBFE",
+          paddingBottom: headerHeight,
+        }}
+      >
+        <AnimatedEllipsis
+          numberOfDots={3}
+          minOpacity={0.4}
+          animationDelay={200}
+          style={{
+            color: "#61b15a",
+            fontSize: 100,
+            letterSpacing: -15,
+          }}
+        />
+        <Text>Vui lòng kiểm tra kết nối mạng</Text>
+      </View>
+    );
+  }
+  //#endregion
+
   return (
     <SafeAreaView
       style={{
@@ -2237,6 +2277,7 @@ export default function Trangdangky({ route, navigation }) {
               alignItems: "center",
               position: "absolute",
               zIndex: 4000,
+              paddingBottom: headerHeight,
             },
           ]}
           intensity={100}
@@ -2477,7 +2518,7 @@ export default function Trangdangky({ route, navigation }) {
                   </View>
                   {/* Dân tộc */}
                   <View style={styles.field}>
-                    {data.DanToc === ("Chọn dân tộc" && "") && (
+                    {data.DanToc === ("Chọn dân tộc" || "") && (
                       <IconButton
                         icon="menu-right"
                         color={Colors.red500}
@@ -2490,7 +2531,7 @@ export default function Trangdangky({ route, navigation }) {
                     </Text>
                     <Picker
                       selectedValue={data.DanToc}
-                      placeholder="Chọn dân tộc"
+                      // placeholder="Chọn dân tộc"
                       style={{ height: 50, width: "100%" }}
                       onValueChange={(itemValue, itemIndex) =>
                         changeValuePicker({ DanToc: itemValue })

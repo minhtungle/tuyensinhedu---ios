@@ -16,6 +16,7 @@ import {
   Trangchu,
   Trangdangky,
   FileDinhKem,
+  Test,
 } from "./Screen/index";
 
 const ScreenStyle = {
@@ -62,6 +63,8 @@ export default function App() {
         />
         {/* Góp ý */}
         <Stack.Screen name="Góp ý" component={Gopy} />
+        {/* Test */}
+        <Stack.Screen name="Test" component={Test} />
       </Stack.Navigator>
     </NavigationContainer>
   );

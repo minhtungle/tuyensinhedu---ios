@@ -81,19 +81,19 @@ export default ({ type, Tinh }) => {
       page = "Tra cứu kết quả tuyển sinh";
       title = "Tra cứu kết quả tuyển sinh";
       textSub = "Tra cứu kết quả tuyển sinh";
-      source = require("../assets/550x271_Pink.jpg");
+      source = require("../assets/550x271_Brown.jpg");
       break;
     case Cards.Card5:
       page = "Hướng dẫn đăng ký trực tuyến";
       title = "Hướng dẫn đăng ký trực tuyến";
       textSub = "Hướng dẫn đăng ký trực tuyến";
-      source = require("../assets/550x271_Brown.jpg");
+      source = require("../assets/550x271_Pink.jpg");
       break;
     case Cards.Card6:
       page = "Góp ý";
       title = "Góp ý";
       textSub = "Tổng hợp các ý kiến phản ánh của công dân";
-      source = require("../assets/550x271_Skyblue.jpg");
+      source = require("../assets/550x271_Brown.jpg");
       break;
     default:
       throw Error("Không nhận diện được ảnh");
@@ -108,7 +108,7 @@ export default ({ type, Tinh }) => {
         style={styles.card}
         {...{ source }}
         imageStyle={styles.image}
-        blurRadius={1}
+        blurRadius={3}
       >
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.sub_title}>{textSub}</Text>
