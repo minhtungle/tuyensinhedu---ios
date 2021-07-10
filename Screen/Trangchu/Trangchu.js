@@ -10,6 +10,7 @@ function Trangchu({ route, navigation }) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
+      // headerTitleAlign: "center",
     });
   });
   // const { Tinh } = route.params;

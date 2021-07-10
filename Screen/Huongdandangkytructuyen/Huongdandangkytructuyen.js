@@ -10,7 +10,6 @@ import {
   Image,
 } from "react-native";
 import Carousel from "pinar";
-import { marginBottom } from "styled-system";
 
 function Huongdandangkytructuyen({ navigation }) {
   useLayoutEffect(() => {
@@ -54,7 +53,7 @@ function Huongdandangkytructuyen({ navigation }) {
   });
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView nestedScrollEnabled>
         {/*Bước 1*/}
         <View style={styles.main}>
           <View style={styles.block}>

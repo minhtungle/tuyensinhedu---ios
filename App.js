@@ -8,21 +8,22 @@ import React from "react";
 import {
   Dangkytuyensinh,
   Dangnhap,
+  Danhmucvanban,
+  FileDinhKem,
   Gopy,
   Huongdandangkytructuyen,
-  Danhmucvanban,
+  Test,
   Thongtintuyensinh,
   Tracuuketquatuyensinh,
   Trangchu,
   Trangdangky,
-  FileDinhKem,
-  Test,
 } from "./Screen/index";
 
 const ScreenStyle = {
   headerTitleStyle: {
     alignSelf: "center",
   },
+  headerTitleAlign: "center",
   cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
 };
 

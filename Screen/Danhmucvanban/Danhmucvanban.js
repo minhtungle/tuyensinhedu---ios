@@ -6,10 +6,14 @@ import {
   ImageBackground,
   Text,
 } from "react-native";
+import * as Font from "expo-font";
+import AppLoading from "expo-app-loading";
+
 import DataWithSearchBar from "./DataWithSearchBar";
 import NetInfo from "@react-native-community/netinfo";
 import { useHeaderHeight } from "@react-navigation/stack";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
+import { Ionicons } from "@expo/vector-icons";
 
 function Danhmucvanban({ navigation }) {
   useLayoutEffect(() => {
@@ -17,6 +21,11 @@ function Danhmucvanban({ navigation }) {
       title: "Danh mục văn bản",
     });
   });
+  const [fontLoaded] = Font.useFonts({
+    Roboto: require("native-base/Fonts/Roboto.ttf"),
+    Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+  });
+
   //#region Kiểm tra kết nối mạng
   const [connected, setConnected] = useState(false);
   const headerHeight = useHeaderHeight();
@@ -52,6 +61,10 @@ function Danhmucvanban({ navigation }) {
   }
   //#endregion
 
+  if (!fontLoaded) {
+    console.log(fontLoaded);
+    return <AppLoading />;
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.block}>

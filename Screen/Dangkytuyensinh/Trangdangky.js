@@ -22,12 +22,12 @@ import {
 } from "native-base";
 
 import { BlurView } from "expo-blur";
+import Constants from "expo-constants";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import RadioButtonRN from "radio-buttons-react-native";
 import { Colors, IconButton } from "react-native-paper";
 import { AssetsSelector } from "expo-images-picker";
 import { Ionicons } from "@expo/vector-icons";
-const { height, width } = Dimensions.get("window");
 import {
   Table,
   TableWrapper,
@@ -43,7 +43,8 @@ import { LogBox } from "react-native";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
 import NetInfo from "@react-native-community/netinfo";
 import { useHeaderHeight } from "@react-navigation/stack";
-
+const { height, width } = Dimensions.get("window");
+const { statusBarHeight } = Constants;
 LogBox.ignoreLogs([
   "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.",
 ]);
@@ -113,7 +114,15 @@ function FileDinhKem({ DoiTuongTuyenSinh }) {
     setModalVisible(!modalVisible);
   };
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "#FFF" }}>
+    <ScrollView
+      style={{
+        width: "100%",
+        marginBottom: statusBarHeight,
+        // height: (height * 80) / 100,
+        // maxHeight: (height * 70) / 100,
+        // flexDirection: "column",
+      }}
+    >
       {loaiminhchung &&
         loaiminhchung.map((loaiminhchung_item, loaiminhchung_idx) => (
           <View
@@ -177,6 +186,7 @@ function FileDinhKem({ DoiTuongTuyenSinh }) {
               {loaiminhchung_item.lstMinhChung.map((img_item, img_idx) => {
                 return (
                   <Image
+                    key={img_idx.toString()}
                     source={{
                       uri: `data:image/jpeg;base64,${img_item}`,
                     }}
@@ -211,7 +221,7 @@ function FileDinhKem({ DoiTuongTuyenSinh }) {
               "photo",
               //, "video"
             ],
-            maxSelections: 5,
+            maxSelections: 20,
             margin: 3,
             portraitCols: 4,
             landscapeCols: 5,
@@ -3346,8 +3356,7 @@ export default function Trangdangky({ route, navigation }) {
                             nestedScrollEnabled
                             style={{
                               maxHeight: (height * 70) / 100,
-                              padding: 20,
-                              paddingBottom: 0,
+                              // padding: 20,
                             }}
                           >
                             <DSDoiTuongUuTien />
@@ -3426,7 +3435,12 @@ export default function Trangdangky({ route, navigation }) {
                       </View>
                     </TouchableOpacity>
                   </View>
-                  <View style={[styles.field, { display: "none" }]}>
+                  <View
+                    style={[
+                      styles.field,
+                      //  { display: "none" }
+                    ]}
+                  >
                     {data.DanhSachFileDinhKem.length === 0 && (
                       <IconButton
                         icon="menu-right"
@@ -3451,7 +3465,7 @@ export default function Trangdangky({ route, navigation }) {
                         color={Colors.red500}
                         size={25}
                         // onPress={() => console.log("a")}
-                        // onPress={() => setModal_MinhChung(true)}
+                        onPress={() => setModal_MinhChung(true)}
                       />
                     </View>
                     <Modal
@@ -3464,36 +3478,44 @@ export default function Trangdangky({ route, navigation }) {
                           StyleSheet.absoluteFill,
                           {
                             flex: 1,
-                            justifyContent: "center",
+                            justifyContent: "flex-end",
                             alignItems: "center",
-                            marginTop: 50,
                           },
                         ]}
                         intensity={200}
                       >
+                        <TouchableOpacity
+                          style={{
+                            // borderWidth: 1,
+                            position: "absolute",
+                            top: statusBarHeight / 2,
+                            left: 20,
+                          }}
+                          onPress={() => setModal_MinhChung(!modal_MinhChung)}
+                        >
+                          <Text style={{ fontSize: 20 }}>Đóng</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          style={{
+                            // borderWidth: 1,
+                            position: "absolute",
+                            top: statusBarHeight / 2,
+                            right: 20,
+                          }}
+                          onPress={() => setModal_MinhChung(!modal_MinhChung)}
+                        >
+                          <Text style={{ fontSize: 20 }}>Chọn</Text>
+                        </TouchableOpacity>
                         <View
                           style={{
-                            width: "95%",
-                            backgroundColor: "#eff8ff",
-                            borderRadius: 20,
-                            padding: 10,
+                            width: "100%",
+                            height: height - statusBarHeight,
+                            backgroundColor: "#FFF",
                             alignItems: "center",
-                            shadowColor: "#000",
-                            shadowOffset: {
-                              width: 0,
-                              height: 2,
-                            },
-                            shadowOpacity: 0.25,
-                            shadowRadius: 3.84,
-                            elevation: 5,
                             flexDirection: "column",
                           }}
                         >
-                          <Button
-                            onPress={() => setModal_MinhChung(!modal_MinhChung)}
-                          >
-                            <Text>Đóng</Text>
-                          </Button>
                           <FileDinhKem DoiTuongTuyenSinh={DoiTuongTuyenSinh} />
                         </View>
                       </BlurView>
