@@ -52,10 +52,15 @@ LogBox.ignoreLogs([
 //* hàm chuyển đổi ngày tháng
 const date = require("s-date");
 // Minh chứng
-function FileDinhKem({ DoiTuongTuyenSinh }) {
+function FileDinhKem({
+  DoiTuongTuyenSinh,
+  loaiminhchung,
+  setLoaiMinhChung,
+  setModal_MinhChung,
+}) {
   const [modalVisible, setModalVisible] = useState(false);
-  const [loaiminhchung, setLoaiMinhChung] = useState(null);
-  // console.log(DoiTuongTuyenSinh);
+  // const [loaiminhchung, setLoaiMinhChung] = useState(false);
+
   //* Gọi API loại minh chứng
   useEffect(() => {
     fetch(
@@ -113,150 +118,229 @@ function FileDinhKem({ DoiTuongTuyenSinh }) {
     // Đóng modal lại
     setModalVisible(!modalVisible);
   };
+  //* Tính số lượng ảnh chọn cả tất cả loại minh chứng
+  const Tong_AnhMinhChung = () => {
+    console.log(loaiminhchung);
+    const tong = loaiminhchung
+      .map((x) => {
+        return x.lstMinhChung.length;
+      })
+      .reduce((x, y) => x + y, 0);
+    return tong;
+  };
   return (
-    <ScrollView
+    <View
       style={{
         width: "100%",
-        marginBottom: statusBarHeight,
-        // height: (height * 80) / 100,
-        // maxHeight: (height * 70) / 100,
-        // flexDirection: "column",
+        // height: 50,
       }}
     >
-      {loaiminhchung &&
-        loaiminhchung.map((loaiminhchung_item, loaiminhchung_idx) => (
-          <View
-            key={loaiminhchung_idx.toString()}
-            style={{ flexDirection: "column" }}
+      <View
+        style={{ flexDirection: "row", justifyContent: "center", height: 25 }}
+      >
+        <TouchableOpacity
+          style={{
+            // borderWidth: 1,
+            justifyContent: "center",
+            flexGrow: 1,
+          }}
+          onPress={() => setModal_MinhChung(false)}
+        >
+          <Text style={{ fontSize: 16, textAlign: "center" }}>Huỷ</Text>
+        </TouchableOpacity>
+        <View
+          style={{
+            // borderWidth: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            flexGrow: 3,
+          }}
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              color: "red",
+            }}
           >
-            <TouchableOpacity
-              style={{
-                width: "100%",
-                flexDirection: "row",
-                backgroundColor: "#2f58cf",
-                marginVertical: 5,
-                minHeight: 50,
-              }}
+            {/* Đã chọn {} ảnh */}
+          </Text>
+        </View>
+        <TouchableOpacity
+          style={{
+            // borderWidth: 1,
+            justifyContent: "center",
+            flexGrow: 1,
+          }}
+          // onPress={() => Luu_MinhChung()}
+        >
+          <Text style={{ fontSize: 16, textAlign: "center" }}>Chọn</Text>
+        </TouchableOpacity>
+      </View>
+      <ScrollView
+        style={{
+          width: "100%",
+          marginBottom: statusBarHeight,
+          // height: (height * 80) / 100,
+          // maxHeight: (height * 70) / 100,
+          // flexDirection: "column",
+        }}
+      >
+        {loaiminhchung &&
+          loaiminhchung.map((loaiminhchung_item, loaiminhchung_idx) => (
+            <View
+              key={loaiminhchung_idx.toString()}
+              style={{ flexDirection: "column" }}
             >
-              <Text
+              <TouchableOpacity
                 style={{
-                  flexWrap: "wrap",
-                  flexGrow: 1,
-                  maxWidth: "90%",
-                  paddingLeft: 10,
-                  alignSelf: "center",
-                  color: "#FFF",
+                  width: "100%",
+                  flexDirection: "row",
+                  backgroundColor: "#2f58cf",
+                  marginVertical: 5,
+                  minHeight: 50,
                 }}
               >
-                {loaiminhchung_item.Ten}
-              </Text>
-              {loaiminhchung_item.lstMinhChung.length > 0 && (
-                <Icon
-                  name="trash"
-                  style={{ alignSelf: "center", color: "#FFF" }}
-                />
-              )}
-            </TouchableOpacity>
-            <Text
-              style={{ textAlign: "center", color: "red", marginBottom: 5 }}
-            >
-              {loaiminhchung_item.GhiChu}
-            </Text>
-            {/* Ảnh */}
-            <View style={styles.lst_imgs}>
-              <TouchableOpacity
-                style={[
-                  styles.img,
-                  {
-                    backgroundColor: "#DDDDDD",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  },
-                ]}
-                onPress={() => ChonMinhChung(loaiminhchung_idx)}
-              >
-                <Icon
-                  name="add"
+                <Text
                   style={{
-                    width: "100%",
-                    textAlign: "center",
+                    flexWrap: "wrap",
+                    flexGrow: 1,
+                    maxWidth: "90%",
+                    paddingLeft: 10,
+                    alignSelf: "center",
+                    color: "#FFF",
                   }}
-                />
-              </TouchableOpacity>
-              {loaiminhchung_item.lstMinhChung.map((img_item, img_idx) => {
-                return (
-                  <Image
-                    key={img_idx.toString()}
-                    source={{
-                      uri: `data:image/jpeg;base64,${img_item}`,
-                    }}
-                    style={styles.img}
+                >
+                  {loaiminhchung_item.Ten}
+                </Text>
+                {loaiminhchung_item.lstMinhChung.length > 0 && (
+                  <Icon
+                    name="trash"
+                    style={{ alignSelf: "center", color: "#FFF" }}
                   />
-                );
-              })}
+                )}
+              </TouchableOpacity>
+              <Text
+                style={{ textAlign: "center", color: "red", marginBottom: 5 }}
+              >
+                {loaiminhchung_item.GhiChu}
+              </Text>
+              {/* Ảnh */}
+              <View style={styles.lst_imgs}>
+                <TouchableOpacity
+                  style={[
+                    styles.img,
+                    {
+                      backgroundColor: "#DDDDDD",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    },
+                  ]}
+                  onPress={() => ChonMinhChung(loaiminhchung_idx)}
+                >
+                  <Icon
+                    name="add"
+                    style={{
+                      width: "100%",
+                      textAlign: "center",
+                    }}
+                  />
+                </TouchableOpacity>
+                {loaiminhchung_item.lstMinhChung.map((img_item, img_idx) => {
+                  return (
+                    <Image
+                      key={img_idx.toString()}
+                      source={{
+                        uri: `data:image/jpeg;base64,${img_item}`,
+                      }}
+                      style={styles.img}
+                    />
+                  );
+                })}
+              </View>
             </View>
-          </View>
-        ))}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
+          ))}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
 
-        // onRequestClose={() => {
-        //   Alert.alert("Modal has been closed.");
-        //   setModalVisible(!modalVisible);
-        // }}
-      >
-        <AssetsSelector
-          options={{
-            /* Add only when u want to Manipulate Assets.
-             */
-            manipulate: {
-              width: 512,
-              compress: 0.7,
-              base64: true,
-              saveTo: "jpeg",
-            },
-            assetsType: [
-              "photo",
-              //, "video"
-            ],
-            maxSelections: 20,
-            margin: 3,
-            portraitCols: 4,
-            landscapeCols: 5,
-            widgetWidth: 100,
-            widgetBgColor: "white",
-            selectedBgColor: "green",
-            spinnerColor: "white",
-            videoIcon: {
-              Component: Ionicons,
-              iconName: "ios-videocam",
-              color: "white",
-              size: 20,
-            },
-            selectedIcon: {
-              Component: Ionicons,
-              iconName: "ios-checkmark-circle-outline",
-              color: "green",
-              bg: "#e7f3ffc7",
-              size: 32,
-            },
-            defaultTopNavigator: {
-              selectedText: "ảnh được chọn",
-              continueText: "Đồng ý",
-              //goBackText: "Back",
-              midTextColor: "red",
-              // buttonStyle: validViewStyleObject,
-              // textStyle: validTextStyleObject,
-              // backFunction: goBack,
-              doneFunction: (imgs) => ChonAnh(imgs),
-            },
-            //   noAssets: CustomNoAssetsComponent,
-          }}
-        />
-      </Modal>
-    </ScrollView>
+          // onRequestClose={() => {
+          //   Alert.alert("Modal has been closed.");
+          //   setModalVisible(!modalVisible);
+          // }}
+        >
+          <BlurView
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                flex: 1,
+                justifyContent: "flex-end",
+                alignItems: "center",
+                backgroundColor: "#FFF",
+              },
+            ]}
+            intensity={200}
+          >
+            <View
+              style={{
+                width: "100%",
+                height: height - statusBarHeight,
+                backgroundColor: "#FFF",
+              }}
+            >
+              <AssetsSelector
+                options={{
+                  /* Add only when u want to Manipulate Assets.
+                   */
+                  manipulate: {
+                    width: 512,
+                    compress: 0.7,
+                    base64: true,
+                    saveTo: "jpeg",
+                  },
+                  assetsType: [
+                    "photo",
+                    //, "video"
+                  ],
+                  maxSelections: 20,
+                  margin: 3,
+                  portraitCols: 4,
+                  landscapeCols: 5,
+                  widgetWidth: 100,
+                  widgetBgColor: "white",
+                  selectedBgColor: "green",
+                  spinnerColor: "white",
+                  videoIcon: {
+                    Component: Ionicons,
+                    iconName: "ios-videocam",
+                    color: "white",
+                    size: 20,
+                  },
+                  selectedIcon: {
+                    Component: Ionicons,
+                    iconName: "ios-checkmark-circle-outline",
+                    color: "green",
+                    bg: "#e7f3ffc7",
+                    size: 32,
+                  },
+                  defaultTopNavigator: {
+                    selectedText: "ảnh được chọn",
+                    continueText: "Chọn",
+                    goBackText: "Huỷ",
+                    midTextColor: "red",
+                    // buttonStyle: validViewStyleObject,
+                    // textStyle: validTextStyleObject,
+                    backFunction: (imgs) => ChonAnh([]),
+                    doneFunction: (imgs) => ChonAnh(imgs),
+                  },
+                  //   noAssets: CustomNoAssetsComponent,
+                }}
+              />
+            </View>
+          </BlurView>
+        </Modal>
+      </ScrollView>
+    </View>
   );
 }
 export default function Trangdangky({ route, navigation }) {
@@ -269,6 +353,7 @@ export default function Trangdangky({ route, navigation }) {
     });
   });
   const [loading, setLoading] = useState(true);
+  const [loaiminhchung, setLoaiMinhChung] = useState(null);
 
   const [data, setData] = useState({
     MaHocSinh: "",
@@ -3484,29 +3569,6 @@ export default function Trangdangky({ route, navigation }) {
                         ]}
                         intensity={200}
                       >
-                        <TouchableOpacity
-                          style={{
-                            // borderWidth: 1,
-                            position: "absolute",
-                            top: statusBarHeight / 2,
-                            left: 20,
-                          }}
-                          onPress={() => setModal_MinhChung(!modal_MinhChung)}
-                        >
-                          <Text style={{ fontSize: 20 }}>Đóng</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                          style={{
-                            // borderWidth: 1,
-                            position: "absolute",
-                            top: statusBarHeight / 2,
-                            right: 20,
-                          }}
-                          onPress={() => setModal_MinhChung(!modal_MinhChung)}
-                        >
-                          <Text style={{ fontSize: 20 }}>Chọn</Text>
-                        </TouchableOpacity>
                         <View
                           style={{
                             width: "100%",
@@ -3516,7 +3578,14 @@ export default function Trangdangky({ route, navigation }) {
                             flexDirection: "column",
                           }}
                         >
-                          <FileDinhKem DoiTuongTuyenSinh={DoiTuongTuyenSinh} />
+                          <FileDinhKem
+                            {...{
+                              DoiTuongTuyenSinh,
+                              loaiminhchung,
+                              setLoaiMinhChung,
+                              setModal_MinhChung,
+                            }}
+                          />
                         </View>
                       </BlurView>
                     </Modal>
