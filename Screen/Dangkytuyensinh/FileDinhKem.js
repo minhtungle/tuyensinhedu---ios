@@ -67,7 +67,9 @@ export default function FileDinhKem({
     for (var i = 0; i < loaiminhchung.length; i++) {
       for (var j = 0; j < loaiminhchung[i].lstMinhChung.length; j++) {
         let minhchung = {
-          ID: loaiminhchung[i].ID,
+          FileName: loaiminhchung[i].Ten,
+          Loai: loaiminhchung[i].ID,
+          GhiChu: loaiminhchung[i].GhiChu,
           base64: loaiminhchung[i].lstMinhChung[j],
         };
         lst_minhchung.push(minhchung);
@@ -165,12 +167,12 @@ export default function FileDinhKem({
                 >
                   {loaiminhchung_item.Ten}
                 </Text>
-                {loaiminhchung_item.lstMinhChung.length > 0 && (
+                {/* {loaiminhchung_item.lstMinhChung.length > 0 && (
                   <Icon
                     name="trash"
                     style={{ alignSelf: "center", color: "#FFF" }}
                   />
-                )}
+                )} */}
               </TouchableOpacity>
               <Text
                 style={{ textAlign: "center", color: "red", marginBottom: 5 }}

@@ -158,16 +158,20 @@ export default function Trangdangky({ route, navigation }) {
   // console.log(data.DanhSachFileDinhKem.length);
 
   //#region Học bạ: Table - Call API
-  const XuLy_Input_DiemHocBa = (number) => {
-    number.includes(",");
-  };
+  const XuLy_Type_DiemHocBa = (number) => {
+    if (number.includes(",")) {
+      return "number-pad";
+    } else {
+      return "decimal-pad";
+    }
+  }; // number-pad
 
   //* Tạo bảng
-  const inputTable = (indexRow, indexCell, value) => (
+  const inputTable = (indexRow, indexCell, type) => (
     <TextInput
       style={{ paddingLeft: 5 }}
       placeholder="Nhập điểm ..."
-      keyboardType={"number-pad"}
+      keyboardType={type}
       multiline={false}
       onChangeText={(value) => NhapDiemHocBa(indexRow, indexCell, value)}
     />
@@ -179,7 +183,8 @@ export default function Trangdangky({ route, navigation }) {
   });
   const NhapDiemHocBa = (indexRow, indexCell, value) => {
     const arr = [...data.HocBa];
-    arr[indexRow][indexCell].Diem = value;
+    arr[indexRow][indexCell].Diem = value; // value
+    arr[indexRow][indexCell].Type = XuLy_Type_DiemHocBa(value); // value
     setData((prev) => ({
       ...prev,
       HocBa: arr,
@@ -207,6 +212,7 @@ export default function Trangdangky({ route, navigation }) {
             const obj = {
               IDMonThi: item_Mon.ID,
               Lop: item_Lop,
+              Type: "decimal-pad",
               Diem: null,
             };
             diemData[index_Lop].push(obj);
@@ -2916,7 +2922,11 @@ export default function Trangdangky({ route, navigation }) {
                                   {itemRow.map((itemCell, indexCell) => (
                                     <Cell
                                       key={indexCell.toString()}
-                                      data={inputTable(indexRow, indexCell)}
+                                      data={inputTable(
+                                        indexRow,
+                                        indexCell,
+                                        itemCell.Type
+                                      )}
                                       textStyle={styles.tableText}
                                       //style={styles.tableData}
                                     />
