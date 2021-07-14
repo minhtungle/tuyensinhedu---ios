@@ -694,6 +694,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
                 backgroundColor: "white",
                 borderRadius: 20,
                 padding: 10,
+                paddingBottom: 0,
                 alignItems: "center",
                 shadowColor: "#000",
                 shadowOffset: {
@@ -754,13 +755,15 @@ export default function Thongtintuyensinh({ navigation, route }) {
               </ScrollView>
               <View
                 style={{
-                  flexGrow: 1,
-                  flexDirection: "row",
+                  padding: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  // borderWidth: 1,
                 }}
               >
                 <Button
-                  info
-                  style={[styles.button, { alignSelf: "flex-end" }]}
+                  primary
+                  style={[styles.button]}
                   color="#61b15a"
                   onPress={() => {
                     setModalVisible(!modalVisible);
@@ -826,8 +829,6 @@ const styles = StyleSheet.create({
     width: width * (95 / 100),
   },
   button: {
-    marginBottom: "5%",
-    alignSelf: "center",
     borderRadius: 25,
     textShadowColor: "#bbbbbb",
 

@@ -125,7 +125,7 @@ export default function Trangdangky({ route, navigation }) {
     HoTen_Cha: "",
     Tuoi_Cha: "",
     DonViCongTac_Cha: "",
-    NgheNgiep_Cha: "",
+    NgheNghiep_Cha: "",
     SDT_Cha: "",
 
     HoTen_NGH: "",
@@ -158,20 +158,60 @@ export default function Trangdangky({ route, navigation }) {
   // console.log(data.DanhSachFileDinhKem.length);
 
   //#region Học bạ: Table - Call API
-  const XuLy_Type_DiemHocBa = (number) => {
+  const XuLy_NhapDiemHocBa = (number) => {
     if (number.includes(",")) {
-      return "number-pad";
-    } else {
-      return "decimal-pad";
+      return {
+        Type: "number-pad",
+        Lenght: 4, // 0,00
+      };
     }
+    return {
+      Type: "decimal-pad",
+      Lenght: 2,
+    };
   }; // number-pad
-
+  const ChuyenDoi_DiemHocBa = (number) => {
+    // console.log(typeof number);
+    // console.log(number);
+    // trường hợp đặc biệt
+    if (
+      number === null ||
+      number === "" ||
+      number === undefined ||
+      number.includes(",,") ||
+      number === "0,00" ||
+      number === "0,0" ||
+      number === "0," ||
+      number === "00"
+    ) {
+      return "0";
+    }
+    // số lớn hơn 10
+    if (number > 10) {
+      return "10";
+    }
+    // xử lý sau dấu ' , '
+    const number_split = number.toString().split(",");
+    if (
+      number_split[1] === "0" ||
+      number_split[1] === "00" ||
+      number_split[1] === ""
+    ) {
+      return number_split[0];
+    }
+    // sau dấu ' , ' là số tròn chục
+    if (number_split[1] % 10 == 0) {
+      number_split[1] = number_split[1] / 10;
+    }
+    return number_split.join(".");
+  };
   //* Tạo bảng
-  const inputTable = (indexRow, indexCell, type) => (
+  const inputTable = (indexRow, indexCell, itemCell) => (
     <TextInput
       style={{ paddingLeft: 5 }}
       placeholder="Nhập điểm ..."
-      keyboardType={type}
+      keyboardType={itemCell.Type}
+      maxLength={itemCell.Lenght}
       multiline={false}
       onChangeText={(value) => NhapDiemHocBa(indexRow, indexCell, value)}
     />
@@ -184,7 +224,8 @@ export default function Trangdangky({ route, navigation }) {
   const NhapDiemHocBa = (indexRow, indexCell, value) => {
     const arr = [...data.HocBa];
     arr[indexRow][indexCell].Diem = value; // value
-    arr[indexRow][indexCell].Type = XuLy_Type_DiemHocBa(value); // value
+    arr[indexRow][indexCell].Type = XuLy_NhapDiemHocBa(value).Type; // value
+    arr[indexRow][indexCell].Lenght = XuLy_NhapDiemHocBa(value).Lenght; // value
     setData((prev) => ({
       ...prev,
       HocBa: arr,
@@ -205,7 +246,7 @@ export default function Trangdangky({ route, navigation }) {
         responseJson.Result.data.lstLopHoc.map((item_Lop, index_Lop) => {
           diemData.push([]);
           //lstDiem.push([]);
-          lstLop.push(item_Lop);
+          lstLop.push("Lớp " + item_Lop);
           responseJson.Result.data.lstMonHoc.map((item_Mon, index_Mon) => {
             //lstDiem[index_Lop].push(inputTable());
             // Tạo đối tượng điểm data
@@ -213,6 +254,7 @@ export default function Trangdangky({ route, navigation }) {
               IDMonThi: item_Mon.ID,
               Lop: item_Lop,
               Type: "decimal-pad",
+              Lenght: 2,
               Diem: null,
             };
             diemData[index_Lop].push(obj);
@@ -511,8 +553,8 @@ export default function Trangdangky({ route, navigation }) {
       NguyenVong: stt_nguyenvong,
       IDTruong: "",
       CoSoDangKy: "",
-      IDLopChuyen: "",
-      IDMonChuyen: "",
+      IDLopChuyen: 0,
+      IDMonChuyen: 0,
       lstLopChuyen: [],
     };
     setData((prevState) => ({
@@ -539,8 +581,8 @@ export default function Trangdangky({ route, navigation }) {
       ...itemParent,
       IDTruong: itemValue,
       CoSoDangKy: "",
-      IDLopChuyen: "",
-      IDMonChuyen: "",
+      IDLopChuyen: 0,
+      IDMonChuyen: 0,
       lstLopChuyen: [],
     };
     setData((prevState) => ({
@@ -645,8 +687,8 @@ export default function Trangdangky({ route, navigation }) {
       ...itemParent,
       IDTruong: itemValue,
       CoSoDangKy: "",
-      IDLopChuyen: "",
-      IDMonChuyen: "",
+      IDLopChuyen: 0,
+      IDMonChuyen: 0,
       lstLopChuyen: [],
     };
     setData((prevState) => ({
@@ -1618,7 +1660,13 @@ export default function Trangdangky({ route, navigation }) {
   const DangKy = async () => {
     const lstDiemHocBa = [];
     data.HocBa.map((itemParent) => {
-      itemParent.map((item) => lstDiemHocBa.push(item));
+      itemParent.map((item) => {
+        const _item = {
+          ...item,
+          Diem: ChuyenDoi_DiemHocBa(item.Diem),
+        };
+        lstDiemHocBa.push(_item);
+      });
     });
     const DataPush = {
       // MaHocSinh: data.MaHocSinh || "", //string
@@ -1679,7 +1727,7 @@ export default function Trangdangky({ route, navigation }) {
       // NamSinhCha: date("{dd}/{mm}/{yyyy}", inputCha.date), //string
       TuoiCha: data.Tuoi_Cha || "",
       DonViCongTac_Cha: data.DonViCongTac_Cha || "", //string
-      NgheNghiepCha: data.NgheNgiep_Cha || "", //string
+      NgheNghiepCha: data.NgheNghiep_Cha || "", //string
       SDTCha: data.SDT_Cha || "", //string
 
       HoTenNguoiGiamHo: data.HoTen_NGH || "", //string
@@ -1712,9 +1760,9 @@ export default function Trangdangky({ route, navigation }) {
       )
         .then((response) => response.json())
         .then((responseJson) => {
-          console.log(responseJson.Result);
-          console.log(responseJson.Result.status);
-          console.log(responseJson.Result.message);
+          // console.log(responseJson.Result);
+          // console.log(responseJson.Result.status);
+          // console.log(responseJson.Result.message);
           responseJson.Result.status
             ? (showMessage({
                 message: "Thành công",
@@ -2882,15 +2930,25 @@ export default function Trangdangky({ route, navigation }) {
                         {/*---------Trên--------*/}
                         <TableWrapper style={{ flexDirection: "row" }}>
                           {/*----Trái----*/}
-                          <TableWrapper style={{ flexGrow: 1 }}>
+                          <TableWrapper
+                            style={{
+                              // flexGrow: 1,
+                              width: "20%",
+                            }}
+                          >
                             <Cell
-                              data="#"
+                              data="Lớp"
                               textStyle={styles.tableText}
                               style={styles.tableHead}
                             />
                           </TableWrapper>
                           {/*----Phải----*/}
-                          <TableWrapper style={{ flexGrow: 4 }}>
+                          <TableWrapper
+                            style={{
+                              // flexGrow: 4 ,
+                              width: "80%",
+                            }}
+                          >
                             {
                               <Row
                                 data={table.tableHead}
@@ -2903,21 +2961,33 @@ export default function Trangdangky({ route, navigation }) {
                         {/*---------Dưới--------*/}
                         <TableWrapper style={{ flexDirection: "row" }}>
                           {/*----Trái----*/}
-                          <TableWrapper style={{ flexGrow: 1 }}>
+                          <TableWrapper
+                            style={{
+                              // flexGrow: 1,
+                              width: "20%",
+                            }}
+                          >
                             <Col
                               data={table.tableTitle}
                               textStyle={styles.tableText}
-                              //style={styles.tableData}
+                              style={styles.tableBody}
                             />
                           </TableWrapper>
                           {/*----Phải----*/}
-                          <TableWrapper style={{ flexGrow: 4 }}>
+                          <TableWrapper
+                            style={{
+                              // flexGrow: 4 ,
+                              width: "80%",
+                            }}
+                          >
                             {
                               // Các input được tạo theo thứ tự đối tượng lưu trữ ở data
                               data.HocBa.map((itemRow, indexRow) => (
                                 <TableWrapper
                                   key={indexRow.toString()}
-                                  style={{ flexDirection: "row" }}
+                                  style={{
+                                    flexDirection: "row",
+                                  }}
                                 >
                                   {itemRow.map((itemCell, indexCell) => (
                                     <Cell
@@ -2925,10 +2995,15 @@ export default function Trangdangky({ route, navigation }) {
                                       data={inputTable(
                                         indexRow,
                                         indexCell,
-                                        itemCell.Type
+                                        itemCell
                                       )}
                                       textStyle={styles.tableText}
-                                      //style={styles.tableData}
+                                      style={[
+                                        styles.tableBody,
+                                        {
+                                          width: 100 / itemRow.length + "%",
+                                        },
+                                      ]}
                                     />
                                   ))}
                                 </TableWrapper>
@@ -3300,7 +3375,19 @@ export default function Trangdangky({ route, navigation }) {
                         icon="camera"
                         color={Colors.red500}
                         size={25}
-                        // onPress={() => console.log("a")}
+                        // onPress={() => {
+                        //   const lstDiemHocBa = [];
+                        //   data.HocBa.map((itemParent) => {
+                        //     itemParent.map((item) => {
+                        //       const _item = {
+                        //         ...item,
+                        //         Diem: ChuyenDoi_DiemHocBa(item.Diem),
+                        //       };
+                        //       lstDiemHocBa.push(_item);
+                        //     });
+                        //   });
+                        //   console.log(lstDiemHocBa);
+                        // }}
                         onPress={() => HienThi_ModalMinhChung()}
                       />
                     </View>
@@ -4033,9 +4120,9 @@ const styles = StyleSheet.create({
   },
 
   tableHead: { height: 50, backgroundColor: "#cee5d0" },
-  tableText: { textAlign: "center", fontWeight: "100" },
+  tableText: { textAlign: "center", fontWeight: "bold" },
   tableTitle: { backgroundColor: "#f6f8fa" },
-  tableData: { backgroundColor: "#ffeedb" },
+  tableBody: { height: 50, backgroundColor: "#ffeedb" },
   lst_imgs: {
     flexDirection: "row",
     flexWrap: "wrap",

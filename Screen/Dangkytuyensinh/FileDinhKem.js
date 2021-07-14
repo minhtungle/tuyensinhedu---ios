@@ -67,7 +67,7 @@ export default function FileDinhKem({
     for (var i = 0; i < loaiminhchung.length; i++) {
       for (var j = 0; j < loaiminhchung[i].lstMinhChung.length; j++) {
         let minhchung = {
-          FileName: loaiminhchung[i].Ten,
+          Ten: loaiminhchung[i].Ten + `_${j}`,
           Loai: loaiminhchung[i].ID,
           GhiChu: loaiminhchung[i].GhiChu,
           base64: loaiminhchung[i].lstMinhChung[j],
