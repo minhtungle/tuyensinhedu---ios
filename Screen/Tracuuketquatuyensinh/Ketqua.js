@@ -121,7 +121,7 @@ export default function Ketqua(props) {
                     <Text style={styles.textField}> Trạng thái hồ sơ:</Text>
                     <Text style={styles.textData}>
                       {data.ThongTinHoSo.TrangThai === 1
-                        ? "Hồ sơ đang duyệt"
+                        ? "Hồ sơ đã đăng ký"
                         : data.ThongTinHoSo.TrangThai === 2
                         ? "Hồ sơ đã được duyệt"
                         : data.ThongTinHoSo.TrangThai === 3

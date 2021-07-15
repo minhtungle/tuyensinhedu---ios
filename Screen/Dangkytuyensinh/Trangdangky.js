@@ -175,8 +175,8 @@ export default function Trangdangky({ route, navigation }) {
     // console.log(number);
     // trường hợp đặc biệt
     if (
-      number === null ||
-      number === "" ||
+      // number === null ||
+      // number === "" ||
       number === undefined ||
       number.includes(",,") ||
       number === "0,00" ||
@@ -1662,7 +1662,8 @@ export default function Trangdangky({ route, navigation }) {
     data.HocBa.map((itemParent) => {
       itemParent.map((item) => {
         const _item = {
-          ...item,
+          IDMonThi: item.IDMonThi,
+          Lop: item.Lop,
           Diem: ChuyenDoi_DiemHocBa(item.Diem),
         };
         lstDiemHocBa.push(_item);
@@ -1742,7 +1743,7 @@ export default function Trangdangky({ route, navigation }) {
 
       IDKyThi: IDKyThi,
     };
-    // console.log(DataPush);
+    console.log(DataPush);
     // console.log(JSON.stringify(DataPush));
     try {
       await fetch(
@@ -1764,12 +1765,13 @@ export default function Trangdangky({ route, navigation }) {
           // console.log(responseJson.Result.status);
           // console.log(responseJson.Result.message);
           responseJson.Result.status
-            ? (showMessage({
-                message: "Thành công",
+            ? showMessage({
+                message: "Đăng ký thành công",
                 description: `${responseJson.Result.message}`,
                 duration: 3000,
                 type: "success",
-              }),
+              })
+            : //,
               changeValuePicker({
                 // MaHocSinh: "",
                 // MatKhau: "",
@@ -1830,15 +1832,15 @@ export default function Trangdangky({ route, navigation }) {
                 MailLienHe: "",
                 Xacnhanthongtin: false,
               }),
-              setTimeout(() => {
-                navigation.goBack();
-              }, 2000))
-            : showMessage({
-                message: "Thất bại",
-                description: `${responseJson.Result.message}`,
-                duration: 3000,
-                type: "warning",
-              });
+            setTimeout(() => {
+              navigation.goBack();
+            }, 3000);
+          showMessage({
+            message: "Đăng ký không thành công !",
+            description: `${responseJson.Result.message}`,
+            duration: 3000,
+            type: "warning",
+          });
         });
     } catch (e) {
       //
