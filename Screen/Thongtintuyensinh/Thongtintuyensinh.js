@@ -480,12 +480,19 @@ export default function Thongtintuyensinh({ navigation, route }) {
   };
 
   //#region Kiểm tra kết nối mạng
-  const [connected, setConnected] = useState(false);
+  const [connected, setConnected] = useState(true);
   useEffect(() => {
-    NetInfo.fetch().then((state) => {
-      setConnected(state.isConnected);
-    });
-  });
+    const interval = setInterval(
+      () =>
+        NetInfo.fetch().then((state) => {
+          setConnected(state.isConnected);
+        }),
+      3000
+    );
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
   if (!connected) {
     return (
       <View

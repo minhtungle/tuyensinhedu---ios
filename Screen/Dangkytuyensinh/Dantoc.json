@@ -6,7 +6,7 @@
     },
     {
       "id": "1",
-      "name": "Kinh"
+      "name": "Kinh (Việt)"
     },
     {
       "id": "2",
@@ -22,11 +22,11 @@
     },
     {
       "id": "5",
-      "name": "Khơ me"
+      "name": "Hoa (Hán)"
     },
     {
       "id": "6",
-      "name": "Hoa (Hán)"
+      "name": "Khmer"
     },
     {
       "id": "7",
@@ -34,7 +34,7 @@
     },
     {
       "id": "8",
-      "name": "H'mông (Mèo)"
+      "name": "HMông (Mèo)"
     },
     {
       "id": "9",
@@ -42,7 +42,7 @@
     },
     {
       "id": "10",
-      "name": "Gia - rai"
+      "name": "Gia-rai"
     },
     {
       "id": "11",
@@ -54,7 +54,7 @@
     },
     {
       "id": "13",
-      "name": "Sán Chay (Cao Lan-Sán Chỉ)"
+      "name": "Sán-Chay (Cao lan - Sán chỉ)"
     },
     {
       "id": "14",
@@ -62,39 +62,39 @@
     },
     {
       "id": "15",
-      "name": "Cơ-ho"
+      "name": "Xê-đăng"
     },
     {
       "id": "16",
-      "name": "Xơ-đăng"
+      "name": "Sán-Dìu"
     },
     {
       "id": "17",
-      "name": "Sán Dìu"
-    },
-    {
-      "id": "18",
       "name": "Hrê"
     },
     {
+      "id": "18",
+      "name": "Cơ-ho"
+    },
+    {
       "id": "19",
-      "name": "Ra-glai"
+      "name": "Ra Glay"
     },
     {
       "id": "20",
-      "name": "Mnông"
+      "name": "M'Nông"
     },
     {
       "id": "21",
-      "name": "Thổ (4)"
+      "name": "Thổ"
     },
     {
       "id": "22",
-      "name": "XTiêng"
+      "name": "Xtiêng"
     },
     {
       "id": "23",
-      "name": "Khơ-mú"
+      "name": "Khơ Mú"
     },
     {
       "id": "24",
@@ -102,23 +102,23 @@
     },
     {
       "id": "25",
-      "name": "Cơ-Tu"
-    },
-    {
-      "id": "26",
       "name": "Giáy"
     },
     {
+      "id": "26",
+      "name": "Cơ tu"
+    },
+    {
       "id": "27",
-      "name": "Tà-ôi"
+      "name": "Gié-Triêng"
     },
     {
       "id": "28",
-      "name": "Mạ"
+      "name": "Ta Ôi"
     },
     {
       "id": "29",
-      "name": "Gié-Triêng"
+      "name": "Ma"
     },
     {
       "id": "30",
@@ -126,31 +126,31 @@
     },
     {
       "id": "31",
-      "name": "Chơ - ro"
+      "name": "Chơ Ro"
     },
     {
       "id": "32",
-      "name": "Xinh-mun"
-    },
-    {
-      "id": "33",
       "name": "Hà Nhì"
     },
     {
+      "id": "33",
+      "name": "Ơ Đu"
+    },
+    {
       "id": "34",
-      "name": "Chu - ru"
+      "name": "Xinh Mun"
     },
     {
       "id": "35",
-      "name": "Lào"
+      "name": "Chu-ru"
     },
     {
       "id": "36",
-      "name": "La Chí"
+      "name": "Lào"
     },
     {
       "id": "37",
-      "name": "Kháng"
+      "name": "La Chí"
     },
     {
       "id": "38",
@@ -162,19 +162,19 @@
     },
     {
       "id": "40",
-      "name": "La Ha"
+      "name": "Kháng"
     },
     {
       "id": "41",
-      "name": "Pà Thẻn"
-    },
-    {
-      "id": "42",
       "name": "Lự"
     },
     {
+      "id": "42",
+      "name": "Pà Thẻn"
+    },
+    {
       "id": "43",
-      "name": "Ngái"
+      "name": "Lô Lô"
     },
     {
       "id": "44",
@@ -182,19 +182,19 @@
     },
     {
       "id": "45",
-      "name": "Lô Lô"
-    },
-    {
-      "id": "46",
       "name": "Mảng"
     },
     {
+      "id": "46",
+      "name": "Cờ Lao"
+    },
+    {
       "id": "47",
-      "name": "Cơ Lao"
+      "name": "Bố Y"
     },
     {
       "id": "48",
-      "name": "Bố Y"
+      "name": "La Ha"
     },
     {
       "id": "49",
@@ -202,15 +202,15 @@
     },
     {
       "id": "50",
-      "name": "Si La"
+      "name": "Ngái"
     },
     {
       "id": "51",
-      "name": "Pu Péo"
+      "name": "Si La"
     },
     {
       "id": "52",
-      "name": "Rơ - măm"
+      "name": "Pu Péo"
     },
     {
       "id": "53",
@@ -218,7 +218,7 @@
     },
     {
       "id": "54",
-      "name": "Ơ Đu"
+      "name": "Rơ Măm"
     }
   ]
 }

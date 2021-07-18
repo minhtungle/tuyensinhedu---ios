@@ -46,12 +46,42 @@ import NetInfo from "@react-native-community/netinfo";
 import { useHeaderHeight } from "@react-navigation/stack";
 const { height, width } = Dimensions.get("window");
 const { statusBarHeight } = Constants;
+import { StatusBar } from "expo-status-bar";
+
 LogBox.ignoreLogs([
   "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.",
 ]);
 
 //* hàm chuyển đổi ngày tháng
 const date = require("s-date");
+
+//* Hàm xử lý picker ngày tháng
+function useInput() {
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+  const showDatepicker = () => {
+    showMode("date");
+  };
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === "ios");
+    setDate(currentDate);
+  };
+  return {
+    date,
+    showDatepicker,
+    show,
+    mode,
+    onChange,
+  };
+}
 
 export default function Trangdangky({ route, navigation }) {
   const { DoiTuongTuyenSinh, IDKyThi } = route.params;
@@ -157,9 +187,30 @@ export default function Trangdangky({ route, navigation }) {
 
   // console.log(data.DanhSachFileDinhKem.length);
 
+  //#region Ngày tháng
+  const inputCon = useInput(new Date());
+  /*   const [mode, setMode] = useState("date");
+  const [picker_NgaySinh, setPicker_NgaySinh] = useState(false);
+
+  const ThayDoi_NgaySinh = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    // setShow(Platform.OS === "ios");
+    setPicker_NgaySinh(Platform.OS === "ios");
+    changeValuePicker({ NgaySinh: currentDate });
+  };
+
+  const HienThi_DateTimePicker = (mode) => {
+    // Hiển thị trạng thái chọn ngày tháng
+    setPicker_NgaySinh(true);
+    setMode(mode);
+  }; */
+  //#endregion
+
   //#region Học bạ: Table - Call API
-  const XuLy_NhapDiemHocBa = (number) => {
-    if (number.includes(",")) {
+  const XuLy_Nhap_DiemHocBa = (text) => {
+    if (text >= 0) {
+    }
+    if (text.includes(",") || text.includes(".")) {
       return {
         Type: "number-pad",
         Lenght: 4, // 0,00
@@ -170,7 +221,7 @@ export default function Trangdangky({ route, navigation }) {
       Lenght: 2,
     };
   }; // number-pad
-  const ChuyenDoi_DiemHocBa = (number) => {
+  const XuLy_Xuat_DiemHocBa = (number) => {
     // console.log(typeof number);
     // console.log(number);
     // trường hợp đặc biệt
@@ -205,6 +256,13 @@ export default function Trangdangky({ route, navigation }) {
     }
     return number_split.join(".");
   };
+  const _ChuyenDoi_DiemHocBa = (num) => {
+    if (/^[a-zA-Z]+$/.test(num)) {
+      return "num";
+    }
+    return 2;
+  };
+
   //* Tạo bảng
   const inputTable = (indexRow, indexCell, itemCell) => (
     <TextInput
@@ -224,8 +282,8 @@ export default function Trangdangky({ route, navigation }) {
   const NhapDiemHocBa = (indexRow, indexCell, value) => {
     const arr = [...data.HocBa];
     arr[indexRow][indexCell].Diem = value; // value
-    arr[indexRow][indexCell].Type = XuLy_NhapDiemHocBa(value).Type; // value
-    arr[indexRow][indexCell].Lenght = XuLy_NhapDiemHocBa(value).Lenght; // value
+    arr[indexRow][indexCell].Type = XuLy_Nhap_DiemHocBa(value).Type; // value
+    arr[indexRow][indexCell].Lenght = XuLy_Nhap_DiemHocBa(value).Lenght; // value
     setData((prev) => ({
       ...prev,
       HocBa: arr,
@@ -253,7 +311,7 @@ export default function Trangdangky({ route, navigation }) {
             const obj = {
               IDMonThi: item_Mon.ID,
               Lop: item_Lop,
-              Type: "decimal-pad",
+              Type: "number-pad",
               Lenght: 2,
               Diem: null,
             };
@@ -1664,7 +1722,7 @@ export default function Trangdangky({ route, navigation }) {
         const _item = {
           IDMonThi: item.IDMonThi,
           Lop: item.Lop,
-          Diem: ChuyenDoi_DiemHocBa(item.Diem),
+          Diem: XuLy_Xuat_DiemHocBa(item.Diem),
         };
         lstDiemHocBa.push(_item);
       });
@@ -1674,8 +1732,8 @@ export default function Trangdangky({ route, navigation }) {
       // MatKhau: data.MatKhau || "", //string
 
       HoTen: data.HoTen || "", //string
-      //NgaySinh: date("{dd}/{mm}/{yyyy}", inputCon.date) || "", //string
-      NgaySinh: "", //string
+      NgaySinh: date("{dd}/{mm}/{yyyy}", inputCon.date), //string
+      // NgaySinh: "", //string
 
       DanToc: data.DanToc || "", //string
       GioiTinh: data.GioiTinh, //bool
@@ -1743,7 +1801,7 @@ export default function Trangdangky({ route, navigation }) {
 
       IDKyThi: IDKyThi,
     };
-    console.log(DataPush);
+    // console.log(DataPush);
     // console.log(JSON.stringify(DataPush));
     try {
       await fetch(
@@ -1765,13 +1823,14 @@ export default function Trangdangky({ route, navigation }) {
           // console.log(responseJson.Result.status);
           // console.log(responseJson.Result.message);
           responseJson.Result.status
-            ? showMessage({
+            ? (showMessage({
+                hideOnPress: true,
+                onPress: () => navigation.goBack(),
                 message: "Đăng ký thành công",
                 description: `${responseJson.Result.message}`,
                 duration: 3000,
                 type: "success",
-              })
-            : //,
+              }),
               changeValuePicker({
                 // MaHocSinh: "",
                 // MatKhau: "",
@@ -1832,18 +1891,17 @@ export default function Trangdangky({ route, navigation }) {
                 MailLienHe: "",
                 Xacnhanthongtin: false,
               }),
-            setTimeout(() => {
-              navigation.goBack();
-            }, 3000);
-          showMessage({
-            message: "Đăng ký không thành công !",
-            description: `${responseJson.Result.message}`,
-            duration: 3000,
-            type: "warning",
-          });
+              setTimeout(() => {
+                navigation.goBack();
+              }, 5000))
+            : showMessage({
+                message: "Đăng ký không thành công !",
+                description: `${responseJson.Result.message}`,
+                duration: 3000,
+                type: "warning",
+              });
         });
     } catch (e) {
-      //
       showMessage({
         message: "Thất bại",
         description: `${responseJson.Result.message}`,
@@ -1869,10 +1927,11 @@ export default function Trangdangky({ route, navigation }) {
         data.IDXaTT &&
         data.IDXaTamTru &&
         data.IDXa &&
+        data.MailLienHe &&
         data.NguyenVong[0].IDTruong &&
         data.DanToc) !== "" &&
         data.Xacnhanthongtin &&
-        //data.DanhSachFileDinhKem.length !== 0 &&
+        data.FileDinhKem.length !== 0 &&
         data.DanToc !== "Chọn dân tộc"
         ? true
         : false;
@@ -1886,10 +1945,11 @@ export default function Trangdangky({ route, navigation }) {
         data.IDHuyen &&
         data.IDXaTT &&
         data.IDXa &&
+        data.MailLienHe &&
         data.NguyenVong[0].IDTruong &&
         data.DanToc) !== "" &&
         data.Xacnhanthongtin &&
-        //data.DanhSachFileDinhKem.length !== 0 &&
+        data.FileDinhKem.length !== 0 &&
         data.DanToc !== "Chọn dân tộc"
         ? true
         : false;
@@ -2118,12 +2178,19 @@ export default function Trangdangky({ route, navigation }) {
   //#endregion
 
   //#region Kiểm tra kết nối mạng
-  const [connected, setConnected] = useState(false);
+  const [connected, setConnected] = useState(true);
   useEffect(() => {
-    NetInfo.fetch().then((state) => {
-      setConnected(state.isConnected);
-    });
-  });
+    const interval = setInterval(
+      () =>
+        NetInfo.fetch().then((state) => {
+          setConnected(state.isConnected);
+        }),
+      3000
+    );
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
   if (!connected) {
     return (
       <View
@@ -2361,15 +2428,18 @@ export default function Trangdangky({ route, navigation }) {
                     </TextInput>
                   </View>
                   {/* Ngày sinh */}
-                  <View style={styles.field} style={{ display: "none" }}>
-                    {/* {date("{dd}/{mm}/{yyyy}", data.NgaySinh) === "" && (
+                  <View
+                    style={styles.field}
+                    // style={{ display: "none" }}
+                  >
+                    {date("{dd}/{mm}/{yyyy}", inputCon.date) === "" && (
                       <IconButton
                         icon="menu-right"
                         color={Colors.red500}
                         size={30}
                         style={{ position: "absolute", left: -42, top: -12 }}
                       />
-                    )} */}
+                    )}
                     <Text>
                       Ngày sinh <Text style={{ color: "red" }}>*</Text>
                     </Text>
@@ -2380,7 +2450,7 @@ export default function Trangdangky({ route, navigation }) {
                         borderBottomWidth: 0.5,
                       }}
                     >
-                      {/* <Text
+                      <Text
                         style={{
                           flexGrow: 1,
                           alignSelf: "center",
@@ -2388,25 +2458,27 @@ export default function Trangdangky({ route, navigation }) {
                           paddingLeft: 5,
                         }}
                       >
-                        {date("{dd}/{mm}/{yyyy}", data.NgaySinh)}
-                      </Text> */}
-                      {/* <IconButton
+                        {date("{dd}/{mm}/{yyyy}", inputCon.date)}
+                      </Text>
+                      <IconButton
                         icon="calendar"
                         color={Colors.red500}
                         size={18}
                         onPress={inputCon.showDatepicker}
                       />
-                      {inputCon.show && (
-                        <DateTimePicker
-                          testID="Con"
-                          value={inputCon.date}
-                          mode={inputCon.mode}
-                          is24Hour={true}
-                          display="default"
-                          onChange={inputCon.onChange}
-                        />
-                      )} */}
                     </View>
+                    {inputCon.show && (
+                      <DateTimePicker
+                        testID="Con"
+                        locale="vi-VI"
+                        value={inputCon.date}
+                        mode={inputCon.mode}
+                        is24Hour={true}
+                        display="spinner"
+                        maximumDate={new Date()}
+                        onChange={inputCon.onChange}
+                      />
+                    )}
                   </View>
                   {/* Dân tộc */}
                   <View style={styles.field}>
@@ -3383,7 +3455,7 @@ export default function Trangdangky({ route, navigation }) {
                         //     itemParent.map((item) => {
                         //       const _item = {
                         //         ...item,
-                        //         Diem: ChuyenDoi_DiemHocBa(item.Diem),
+                        //         Diem: XuLy_Xuat_DiemHocBa(item.Diem),
                         //       };
                         //       lstDiemHocBa.push(_item);
                         //     });
@@ -3412,10 +3484,11 @@ export default function Trangdangky({ route, navigation }) {
                         <View
                           style={{
                             width: "100%",
-                            height: height - statusBarHeight,
+                            height: "100%",
                             backgroundColor: "#FFF",
                             alignItems: "center",
                             flexDirection: "column",
+                            paddingVertical: statusBarHeight,
                           }}
                         >
                           <FileDinhKem

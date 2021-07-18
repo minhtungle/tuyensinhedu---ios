@@ -27,13 +27,20 @@ function Danhmucvanban({ navigation }) {
   // });
 
   //#region Kiểm tra kết nối mạng
-  const [connected, setConnected] = useState(false);
+  const [connected, setConnected] = useState(true);
   const headerHeight = useHeaderHeight();
   useEffect(() => {
-    NetInfo.fetch().then((state) => {
-      setConnected(state.isConnected);
-    });
-  });
+    const interval = setInterval(
+      () =>
+        NetInfo.fetch().then((state) => {
+          setConnected(state.isConnected);
+        }),
+      3000
+    );
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
   if (!connected) {
     return (
       <View

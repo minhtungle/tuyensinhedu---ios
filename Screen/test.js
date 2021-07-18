@@ -1,32 +1,51 @@
-import React from "react";
-import { Image, Text, View } from "react-native";
-import { Asset } from "expo-asset";
-import AppLoading from "expo-app-loading";
+import React, { useState } from "react";
+import { View, Button, Platform } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-function Test() {
-  const [isReady, setIsReady] = React.useState(false);
-  const _cacheResourcesAsync = async () => {
-    const images = [require("../assets/icon.png")];
+const Test = () => {
+  const [date, setDate] = useState(new Date(1598051730000));
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
 
-    const cacheImages = images.map((image) => {
-      return Asset.fromModule(image).downloadAsync();
-    });
-    return Promise.all(cacheImages);
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === "ios");
+    setDate(currentDate);
   };
-  if (isReady) {
-    return (
-      <AppLoading
-        startAsync={() => _cacheResourcesAsync()}
-        onFinish={() => setIsReady(true)}
-        onError={console.warn}
-      />
-    );
-  }
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode("date");
+  };
+
+  const showTimepicker = () => {
+    showMode("time");
+  };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>alo</Text>
+    <View>
+      <View>
+        <Button onPress={showDatepicker} title="Show date picker!" />
+      </View>
+      <View>
+        <Button onPress={showTimepicker} title="Show time picker!" />
+      </View>
+      {show && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={mode}
+          is24Hour={true}
+          display="spinner"
+          onChange={onChange}
+        />
+      )}
     </View>
   );
-}
+};
+
 export default Test;
