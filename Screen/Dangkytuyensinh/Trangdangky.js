@@ -27,7 +27,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import RadioButtonRN from "radio-buttons-react-native";
 import { Colors, IconButton } from "react-native-paper";
 import { AssetsSelector } from "expo-images-picker";
-import { Ionicons } from "@expo/vector-icons";
+import { createIconSetFromFontello, Ionicons } from "@expo/vector-icons";
 import FileDinhKem from "./FileDinhKem";
 import {
   Table,
@@ -207,16 +207,28 @@ export default function Trangdangky({ route, navigation }) {
   //#endregion
 
   //#region Học bạ: Table - Call API
-  const XuLy_Nhap_DiemHocBa = (text) => {
-    if (text >= 0) {
+  const XuLy_Nhap_DiemHocBa = (indexRow, indexCell, value) => {
+    value = value.replace(/[^a-zA-Z0-9]/g, ",").replace(/_{2,}/g, ",");
+    // console.log(value.split(",").length);
+    // if (value.includes(",,,")) {
+    //   value = value.replace(",,,", ",");
+    // }
+    // if (value.includes(",,")) {
+    //   value = value.replace(",,", ",");
+    // }
+    if (value.split(",").length > 2) {
+      value = "0";
+      // value = data.HocBa[indexRow][indexCell].Diem;
     }
-    if (text.includes(",") || text.includes(".")) {
+    if (value.includes(",")) {
       return {
+        Value: value,
         Type: "number-pad",
         Lenght: 4, // 0,00
       };
     }
     return {
+      Value: value,
       Type: "decimal-pad",
       Lenght: 2,
     };
@@ -243,6 +255,9 @@ export default function Trangdangky({ route, navigation }) {
     }
     // xử lý sau dấu ' , '
     const number_split = number.toString().split(",");
+    if (number_split[0] === "") {
+      number_split[0] = 0;
+    }
     if (
       number_split[1] === "0" ||
       number_split[1] === "00" ||
@@ -272,7 +287,9 @@ export default function Trangdangky({ route, navigation }) {
       maxLength={itemCell.Lenght}
       multiline={false}
       onChangeText={(value) => NhapDiemHocBa(indexRow, indexCell, value)}
-    />
+    >
+      {data.HocBa[indexRow][indexCell].Diem}
+    </TextInput>
   );
   const [table, setTable] = useState({
     tableHead: [],
@@ -281,9 +298,21 @@ export default function Trangdangky({ route, navigation }) {
   });
   const NhapDiemHocBa = (indexRow, indexCell, value) => {
     const arr = [...data.HocBa];
-    arr[indexRow][indexCell].Diem = value; // value
-    arr[indexRow][indexCell].Type = XuLy_Nhap_DiemHocBa(value).Type; // value
-    arr[indexRow][indexCell].Lenght = XuLy_Nhap_DiemHocBa(value).Lenght; // value
+    arr[indexRow][indexCell].Diem = XuLy_Nhap_DiemHocBa(
+      indexRow,
+      indexCell,
+      value
+    ).Value; // value
+    arr[indexRow][indexCell].Type = XuLy_Nhap_DiemHocBa(
+      indexRow,
+      indexCell,
+      value
+    ).Type; // value
+    arr[indexRow][indexCell].Lenght = XuLy_Nhap_DiemHocBa(
+      indexRow,
+      indexCell,
+      value
+    ).Lenght; // value
     setData((prev) => ({
       ...prev,
       HocBa: arr,
