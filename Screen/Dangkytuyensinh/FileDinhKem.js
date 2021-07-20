@@ -146,7 +146,7 @@ export default function FileDinhKem({
               key={loaiminhchung_idx.toString()}
               style={{ flexDirection: "column" }}
             >
-              <TouchableOpacity
+              <View
                 style={{
                   width: "100%",
                   flexDirection: "row",
@@ -173,7 +173,7 @@ export default function FileDinhKem({
                     style={{ alignSelf: "center", color: "#FFF" }}
                   />
                 )} */}
-              </TouchableOpacity>
+              </View>
               <Text
                 style={{ textAlign: "center", color: "red", marginBottom: 5 }}
               >
@@ -251,7 +251,7 @@ export default function FileDinhKem({
                     width: 512,
                     compress: 0.7,
                     base64: true,
-                    saveTo: "jpeg",
+                    saveTo: "png",
                   },
                   assetsType: [
                     "photo",

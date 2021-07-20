@@ -1,6 +1,15 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import NetInfo from "@react-native-community/netinfo";
+import { useHeaderHeight } from "@react-navigation/stack";
+import { BlurView } from "expo-blur";
+import Constants from "expo-constants";
+import { Button, CheckBox, Picker, Text, View } from "native-base";
+import RadioButtonRN from "radio-buttons-react-native";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
+  Dimensions,
   KeyboardAvoidingView,
+  LogBox,
   Modal,
   Platform,
   SafeAreaView,
@@ -8,45 +17,22 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Image,
-  Dimensions,
 } from "react-native";
-import AsyncStorage from "@react-native-community/async-storage";
-import {
-  View,
-  Text,
-  Button,
-  Picker,
-  CheckBox,
-  DatePicker,
-  Icon,
-} from "native-base";
-import { BlurView } from "expo-blur";
-import Constants from "expo-constants";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import RadioButtonRN from "radio-buttons-react-native";
+import AnimatedEllipsis from "react-native-animated-ellipsis";
+import FlashMessage, { showMessage } from "react-native-flash-message";
 import { Colors, IconButton } from "react-native-paper";
-import { AssetsSelector } from "expo-images-picker";
-import { createIconSetFromFontello, Ionicons } from "@expo/vector-icons";
-import FileDinhKem from "./FileDinhKem";
 import {
+  Cell,
+  Col,
+  Row,
   Table,
   TableWrapper,
-  Row,
-  Rows,
-  Col,
-  Cols,
-  Cell,
 } from "react-native-table-component";
-import FlashMessage from "react-native-flash-message";
-import { showMessage, hideMessage } from "react-native-flash-message";
-import { LogBox } from "react-native";
-import AnimatedEllipsis from "react-native-animated-ellipsis";
-import NetInfo from "@react-native-community/netinfo";
-import { useHeaderHeight } from "@react-navigation/stack";
+import { Camera } from "expo-camera";
+
+import FileDinhKem from "./FileDinhKem";
 const { height, width } = Dimensions.get("window");
 const { statusBarHeight } = Constants;
-import { StatusBar } from "expo-status-bar";
 
 LogBox.ignoreLogs([
   "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.",
@@ -62,7 +48,7 @@ function useInput() {
   const [show, setShow] = useState(false);
 
   const showMode = (currentMode) => {
-    setShow(true);
+    setShow(!show);
     setMode(currentMode);
   };
   const showDatepicker = () => {
@@ -92,6 +78,7 @@ export default function Trangdangky({ route, navigation }) {
       title: "Đăng ký tuyển sinh",
     });
   });
+
   const [loading, setLoading] = useState(true);
 
   const [data, setData] = useState({
@@ -189,33 +176,14 @@ export default function Trangdangky({ route, navigation }) {
 
   //#region Ngày tháng
   const inputCon = useInput(new Date());
-  /*   const [mode, setMode] = useState("date");
-  const [picker_NgaySinh, setPicker_NgaySinh] = useState(false);
 
-  const ThayDoi_NgaySinh = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    // setShow(Platform.OS === "ios");
-    setPicker_NgaySinh(Platform.OS === "ios");
-    changeValuePicker({ NgaySinh: currentDate });
-  };
-
-  const HienThi_DateTimePicker = (mode) => {
-    // Hiển thị trạng thái chọn ngày tháng
-    setPicker_NgaySinh(true);
-    setMode(mode);
-  }; */
   //#endregion
 
   //#region Học bạ: Table - Call API
   const XuLy_Nhap_DiemHocBa = (indexRow, indexCell, value) => {
     value = value.replace(/[^a-zA-Z0-9]/g, ",").replace(/_{2,}/g, ",");
     // console.log(value.split(",").length);
-    // if (value.includes(",,,")) {
-    //   value = value.replace(",,,", ",");
-    // }
-    // if (value.includes(",,")) {
-    //   value = value.replace(",,", ",");
-    // }
+
     if (value.split(",").length > 2) {
       value = "0";
       // value = data.HocBa[indexRow][indexCell].Diem;
@@ -340,7 +308,7 @@ export default function Trangdangky({ route, navigation }) {
             const obj = {
               IDMonThi: item_Mon.ID,
               Lop: item_Lop,
-              Type: "number-pad",
+              Type: "decimal-pad",
               Lenght: 2,
               Diem: null,
             };
@@ -532,6 +500,7 @@ export default function Trangdangky({ route, navigation }) {
   //#region Minh Chứng: Ẩn hiện
   const [loaiminhchung, setLoaiMinhChung] = useState(null);
   const [loaiminhchung_cache, setLoaiMinhChung_cache] = useState(null);
+  const [cameraPermission, setCameraPermission] = useState(null);
 
   //* Gọi API loại minh chứng
   useEffect(() => {
@@ -554,13 +523,24 @@ export default function Trangdangky({ route, navigation }) {
       setLoaiMinhChung(null);
     };
   }, [0]);
+  const _mediaLibraryAsync = async () => {
+    const { status } = await Camera.requestPermissionsAsync();
+    console.log(status);
+    setCameraPermission(status);
+  };
   //* Hiển thị modal
   const HienThi_ModalMinhChung = () => {
+    _mediaLibraryAsync();
+
     // Tạo localStore lưu trữ danh sách ảnh khi chưa hiển thị
     // AsyncStorage.setItem("Lst_MinhChung_Cu", loaiminhchung);
-    setLoaiMinhChung_cache(loaiminhchung);
-    // Hiển thị modal
-    setModal_MinhChung(true);
+    if (cameraPermission === "granted") {
+      setLoaiMinhChung_cache(loaiminhchung);
+      // Hiển thị modal
+      setModal_MinhChung(true);
+    } else {
+      setModal_MinhChung(false);
+    }
   };
 
   //#endregion
@@ -1667,8 +1647,7 @@ export default function Trangdangky({ route, navigation }) {
       return (
         <View
           style={{
-            paddingTop: 20,
-            paddingVertical: 20,
+            // marginVertical: 20,
             flexDirection: "column",
           }}
           key={indexParent.toString()}
@@ -2472,12 +2451,14 @@ export default function Trangdangky({ route, navigation }) {
                     <Text>
                       Ngày sinh <Text style={{ color: "red" }}>*</Text>
                     </Text>
-                    <View
+                    {/* {Platform.OS !== "ios" && ( */}
+                    <TouchableOpacity
                       style={{
                         flexDirection: "row",
                         borderLeftWidth: 0.5,
                         borderBottomWidth: 0.5,
                       }}
+                      onPress={inputCon.showDatepicker}
                     >
                       <Text
                         style={{
@@ -2495,7 +2476,8 @@ export default function Trangdangky({ route, navigation }) {
                         size={18}
                         onPress={inputCon.showDatepicker}
                       />
-                    </View>
+                    </TouchableOpacity>
+                    {/* )} */}
                     {inputCon.show && (
                       <DateTimePicker
                         testID="Con"
@@ -3352,6 +3334,7 @@ export default function Trangdangky({ route, navigation }) {
                         <View
                           style={{
                             width: "95%",
+                            height: (height * 80) / 100,
                             backgroundColor: "#eff8ff",
                             borderRadius: 20,
                             padding: 10,
@@ -3368,10 +3351,12 @@ export default function Trangdangky({ route, navigation }) {
                         >
                           <ScrollView
                             nestedScrollEnabled
-                            style={{
-                              maxHeight: (height * 70) / 100,
-                              // padding: 20,
-                            }}
+                            style={
+                              {
+                                // maxHeight: (height * 70) / 100,
+                                // padding: 20,
+                              }
+                            }
                           >
                             <DSDoiTuongUuTien />
                           </ScrollView>
@@ -3467,12 +3452,13 @@ export default function Trangdangky({ route, navigation }) {
                       Bổ sung các giấy tờ liên quan
                       <Text style={{ color: "red" }}> *</Text>
                     </Text>
-                    <View
+                    <TouchableOpacity
                       style={{
                         marginTop: 5,
                         alignItems: "center",
                         backgroundColor: "#fff5c0",
                       }}
+                      onPress={() => HienThi_ModalMinhChung()}
                     >
                       <IconButton
                         icon="camera"
@@ -3493,7 +3479,7 @@ export default function Trangdangky({ route, navigation }) {
                         // }}
                         onPress={() => HienThi_ModalMinhChung()}
                       />
-                    </View>
+                    </TouchableOpacity>
                     <Modal
                       animationType="slide"
                       transparent={true}
@@ -4163,6 +4149,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#DEEBFE",
   },
   block: {
+    // borderWidth: 1,
+
     backgroundColor: "#DEEBFE",
     width: "100%",
   },

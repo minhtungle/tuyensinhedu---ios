@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "white",
-    fontSize: 36,
+    fontSize: 30,
     fontWeight: "bold",
     textAlign: "center",
     textShadowColor: "rgba(0, 0, 0, 1)",
@@ -108,7 +108,7 @@ export default ({ type, Tinh }) => {
         style={styles.card}
         {...{ source }}
         imageStyle={styles.image}
-        blurRadius={3}
+        blurRadius={1.5}
       >
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.sub_title}>{textSub}</Text>
