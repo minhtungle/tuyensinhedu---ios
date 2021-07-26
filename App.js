@@ -4,7 +4,7 @@ import {
   createStackNavigator,
 } from "@react-navigation/stack";
 import React from "react";
-//* Screen
+/* //* User
 import {
   Dangkytuyensinh,
   Dangnhap,
@@ -17,13 +17,16 @@ import {
   Tracuuketquatuyensinh,
   Trangchu,
   Trangdangky,
-} from "./Screen/index";
-
+} from "./Screen/User/index"; */
+import { _User, _Admin, Test } from "./Screen/index";
 const ScreenStyle = {
   headerTitleStyle: {
     alignSelf: "center",
   },
   headerTitleAlign: "center",
+  headerStyle: {
+    backgroundColor: "#DEEBFE",
+  },
   cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
 };
 
@@ -38,32 +41,35 @@ export default function App() {
         screenOptions={ScreenStyle}
       > */}
         {/* Đăng nhập */}
-        <Stack.Screen name="Đăng nhập" component={Dangnhap} />
+        <Stack.Screen name="Đăng nhập" component={_User.Dangnhap} />
         {/* Trang chủ */}
-        <Stack.Screen name="Trang chủ" component={Trangchu} />
+        <Stack.Screen name="Trang chủ" component={_User.Trangchu} />
         {/* Danh mục văn bản */}
-        <Stack.Screen name="Danh mục văn bản" component={Danhmucvanban} />
+        <Stack.Screen name="Danh mục văn bản" component={_User.Danhmucvanban} />
         {/* Thông tin tuyển sinh */}
         <Stack.Screen
           name="Thông tin tuyển sinh"
-          component={Thongtintuyensinh}
+          component={_User.Thongtintuyensinh}
         />
         {/* Đăng ký tuyển sinh */}
-        <Stack.Screen name="Đăng ký tuyển sinh" component={Dangkytuyensinh} />
-        <Stack.Screen name="Trang đăng ký" component={Trangdangky} />
-        <Stack.Screen name="FileDinhKem" component={FileDinhKem} />
+        <Stack.Screen
+          name="Đăng ký tuyển sinh"
+          component={_User.Dangkytuyensinh}
+        />
+        <Stack.Screen name="Trang đăng ký" component={_User.Trangdangky} />
+        <Stack.Screen name="FileDinhKem" component={_User.FileDinhKem} />
         {/* Tra cứu kết quả tuyển sinh */}
         <Stack.Screen
           name="Tra cứu kết quả tuyển sinh"
-          component={Tracuuketquatuyensinh}
+          component={_User.Tracuuketquatuyensinh}
         />
         {/* Hướng dẫn đăng ký trực tuyến */}
         <Stack.Screen
           name="Hướng dẫn đăng ký trực tuyến"
-          component={Huongdandangkytructuyen}
+          component={_User.Huongdandangkytructuyen}
         />
         {/* Góp ý */}
-        <Stack.Screen name="Góp ý" component={Gopy} />
+        <Stack.Screen name="Góp ý" component={_User.Gopy} />
         {/* Test */}
         <Stack.Screen name="Test" component={Test} />
       </Stack.Navigator>

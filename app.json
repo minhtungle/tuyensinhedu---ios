@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Đăng ký và tra cứu tuyển sinh đầu cấp - IOS",
+    "name": "Đăng ký và tra cứu tuyển sinh đầu cấp",
     "slug": "Tuyensinh",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -20,7 +20,7 @@
         "com.apple.developer.networking.wifi-info": "true"
       },
       "bundleIdentifier": "com.minhtungle.TraCuuTuyenSinh1",
-      "buildNumber": "1.0.1"
+      "buildNumber": "5.0.0"
     },
     "android": {
       "adaptiveIcon": {
@@ -30,11 +30,13 @@
       "package": "com.minhtungle411.TraCuuTuyenSinh",
       "permissions": [
         "CAMERA",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
         "MEDIA_LIBRARY",
         "MEDIA_LIBRARY_WRITE_ONLY",
         "INTERNET"
       ],
-      "versionCode": 4
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/favicon.png"
