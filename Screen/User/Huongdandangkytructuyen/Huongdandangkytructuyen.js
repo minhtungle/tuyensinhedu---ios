@@ -52,7 +52,7 @@ function Huongdandangkytructuyen({ navigation }) {
     },
   });
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView nestedScrollEnabled>
         {/*Bước 1*/}
         <View style={styles.main}>
@@ -283,7 +283,7 @@ function Huongdandangkytructuyen({ navigation }) {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 const styles = StyleSheet.create({

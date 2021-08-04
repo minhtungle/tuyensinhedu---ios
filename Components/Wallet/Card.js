@@ -11,13 +11,22 @@ import {
 
 const { width } = Dimensions.get("window");
 const ratio = 228 / 362;
-export const CARD_WIDTH = width * 0.7;
+export const CARD_WIDTH = width * 0.9;
 export const CARD_HEIGHT = CARD_WIDTH * ratio;
 const styles = StyleSheet.create({
   card: {
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
     justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+
+    elevation: 10,
   },
   title: {
     color: "white",
@@ -63,7 +72,7 @@ export default ({ type, Tinh }) => {
       page = "Danh mục văn bản";
       title = "Danh mục \nvăn bản";
       textSub = "Các bài viết liên quan đến luật";
-      source = require("../assets/550x271_Blue.jpg");
+      source = require("../assets/550x271_Skyblue.jpg");
       break;
     case Cards.Card2:
       page = "Thông tin tuyển sinh";
@@ -81,7 +90,7 @@ export default ({ type, Tinh }) => {
       page = "Tra cứu kết quả tuyển sinh";
       title = "Tra cứu kết quả tuyển sinh";
       textSub = "Tra cứu kết quả tuyển sinh";
-      source = require("../assets/550x271_Brown.jpg");
+      source = require("../assets/550x271_Blue.jpg");
       break;
     case Cards.Card5:
       page = "Hướng dẫn đăng ký trực tuyến";

@@ -9,8 +9,6 @@ import {
   Animated,
   useWindowDimensions,
 } from "react-native";
-import { Colors, IconButton } from "react-native-paper";
-import { WalletFlatList } from "../../../Components/Wallet/index";
 import NetInfo from "@react-native-community/netinfo";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
 import { useHeaderHeight } from "@react-navigation/stack";
@@ -96,9 +94,7 @@ function Trangchu({ route, navigation }) {
             alignItems: "center",
             justifyContent: "center",
           }}
-        >
-          <WalletFlatList {...{ Tinh }} />
-        </View>
+        ></View>
       </View>
     </View>
   );

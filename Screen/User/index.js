@@ -1,5 +1,3 @@
-//* Đăng nhập
-import Dangnhap from "./Dangnhap/Dangnhap";
 //* Trang chủ
 import Trangchu from "./Trangchu/Trangchu";
 //* Đăng ký tuyển sinh
@@ -18,11 +16,7 @@ import Huongdandangkytructuyen from "./Huongdandangkytructuyen/Huongdandangkytru
 //* Góp ý
 import Gopy from "./Gopy/Gopy";
 
-//* Test
-import Test from "../Test";
-
 export {
-  Dangnhap,
   Trangchu,
   Dangkytuyensinh,
   FileDinhKem,
@@ -33,5 +27,4 @@ export {
   Ketqua,
   Huongdandangkytructuyen,
   Gopy,
-  Test,
 };

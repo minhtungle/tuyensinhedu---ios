@@ -7,6 +7,7 @@ import {
   Dimensions,
   StyleSheet,
   Image,
+  Alert,
 } from "react-native";
 import { AssetsSelector } from "expo-images-picker";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,6 +25,30 @@ export default function FileDinhKem({
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
+  const showAlert = () =>
+    Alert.alert(
+      "Alert Title",
+      "My Alert Msg",
+      [
+        {
+          text: "Cancel",
+          onPress: () => Alert.alert("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Ok",
+          onPress: () => Alert.alert("Ok Pressed"),
+          style: "accept",
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () =>
+          Alert.alert(
+            "This alert was dismissed by tapping outside of the alert dialog."
+          ),
+      }
+    );
   //* Chọn loại minh chứng
   const ChonMinhChung = (idx) => {
     // Thay đổi trạng thái minh chứng được chọn thành true
@@ -42,6 +67,45 @@ export default function FileDinhKem({
     // Mở modal lên
     setModalVisible(true);
   };
+  //* Nhấn giữ ảnh
+  const GiuAnh = (idx_LoaiMinhChung, idx_Anh) => {
+    let _loaiminhchung = loaiminhchung.map(
+      (loaiminhchung_item, loaiminhchung_idx) => {
+        return loaiminhchung_idx === idx_LoaiMinhChung
+          ? {
+              ...loaiminhchung_item,
+              lstMinhChung: loaiminhchung_item.lstMinhChung.map(
+                (anh_item, anh_idx) => {
+                  return anh_idx === idx_Anh
+                    ? {
+                        base64: anh_item.base64,
+                        trangthai: !anh_item.trangthai,
+                      }
+                    : anh_item;
+                }
+              ),
+            }
+          : loaiminhchung_item;
+      }
+    );
+    setLoaiMinhChung(_loaiminhchung);
+  };
+  //* Xóa ảnh
+  const XoaAnh = (idx_LoaiMinhChung) => {
+    let _loaiminhchung = loaiminhchung.map(
+      (loaiminhchung_item, loaiminhchung_idx) => {
+        return loaiminhchung_idx === idx_LoaiMinhChung
+          ? {
+              ...loaiminhchung_item,
+              lstMinhChung: loaiminhchung_item.lstMinhChung.filter(
+                (anh_item, anh_idx) => anh_item.trangthai == true
+              ),
+            }
+          : loaiminhchung_item;
+      }
+    );
+    setLoaiMinhChung(_loaiminhchung);
+  };
   //* Chọn ảnh minh chứng
   const ChonAnh = (imgs) => {
     // Lưu danh sách ảnh được chọn lại loại minh chứng tương ứng và tắt trạng thái chọn của nó
@@ -51,7 +115,10 @@ export default function FileDinhKem({
           ? {
               ...loaiminhchung_item,
               trangthai: false,
-              lstMinhChung: imgs.map((i) => i.base64),
+              lstMinhChung: imgs.map((i) => ({
+                base64: i.base64,
+                trangthai: true,
+              })),
             }
           : loaiminhchung_item;
       }
@@ -70,7 +137,7 @@ export default function FileDinhKem({
           Ten: loaiminhchung[i].Ten + `_${j}`,
           Loai: loaiminhchung[i].ID,
           GhiChu: loaiminhchung[i].GhiChu,
-          base64: loaiminhchung[i].lstMinhChung[j],
+          base64: loaiminhchung[i].lstMinhChung[j].base64,
         };
         lst_minhchung.push(minhchung);
       }
@@ -167,13 +234,28 @@ export default function FileDinhKem({
                 >
                   {loaiminhchung_item.Ten}
                 </Text>
-                {/* {loaiminhchung_item.lstMinhChung.length > 0 && (
+                {loaiminhchung_item.lstMinhChung.length > 0 && (
                   <Icon
                     name="trash"
                     style={{ alignSelf: "center", color: "#FFF" }}
+                    onPress={() => XoaAnh(loaiminhchung_idx)}
                   />
-                )} */}
+                )}
               </View>
+              {/* <Text
+                style={{
+                  position: "absolute",
+                  borderWidth: 1,
+                  textAlign: "center",
+                  textAlignVertical: "center",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                }}
+              >
+                {loaiminhchung_item.lstMinhChung.length}
+              </Text> */}
               <Text
                 style={{ textAlign: "center", color: "red", marginBottom: 5 }}
               >
@@ -202,13 +284,39 @@ export default function FileDinhKem({
                 </TouchableOpacity>
                 {loaiminhchung_item.lstMinhChung.map((img_item, img_idx) => {
                   return (
-                    <Image
+                    <TouchableOpacity
                       key={img_idx.toString()}
-                      source={{
-                        uri: `data:image/jpeg;base64,${img_item}`,
-                      }}
-                      style={styles.img}
-                    />
+                      onPress={() => GiuAnh(loaiminhchung_idx, img_idx)}
+                    >
+                      <Image
+                        source={{
+                          uri: `data:image/jpeg;base64,${img_item.base64}`,
+                        }}
+                        style={styles.img}
+                      />
+                      {!img_item.trangthai && (
+                        <View
+                          style={[
+                            styles.img,
+                            {
+                              position: "absolute",
+                              justifyContent: "center",
+                              backgroundColor: "#bcc8deb0",
+                            },
+                          ]}
+                        >
+                          <Icon
+                            name="close-circle-outline"
+                            style={{
+                              color: "black",
+                              fontSize: 45,
+                              width: "100%",
+                              textAlign: "center",
+                            }}
+                          />
+                        </View>
+                      )}
+                    </TouchableOpacity>
                   );
                 })}
               </View>
@@ -257,7 +365,7 @@ export default function FileDinhKem({
                     "photo",
                     //, "video"
                   ],
-                  maxSelections: 20,
+                  maxSelections: 100,
                   margin: 3,
                   portraitCols: 4,
                   landscapeCols: 5,

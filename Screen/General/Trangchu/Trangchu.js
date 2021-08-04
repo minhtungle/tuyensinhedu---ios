@@ -1,10 +1,12 @@
 import React from "react";
 import { View, Text } from "react-native";
 
-export default function Baocao() {
+function Trangchu() {
   return (
     <View>
-      <Text>Hellu</Text>
+      <Text>Đăng nhập</Text>
     </View>
   );
 }
+
+export default Trangchu;

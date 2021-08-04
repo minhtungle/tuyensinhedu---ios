@@ -17,6 +17,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
 import FlashMessage, { showMessage } from "react-native-flash-message";
@@ -42,8 +43,8 @@ LogBox.ignoreLogs([
 const date = require("s-date");
 
 //* Hàm xử lý picker ngày tháng
-function useInput() {
-  const [date, setDate] = useState(new Date());
+function useInput(_date) {
+  const [date, setDate] = useState(_date);
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
 
@@ -94,7 +95,7 @@ export default function Trangdangky({ route, navigation }) {
     HoTen: "",
     NgaySinh: "",
     DanToc: "Chọn dân tộc",
-    GioiTinh: false,
+    GioiTinh: null,
     // Nơi sinh
     IDTinhNS: "",
     IDHuyenNS: "",
@@ -906,10 +907,10 @@ export default function Trangdangky({ route, navigation }) {
                 <View style={{ flexGrow: 1, borderWidth: 1 }}>
                   <Picker
                     selectedValue={itemParent.IDLopChuyen}
-                    iosIcon={
-                      <IconButton icon="menu-down" color={"black"} size={26} />
-                    }
-                    style={{ height: 40, flexGrow: 1, width: "100%" }}
+                    // iosIcon={
+                    //   <IconButton icon="menu-down" color={"black"} size={26} />
+                    // }
+                    style={{ height: 40, flexGrow: 1 }}
                     itemStyle={{ fontSize: 8 }}
                     onValueChange={(itemValue, itemIndex) =>
                       ChonLopChuyen(itemParent, indexParent, itemValue)
@@ -950,10 +951,10 @@ export default function Trangdangky({ route, navigation }) {
             <View style={{ borderWidth: 1 }}>
               <Picker
                 selectedValue={itemParent.IDTruong}
-                iosIcon={
-                  <IconButton icon="menu-down" color={"black"} size={26} />
-                }
-                style={{ height: 40, flexGrow: 1, width: "100%" }}
+                // iosIcon={
+                //   <IconButton icon="menu-down" color={"black"} size={26} />
+                // }
+                style={{ height: 40, flexGrow: 1 }}
                 itemStyle={{ fontSize: 8 }}
                 onValueChange={(itemValue, itemIndex) =>
                   ChonNguyenVongThem(itemParent, indexParent, itemValue)
@@ -1748,6 +1749,67 @@ export default function Trangdangky({ route, navigation }) {
   //#endregion
 
   //#region API - Push: Đăng ký
+  /* changeValuePicker({
+   // MaHocSinh: "",
+   // MatKhau: "",
+   HoTen: "",
+   NgaySinh: "",
+   // Nơi sinh
+   IDTinhNS: "",
+   IDHuyenNS: "",
+   IDXaNS: "",
+   DiaChiNS: "",
+   // Thường trú
+   IDTinhTT: "",
+   IDHuyenTT: "",
+   IDXaTT: "",
+   DiaChiTT: "",
+   // Tạm trú
+   IDTinhTamTru: "",
+   IDHuyenTamTru: "",
+   IDXaTamTru: "",
+   DiaChiTamTru: "",
+   // Nơi ở
+   IDTinh: "",
+   IDHuyen: "",
+   IDXa: "",
+   DiaChi: "",
+   // Chương trình cấp dưới
+   IDTinhCT: "",
+   IDHuyenCT: "",
+   IDXaCT: "",
+   TenLopCT: "",
+   NamHoanThanhCT: "",
+   TenTruongCT: "",
+
+   HanhKiem: "",
+   HocLuc: "",
+
+   CoGiaiThuongQuocGia: false,
+
+   HoTen_Me: "",
+   Tuoi_Me: "",
+   DonViCongTac_Me: "",
+   NgheNghiep_Me: "",
+   SDT_Me: "",
+
+   HoTen_Cha: "",
+   Tuoi_Cha: "",
+   DonViCongTac_Cha: "",
+   NgheNghiep_Cha: "",
+   SDT_Cha: "",
+
+   HoTen_NGH: "",
+   Tuoi_NGH: "",
+   DonViCongTac_NGH: "",
+   NgheNghiep_NGH: "",
+   SDT_NGH: "",
+
+   DienThoaiLienHe: "",
+   MailLienHe: "",
+   Xacnhanthongtin: false,
+ }); */
+  const [trangthai_DangKy, setTrangThai_DangKy] = useState(false);
   //* Đăng ký
   const DangKy = async () => {
     const lstDiemHocBa = [];
@@ -1852,6 +1914,8 @@ export default function Trangdangky({ route, navigation }) {
     // console.log(DataPush);
     // console.log(JSON.stringify(DataPush));
     try {
+      // Hiển thị trạng thái chờ
+      setLoading(true);
       await fetch(
         "http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/dangkytuyensinh",
         // "https://localhost:44384//api/TSAPIService/dangkytuyensinh",
@@ -1870,6 +1934,9 @@ export default function Trangdangky({ route, navigation }) {
           // console.log(responseJson.Result);
           // console.log(responseJson.Result.status);
           // console.log(responseJson.Result.message);
+
+          // Tắt trạng thái chờ
+          setLoading(false);
           responseJson.Result.status
             ? (showMessage({
                 hideOnPress: true,
@@ -1879,66 +1946,7 @@ export default function Trangdangky({ route, navigation }) {
                 duration: 8000,
                 type: "success",
               }),
-              changeValuePicker({
-                // MaHocSinh: "",
-                // MatKhau: "",
-                HoTen: "",
-                NgaySinh: "",
-                // Nơi sinh
-                IDTinhNS: "",
-                IDHuyenNS: "",
-                IDXaNS: "",
-                DiaChiNS: "",
-                // Thường trú
-                IDTinhTT: "",
-                IDHuyenTT: "",
-                IDXaTT: "",
-                DiaChiTT: "",
-                // Tạm trú
-                IDTinhTamTru: "",
-                IDHuyenTamTru: "",
-                IDXaTamTru: "",
-                DiaChiTamTru: "",
-                // Nơi ở
-                IDTinh: "",
-                IDHuyen: "",
-                IDXa: "",
-                DiaChi: "",
-                // Chương trình cấp dưới
-                IDTinhCT: "",
-                IDHuyenCT: "",
-                IDXaCT: "",
-                TenLopCT: "",
-                NamHoanThanhCT: "",
-                TenTruongCT: "",
-
-                HanhKiem: "",
-                HocLuc: "",
-
-                CoGiaiThuongQuocGia: false,
-
-                HoTen_Me: "",
-                Tuoi_Me: "",
-                DonViCongTac_Me: "",
-                NgheNghiep_Me: "",
-                SDT_Me: "",
-
-                HoTen_Cha: "",
-                Tuoi_Cha: "",
-                DonViCongTac_Cha: "",
-                NgheNghiep_Cha: "",
-                SDT_Cha: "",
-
-                HoTen_NGH: "",
-                Tuoi_NGH: "",
-                DonViCongTac_NGH: "",
-                NgheNghiep_NGH: "",
-                SDT_NGH: "",
-
-                DienThoaiLienHe: "",
-                MailLienHe: "",
-                Xacnhanthongtin: false,
-              }))
+              setTrangThai_DangKy(true))
             : // ,setTimeout(() => {
               //   navigation.goBack();
               // }, 5000)
@@ -1951,6 +1959,8 @@ export default function Trangdangky({ route, navigation }) {
               });
         });
     } catch (e) {
+      setLoading(false);
+
       showMessage({
         hideOnPress: true,
         message: "Thất bại",
@@ -1982,7 +1992,8 @@ export default function Trangdangky({ route, navigation }) {
         data.DanToc) !== "" &&
         data.Xacnhanthongtin &&
         data.FileDinhKem.length !== 0 &&
-        data.DanToc !== "Chọn dân tộc"
+        data.DanToc !== "Chọn dân tộc" &&
+        data.GioiTinh !== null
         ? true
         : false;
     } else {
@@ -2000,7 +2011,8 @@ export default function Trangdangky({ route, navigation }) {
         data.DanToc) !== "" &&
         data.Xacnhanthongtin &&
         data.FileDinhKem.length !== 0 &&
-        data.DanToc !== "Chọn dân tộc"
+        data.DanToc !== "Chọn dân tộc" &&
+        data.GioiTinh !== null
         ? true
         : false;
     }
@@ -2276,33 +2288,80 @@ export default function Trangdangky({ route, navigation }) {
         backgroundColor: "#eff8ff",
       }}
     >
-      {loading && (
-        <BlurView
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              flex: 1,
+      {
+        //Trạng thái chờ
+        loading && (
+          // <BlurView
+          //   style={[
+          //     StyleSheet.absoluteFill,
+          //     {
+          //       flex: 1,
+          //       justifyContent: "center",
+          //       alignItems: "center",
+          //       position: "absolute",
+          //       zIndex: 4000,
+          //       paddingBottom: headerHeight,
+          //     },
+          //   ]}
+          //   intensity={100}
+          // >
+          //   <AnimatedEllipsis
+          //     numberOfDots={3}
+          //     minOpacity={0.4}
+          //     animationDelay={200}
+          //     style={{
+          //       color: "#61b15a",
+          //       fontSize: 100,
+          //       letterSpacing: -15,
+          //     }}
+          //   />
+          // </BlurView>
+          <View
+            style={{
+              width: "100%",
+              height: "100%",
               justifyContent: "center",
               alignItems: "center",
               position: "absolute",
               zIndex: 4000,
               paddingBottom: headerHeight,
-            },
-          ]}
-          intensity={100}
-        >
-          <AnimatedEllipsis
-            numberOfDots={3}
-            minOpacity={0.4}
-            animationDelay={200}
-            style={{
-              color: "#61b15a",
-              fontSize: 100,
-              letterSpacing: -15,
+              opacity: 0.5,
+              backgroundColor: "black",
             }}
-          />
-        </BlurView>
-      )}
+          >
+            <AnimatedEllipsis
+              numberOfDots={3}
+              minOpacity={0.4}
+              animationDelay={200}
+              style={{
+                color: "#61b15a",
+                fontSize: 100,
+                letterSpacing: -15,
+              }}
+            />
+          </View>
+        )
+      }
+      {
+        // Trạng thái đăng ký
+        trangthai_DangKy && (
+          <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "absolute",
+                zIndex: 4000,
+                paddingBottom: headerHeight,
+                opacity: 0.1,
+                backgroundColor: "black",
+              }}
+            />
+          </TouchableWithoutFeedback>
+        )
+      }
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{
@@ -2552,6 +2611,13 @@ export default function Trangdangky({ route, navigation }) {
                     </Text>
                     <Picker
                       selectedValue={data.DanToc}
+                      iosIcon={
+                        <IconButton
+                          icon="menu-down"
+                          color={"black"}
+                          size={26}
+                        />
+                      }
                       // placeholder="Chọn dân tộc"
                       style={{ height: 50, width: "100%" }}
                       onValueChange={(itemValue, itemIndex) =>
@@ -2571,6 +2637,14 @@ export default function Trangdangky({ route, navigation }) {
                   </View>
                   {/* Giới tính */}
                   <View style={styles.field}>
+                    {data.GioiTinh === null && (
+                      <IconButton
+                        icon="menu-right"
+                        color={Colors.red500}
+                        size={30}
+                        style={{ position: "absolute", left: -42, top: -12 }}
+                      />
+                    )}
                     <Text>Giới tính</Text>
                     <RadioButtonRN
                       data={[
@@ -2584,6 +2658,7 @@ export default function Trangdangky({ route, navigation }) {
                         },
                       ]}
                       circleSize={10}
+                      duration={100}
                       activeColor="#61b15a"
                       style={styles.radioButton}
                       selectedBtn={(e) =>
@@ -3737,6 +3812,8 @@ export default function Trangdangky({ route, navigation }) {
                         marginTop: 5,
                         alignItems: "center",
                         backgroundColor: "#fff5c0",
+                        flexDirection: "row",
+                        justifyContent: "center",
                       }}
                       onPress={() => HienThi_ModalMinhChung()}
                     >
@@ -3759,6 +3836,7 @@ export default function Trangdangky({ route, navigation }) {
                         // }}
                         onPress={() => HienThi_ModalMinhChung()}
                       />
+                      <Text>{`Đã chọn ${data.FileDinhKem.length} ảnh`}</Text>
                     </TouchableOpacity>
                     <Modal
                       animationType="slide"

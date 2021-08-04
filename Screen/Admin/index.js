@@ -1,2 +1,2 @@
-import Baocao from "./Baocao";
-export { Baocao };
+import Trangchu from "./Trangchu/Trangchu";
+export { Trangchu };

@@ -53,7 +53,7 @@ const WalletFlatList = ({ Tinh }) => {
   );
   return (
     <AnimatedFlatList
-      style={{ marginTop: 40 }}
+      style={{ width: "100%" }}
       scrollEventThrottle={16}
       bounces={false}
       data={cards}

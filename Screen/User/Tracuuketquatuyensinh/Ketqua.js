@@ -150,6 +150,14 @@ export default function Ketqua(props) {
                   {/*Bảng nguyện vọng*/}
                   <View style={styles.thongtinBlock}>
                     <Text style={styles.textField}>Kết quả:</Text>
+                    {/*  {!data.ThoiGianCongBo ? (
+                      <Text style={styles.textData}>
+                        Chưa đến thời gian công bố kết quả. Vui lòng theo dõi
+                        lịch trình tuyển sinh
+                      </Text>
+                    ) : (
+                      <></>
+                    )} */}
                     <Table
                       style={{ flexDirection: "column", marginTop: 5 }}
                       borderStyle={{ borderWidth: 1 }}
@@ -165,7 +173,7 @@ export default function Ketqua(props) {
                       >
                         <Cell
                           textStyle={styles.tableCell_TextHead}
-                          data="NV số"
+                          data="Nguyện vọng"
                         />
                         <Cell
                           textStyle={styles.tableCell_TextHead}

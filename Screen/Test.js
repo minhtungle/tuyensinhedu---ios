@@ -39,15 +39,20 @@ const Test = () => {
           style={styles.scrollViewStyle}
           pagingEnabled
           showsHorizontalScrollIndicator={false}
-          onScroll={Animated.event([
-            {
-              nativeEvent: {
-                contentOffset: {
-                  x: scrollX,
+          onScroll={Animated.event(
+            [
+              {
+                nativeEvent: {
+                  contentOffset: {
+                    x: scrollX,
+                  },
                 },
               },
-            },
-          ])}
+            ],
+            {
+              useNativeDriver: false,
+            }
+          )}
           scrollEventThrottle={1}
         >
           {images.map((image, imageIndex) => {
