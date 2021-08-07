@@ -6,7 +6,7 @@ import {
   CardStyleInterpolators,
   createStackNavigator,
 } from "@react-navigation/stack";
-import React, { Children, useLayoutEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import { _User, _Admin, _Genaral, Test } from "./Screen/index";
 
 import { StyleSheet, TouchableOpacity } from "react-native";
@@ -28,11 +28,22 @@ const AdminStack = createStackNavigator();
 function AdminStack_Screen() {
   return (
     <AdminStack.Navigator
-      initialRouteName="Đăng nhập"
+      initialRouteName="Kỳ tuyển sinh"
       screenOptions={ScreenStyle}
     >
-      {/* Đăng nhập */}
-      <AdminStack.Screen name="Đăng nhập" component={_Admin.Dangnhap} />
+      {/* Kỳ tuyển sinh */}
+      <AdminStack.Screen name="Kỳ tuyển sinh" component={_Admin.Kytuyensinh} />
+      {/* Kế hoạch tuyển sinh */}
+      <AdminStack.Screen
+        name="Kế hoạch tuyển sinh"
+        component={_Admin.Kehoachtuyensinh}
+      />
+      {/* Kỳ thi*/}
+      <AdminStack.Screen name="Kỳ thi" component={_Admin.Kythi} />
+      {/* Hồ sơ */}
+      <AdminStack.Screen name="Hồ sơ" component={_Admin.Hoso} />
+      {/* Tài khoản */}
+      <AdminStack.Screen name="Tài khoản" component={_Admin.Taikhoan} />
     </AdminStack.Navigator>
   );
 }
@@ -77,35 +88,13 @@ function UserStack_Screen() {
     </UserStack.Navigator>
   );
 }
-// Đăng nhập Tab
-const DangnhapTab = ({ children, onPress }) => (
-  <View
-    style={{
-      top: -10,
-      justifyContent: "center",
-      alignItems: "center",
-      ...styles.shadow,
-    }}
-    // onPress={onPress}
-  >
-    <View
-      style={{
-        width: 70,
-        height: 70,
-        backgroundColor: "tomato",
-        borderRadius: 35,
-      }}
-    >
-      {children}
-    </View>
-  </View>
-);
+
 const GenaralTab = createBottomTabNavigator();
 function GenaralTab_Screen({ route, navigation }) {
   const data = route.params;
   return (
     <GenaralTab.Navigator
-      initialRouteName="User"
+      initialRouteName="Quản lý"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
           let iconName;
@@ -115,31 +104,31 @@ function GenaralTab_Screen({ route, navigation }) {
           let tabName;
           let color;
 
-          if (route.name === "User") {
-            tabName = "Người dùng";
+          if (route.name === "Trang chủ") {
+            tabName = "Trang chủ";
             if (focused) {
-              iconName = "account-group";
-              iconSize = 34;
+              iconName = "home";
+              iconSize = 32;
               color = "tomato";
               fontWeight = "bold";
-              fontSize = 16;
+              fontSize = 15;
             } else {
-              iconName = "account-group-outline";
+              iconName = "home-outline";
               iconSize = 23;
               color = "gray";
               fontWeight = "normal";
               fontSize = 13;
             }
-          } else if (route.name === "Admin") {
-            tabName = "Quản trị";
+          } else if (route.name === "Quản lý") {
+            tabName = "Quản lý";
             if (focused) {
-              iconName = "account-key";
-              iconSize = 34;
+              iconName = "equalizer";
+              iconSize = 32;
               color = "tomato";
               fontWeight = "bold";
-              fontSize = 16;
+              fontSize = 15;
             } else {
-              iconName = "account-key-outline";
+              iconName = "equalizer-outline";
               iconSize = 23;
               color = "gray";
               fontWeight = "normal";
@@ -194,7 +183,7 @@ function GenaralTab_Screen({ route, navigation }) {
       }}
     >
       <GenaralTab.Screen
-        name="User"
+        name="Trang chủ"
         component={_User.Trangchu}
         initialParams={{ ...data }}
       />
@@ -210,7 +199,7 @@ function GenaralTab_Screen({ route, navigation }) {
         }}
       /> */}
       <GenaralTab.Screen
-        name="Admin"
+        name="Quản lý"
         component={_Admin.Trangchu}
         initialParams={{ ...data }}
       />
@@ -223,7 +212,9 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Đăng nhập" screenOptions={ScreenStyle}>
         <Stack.Screen name="Đăng nhập" component={_Genaral.Dangnhap} />
-        <Stack.Screen name="Trang chủ" component={GenaralTab_Screen} />
+        <Stack.Screen name="Quản trị viên" component={GenaralTab_Screen} />
+        <Stack.Screen name="Trang chủ" component={_User.Trangchu} />
+        <Stack.Screen name="Test" component={Test} />
         {/* User */}
         <UserStack.Screen
           name="Danh mục văn bản"
@@ -248,12 +239,46 @@ function App() {
           component={_User.Huongdandangkytructuyen}
         />
         {/* Admin */}
+        <AdminStack.Screen
+          name="Kỳ tuyển sinh"
+          component={_Admin.Kytuyensinh}
+        />
+        <AdminStack.Screen
+          name="Kế hoạch tuyển sinh"
+          component={_Admin.Kehoachtuyensinh}
+        />
+        <AdminStack.Screen name="Kỳ thi" component={_Admin.Kythi} />
+        <AdminStack.Screen name="Hồ sơ" component={_Admin.Hoso} />
+        <AdminStack.Screen name="Tài khoản" component={_Admin.Taikhoan} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 //#region code cũ
+// Đăng nhập Tab
+const DangnhapTab = ({ children, onPress }) => (
+  <View
+    style={{
+      top: -10,
+      justifyContent: "center",
+      alignItems: "center",
+      ...styles.shadow,
+    }}
+    // onPress={onPress}
+  >
+    <View
+      style={{
+        width: 70,
+        height: 70,
+        backgroundColor: "tomato",
+        borderRadius: 35,
+      }}
+    >
+      {children}
+    </View>
+  </View>
+);
 function _App() {
   return (
     <NavigationContainer>

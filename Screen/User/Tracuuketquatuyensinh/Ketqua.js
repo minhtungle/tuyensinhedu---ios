@@ -9,7 +9,6 @@ import {
   Cols,
   Cell,
 } from "react-native-table-component";
-import { bottom } from "styled-system";
 
 export default function Ketqua(props) {
   const { data, bottom } = props;

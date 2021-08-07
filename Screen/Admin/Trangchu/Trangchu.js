@@ -7,29 +7,81 @@ import {
   StyleSheet,
   ScrollView,
   Animated,
-  useWindowDimensions,
+  Easing,
+  TouchableOpacity,
+  Image,
+  Dimensions,
 } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
-import { useHeaderHeight } from "@react-navigation/stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useHeaderHeight } from "@react-navigation/stack";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+const { height, width } = Dimensions.get("window");
 
 function Trangchu({ route, navigation }) {
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      // headerShown: false,
-      headerTitle: () => (
-        <MaterialCommunityIcons name={"home"} size={30} color={"white"} />
-      ),
-      headerRight: () => <Button title="+1" color="#fff" />,
-    });
-  });
+  const data = route.params;
+  // console.log(data);
 
-  // const { Tinh } = route.params;
-  const Tinh = "Vĩnh Phúc";
+  // Tạo chiều cao cho từng screenCard
+  const headerHeight = useHeaderHeight();
+  let heighthPerScreen = 0;
+  heighthPerScreen = (((height - headerHeight) * 0.6 - 2 * 5 * 3) * 0.95) / 3; // (width - 2 * margin * rowElement) / rowElement
+  if (data.DoiTuong != 1) {
+    const bottomHeight = useBottomTabBarHeight();
+    heighthPerScreen =
+      (((height - headerHeight - bottomHeight) * 0.6 - 2 * 5 * 3) * 0.95) / 3; // (width - 2 * margin * rowElement) / rowElement
+  }
+
+  //#region Hieu ung spin logo
+  const spinValue = new Animated.Value(0);
+  Animated.loop(
+    Animated.timing(spinValue, {
+      toValue: 1,
+      duration: 10000,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    })
+  ).start();
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
+  //#endregion
+  const screenCard = [
+    {
+      page: "Kỳ tuyển sinh",
+      title: "Kỳ tuyển sinh",
+      icon: "calendar-month",
+      doituong: 3, // cho PGD
+    },
+    {
+      page: "Kế hoạch tuyển sinh",
+      title: "Kế hoạch tuyển sinh",
+      icon: "bulletin-board",
+      doituong: 2, // cho tất cả
+    },
+    {
+      page: "Kỳ thi",
+      title: "Kỳ thi",
+      icon: "calculator-variant",
+      doituong: 4, // cho SGD
+    },
+    {
+      page: "Hồ sơ",
+      title: "Hồ sơ",
+      icon: "folder-open",
+      doituong: 2,
+    },
+    {
+      page: "Tài khoản",
+      title: "Tài khoản",
+      icon: "account-cog",
+      doituong: 2,
+    },
+  ];
   //#region Kiểm tra kết nối mạng
   const [connected, setConnected] = useState(true);
-  const headerHeight = useHeaderHeight();
   useEffect(() => {
     const interval = setInterval(
       () =>
@@ -50,7 +102,8 @@ function Trangchu({ route, navigation }) {
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "#DEEBFE",
-          paddingBottom: headerHeight,
+          display: "none", // Nhớ đổi lại
+          // paddingBottom: headerHeight,
         }}
       >
         <AnimatedEllipsis
@@ -68,7 +121,18 @@ function Trangchu({ route, navigation }) {
     );
   }
   //#endregion
-
+  //#region Function
+  const Chon_LoaiQuanLy = (page, doituong) => {
+    // console.log(data.DoiTuong, doituong);
+    if (data.DoiTuong != 4 && doituong == 4) {
+      alert("Chức năng này chỉ phục vụ cấp SỞ Giáo Dục");
+    } else if (data.DoiTuong != 3 && doituong == 3) {
+      alert("Chức năng này chỉ phục vụ cấp Phòng Giáo Dục");
+    } else {
+      navigation.navigate(page, { ...data });
+    }
+  };
+  //#endregion
   return (
     <View>
       <View
@@ -79,67 +143,135 @@ function Trangchu({ route, navigation }) {
         }}
       >
         {/*Head*/}
-        <View
-          style={{
-            width: "100%",
-            height: "30%",
-            borderBottomWidth: 1,
-          }}
-        ></View>
+        <View style={styles.headBox}>
+          <Animated.Image
+            style={{
+              height: width * 0.3,
+              width: width * 0.3,
+              transform: [{ rotate: spin }],
+            }}
+            source={require("../../../assets/logo.png")}
+          />
+          <Text
+            style={{
+              width: "90%",
+              fontSize: 28,
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            {(() => {
+              let welcome_mess = "";
+              let doituong = data.DoiTuong;
+              let tendonvi = "";
+              if (doituong == 1) {
+                welcome_mess =
+                  "Chào mừng đến với hệ thống tuyển sinh trực tuyến";
+              } else if (doituong == 2) {
+                let truong = JSON.parse(data.Truong);
+                tendonvi = truong.Ten;
+                welcome_mess = `Xin chào ! \n ${tendonvi}`;
+              } else if (doituong == 3) {
+                let pgd = JSON.parse(data.Truong);
+                tendonvi = pgd.Ten;
+                welcome_mess = `Xin chào ! \n ${tendonvi}`;
+              } else if (doituong == 4) {
+                let sgd = JSON.parse(data.Truong);
+                tendonvi = sgd.Ten;
+                welcome_mess = `Xin chào ! \n ${tendonvi}`;
+              }
+              return welcome_mess;
+            })()}
+          </Text>
+        </View>
         {/*Body*/}
-        <View
-          style={{
-            width: "100%",
-            height: "70%",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        ></View>
+        <View style={styles.bodyBox}>
+          {screenCard.map((sc_item, sc_index) => (
+            <TouchableOpacity
+              key={sc_index.toString()}
+              style={[
+                styles.screenCard,
+                { ...styles.shadow, height: heighthPerScreen },
+              ]}
+              onPress={() => Chon_LoaiQuanLy(sc_item.page, sc_item.doituong)}
+            >
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "40%",
+                  // borderWidth: 1,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name={sc_item.icon}
+                  size={50}
+                  color={"#0965B0"}
+                />
+              </View>
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "40%",
+                  // borderWidth: 1,
+                }}
+              >
+                <Text style={styles.screenText}>{sc_item.title}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
     </View>
   );
 }
+const marginScreen = 5;
+const sumScreenPerRow = 2;
+const widthPerScreen =
+  (width - 2 * marginScreen * sumScreenPerRow) / sumScreenPerRow;
+
 const styles = StyleSheet.create({
-  screenNavigation: {
-    width: 50,
-  },
-  scrollContainer: {
-    height: 300,
-    borderWidth: 2,
+  headBox: {
+    width: "100%",
+    height: "40%",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
+    // borderWidth: 1,
   },
-  card: {
-    flex: 1,
-    marginVertical: 4,
-    marginHorizontal: 16,
-    borderRadius: 5,
-    overflow: "hidden",
+  bodyBox: {
+    width: "100%",
+    height: "60%",
+    justifyContent: "center",
     alignItems: "center",
-    justifyContent: "center",
-  },
-  textContainer: {
-    backgroundColor: "rgba(0,0,0, 0.7)",
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-    borderRadius: 5,
-  },
-  infoText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  normalDot: {
-    height: 8,
-    width: 8,
-    borderRadius: 4,
-    backgroundColor: "silver",
-    marginHorizontal: 4,
-  },
-  indicatorContainer: {
     flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  screenCard: {
+    width: widthPerScreen,
+    // height: "30%",
+    margin: marginScreen,
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
+    flexGrow: 1,
+    backgroundColor: "white",
+    borderRadius: 20,
+    // borderWidth: 1,
+  },
+  screenText: {
+    fontSize: 16,
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 6.27,
+
+    elevation: 10,
   },
 });
 export default Trangchu;

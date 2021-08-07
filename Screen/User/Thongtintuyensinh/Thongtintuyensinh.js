@@ -117,8 +117,9 @@ export default function Thongtintuyensinh({ navigation, route }) {
             name: "Chọn Tỉnh/Thành phố",
           },
         ];
+        let tinh = JSON.parse(Tinh);
         const obj = responseJson.Result.results.filter(
-          (item, index) => item.TenDiaChi.toString() === Tinh.toString()
+          (item, index) => item.ID === tinh.ID
         );
         // console.log(obj);
         // Reset dữ liệu tỉnh để nhận duy nhất tỉnh đang chọn từ đăng nhập
