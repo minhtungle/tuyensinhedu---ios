@@ -125,9 +125,9 @@ function Trangchu({ route, navigation }) {
   const Chon_LoaiQuanLy = (page, doituong) => {
     // console.log(data.DoiTuong, doituong);
     if (data.DoiTuong != 4 && doituong == 4) {
-      alert("Chức năng này chỉ phục vụ cấp SỞ Giáo Dục");
+      alert("Chức năng này chỉ phục vụ cấp SỞ GD&ĐT");
     } else if (data.DoiTuong != 3 && doituong == 3) {
-      alert("Chức năng này chỉ phục vụ cấp Phòng Giáo Dục");
+      alert("Chức năng này chỉ phục vụ cấp Phòng GD&ĐT");
     } else {
       navigation.navigate(page, { ...data });
     }

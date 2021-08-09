@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   Animated,
+  Easing,
   ScrollView,
   ImageBackground,
   TouchableOpacity,
@@ -17,6 +18,7 @@ import { STYLE, TAB_HEADER_HEIGHT } from "./style";
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 // Gọi các chức năng
 import Baocao from "./Baocao";
+import Thongke from "./Thongke";
 
 const Hoso = ({ route, navigation }) => {
   useLayoutEffect(() => {
@@ -116,8 +118,16 @@ const Hoso = ({ route, navigation }) => {
   });
   //* Call API kỳ thi
   useEffect(() => {
+    let doituong = data.DoiTuong;
+    let cap = 0;
+    if (doituong == 2 || doituong == 3) {
+      cap = 2;
+    } else {
+      cap = 3;
+    }
+    let namnay = new Date().getFullYear();
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getkythi?tunam=0&dennam=0&cap=3`
+      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getkythi?tunam=${namnay}&dennam=${namnay}&cap=${cap}`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -153,7 +163,104 @@ const Hoso = ({ route, navigation }) => {
   }, [0]);
   //#endregion
   //#region Gọi dữ liệu hồ sơ
-  useEffect(() => {}, []);
+  const GET_API = async (url) => {
+    try {
+      const res = await fetch(url);
+      const responseJson = await res.json();
+      return responseJson;
+    } catch (e) {
+      console.log(e);
+      alert(e);
+      return (responseJson = {});
+    }
+  };
+  useEffect(() => {
+    if (kythi != 0) {
+      (async () => {
+        const doituong = data.DoiTuong;
+
+        let url = "";
+        let idtinh = 0;
+        const tinh = JSON.parse(data.Tinh);
+        idtinh = tinh.ID;
+
+        let idtruong = 0;
+        let idquan = 0;
+        let idphuong = 0;
+        let idkythi = kythi;
+        let cap = 0;
+
+        let solieu_Hoso = []; // Số liệu hồ sơ các loại
+        let danhsach_Hoso = []; // Danh sách hồ sơ các loại
+
+        let res = {}; // Kết quả CALL API
+
+        // Đối tượng đăng nhập là Trường
+        if (doituong == 2) {
+          const truong = JSON.parse(data.Truong);
+          idtruong = truong.ID;
+          idtruong = 0;
+          url = `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getallhoso?cap=${cap}&idtinh=${idtinh}&idquan=${idquan}&idphuong=${idphuong}&idtruong=${idtruong}&idkythi=${idkythi}`;
+
+          console.log(url);
+          res = await GET_API(url);
+        }
+        // Đối tượng đăng nhập là PGD
+        else if (doituong == 3) {
+          const pgd = JSON.parse(data.PGD);
+          idtruong = pgd.ID;
+          cap = 2;
+          url = `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getallhoso?cap=${cap}&idtinh=${idtinh}&idquan=${idquan}&idphuong=${idphuong}&idtruong=${idtruong}&idkythi=${idkythi}`;
+
+          res = await GET_API(url);
+        }
+        // Đối tượng đăng nhập là SGD
+        else if (doituong == 4) {
+          cap = 3;
+          url = `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getallhoso?cap=${cap}&idtinh=${idtinh}&idquan=${idquan}&idphuong=${idphuong}&idtruong=${idtruong}&idkythi=${idkythi}`;
+
+          res = await GET_API(url);
+        }
+        solieu_Hoso = res.Result.data.lstHoSoGroup_TrangThai;
+        danhsach_Hoso = res.Result.data.lstHoSo;
+        // console.log(danhsach_Hoso);
+        solieu_Hoso.map((solieu_item, solieu_index) => {
+          //Tạo bản sao hồ sơ
+          const _hoso = [...hoso];
+          //Gán số liệu hồ sơ tương ứng cho loại hồ sơ cùng trạng thái
+          _hoso[solieu_item.TrangThai - 1].Loai[0].SoLuong =
+            solieu_item.HoSoTrucTiep; // Trực tiếp
+          _hoso[solieu_item.TrangThai - 1].Loai[1].SoLuong =
+            solieu_item.HoSoOnline; // Trực tuyến
+          setHoSo(_hoso);
+        });
+
+        // Xoá toàn bộ danh sách hồ sơ các loại
+        const _hoso = [...hoso];
+        _hoso.map((hoso_item, hoso_index) =>
+          hoso_item.Loai.map(
+            (loai_hoso_item, loai_hoso_index) =>
+              (loai_hoso_item.DanhSach.length = 0)
+          )
+        );
+        setHoSo(_hoso);
+        // Có hồ sơ thì gán hô sơ vào danh sách hồ sơ các loại tương ứng
+        danhsach_Hoso.map((ds_item, ds_index) => {
+          // Tạo bản sao hồ sơ
+          const _hoso = [...hoso];
+          // Gán số liệu hồ sơ tương ứng cho loại hồ sơ cùng trạng thái
+          if (ds_item.LaHoSoTrucTiep) {
+            // _hoso[ds_item.TrangThai - 1].Loai[0].DanhSach.length = 0;
+            _hoso[ds_item.TrangThai - 1].Loai[0].DanhSach.push(ds_item);
+          } else {
+            // _hoso[ds_item.TrangThai - 1].Loai[1].DanhSach.length = 0;
+            _hoso[ds_item.TrangThai - 1].Loai[1].DanhSach.push(ds_item);
+          }
+          setHoSo(_hoso);
+        });
+      })();
+    }
+  }, [kythi]);
   //#endregion
   //#region Xử lý thanh chọn chung
   const [loaiHienThi, setLoaiHienThi] = useState([
@@ -182,6 +289,23 @@ const Hoso = ({ route, navigation }) => {
       },
     },
   ]);
+  const position = useState(new Animated.Value(0))[0];
+  const Xem_BaoCao = () => {
+    Animated.timing(position, {
+      toValue: 0,
+      duration: 300,
+      easing: Easing.ease,
+      useNativeDriver: true,
+    }).start();
+  };
+  const Xem_ThongKe = () => {
+    Animated.timing(position, {
+      toValue: -SCREEN_WIDTH,
+      duration: 300,
+      easing: Easing.ease,
+      useNativeDriver: true,
+    }).start();
+  };
   const ChuyenDoi_TrangThai_BCTK = (_loaiHT_item, _loaiHT_index) => {
     let _loaiHT = loaiHienThi.map((loaiHT_item, loaiHT_index) =>
       loaiHT_index == _loaiHT_index
@@ -194,6 +318,8 @@ const Hoso = ({ route, navigation }) => {
             TrangThai: false,
           }
     );
+    // Di chuyển sang báo cáo và thống kê
+    _loaiHT_index == 0 ? Xem_BaoCao() : Xem_ThongKe();
     setLoaiHienThi(_loaiHT);
   };
   //#endregion
@@ -265,8 +391,23 @@ const Hoso = ({ route, navigation }) => {
           </Picker>
         </View>
       </View>
-      {/*Thanh lựa chọn chung*/}
-      <Baocao {...{ hoso, setHoSo }} />
+      <Animated.View
+        style={[
+          {
+            width: 2 * SCREEN_WIDTH,
+            flexDirection: "row",
+            transform: [
+              {
+                translateX: position,
+              },
+            ],
+          },
+        ]}
+      >
+        <Baocao {...{ hoso, setHoSo }} />
+        {/*Thống kê*/}
+        <Thongke {...{ hoso, setHoSo }} />
+      </Animated.View>
     </View>
   );
 };

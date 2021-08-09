@@ -9,8 +9,8 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import { Button, Picker, Text, View } from "native-base";
-const { height, width } = Dimensions.get("window");
+import { Button, Picker, Text, View, Spinner } from "native-base";
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function Dangnhap({ route, navigation }) {
@@ -76,6 +76,8 @@ export default function Dangnhap({ route, navigation }) {
     MatKhau: "",
   });
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [loading, setLoading] = useState(false);
+
   //#region DropPicker: Dữ liệu - Thay đổi value khi chọn - Ràng buộc picker child với parent
   //* Dữ liệu trong dropDown
   const [picker, setPicker] = useState({
@@ -592,7 +594,7 @@ export default function Dangnhap({ route, navigation }) {
     );
     setDonVi(_donvi);
   };
-  const API_DangNhap = async (madonvisudung, data) => {
+  const API_DangNhap = async (madonvisudung, doituong, data) => {
     let url = `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/login?username=${thongtin.TenDangNhap}&password=${thongtin.MatKhau}&madonvisudung=${madonvisudung}`;
     // let url = `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/login?username=tkadmin&password=123456&madonvisudung=562`;
     await fetch(url, {
@@ -607,18 +609,49 @@ export default function Dangnhap({ route, navigation }) {
       .then((response) => response.json())
       .then((responseJson) => {
         // console.log(responseJson.Result);
-        // console.log({ ...data, ...responseJson.Result.data });
+        let mess = "";
+
+        if (doituong == 2) {
+          let truong = JSON.parse(thongtin.Truong);
+          let idtruong = truong.ID;
+          if (idtruong == 0 || idtruong == "") {
+            mess = "Mời bạn chọn Trường";
+          } else {
+            mess =
+              "Tài khoản của bạn không chính xác. Vui lòng kiểm tra lại thông tin đã nhập";
+          }
+        } else if (doituong == 3) {
+          let pgd = JSON.parse(thongtin.PGD);
+          let idpgd = pgd.ID;
+          if (idpgd == 0 || idpgd == "") {
+            mess = "Mời bạn chọn Phòng GD&ĐT";
+          } else {
+            mess =
+              "Tài khoản của bạn không chính xác. Vui lòng kiểm tra lại thông tin đã nhập";
+          }
+        } else if (doituong == 4) {
+          let sgd = JSON.parse(thongtin.SGD);
+          let idsgd = sgd.ID;
+          if (idsgd == 0 || idsgd == "") {
+            mess = "Mời bạn chọn Sở GD&ĐT";
+          } else {
+            mess =
+              "Tài khoản của bạn không chính xác. Vui lòng kiểm tra lại thông tin đã nhập";
+          }
+        }
+        console.log({ ...data, ...responseJson.Result.data });
         responseJson.Result.status
           ? navigation.navigate("Quản trị viên", {
               ...data,
               ...responseJson.Result.data,
             })
-          : alert(
-              "Tài khoản của bạn không chính xác. Vui lòng kiểm tra lại thông tin đã nhập"
-            );
+          : alert(mess);
       });
   };
   const DangNhap = () => {
+    // Cho hiệu ứng chờ
+    setLoading(true);
+
     let DoiTuong = 0;
     let madonvisudung = 0;
     // Kiểm tra loại đối tượng đăng nhập
@@ -634,19 +667,29 @@ export default function Dangnhap({ route, navigation }) {
     };
     // console.log(data);
     if (DoiTuong == 1) {
-      navigation.navigate("Trang chủ", { ...data });
+      setLoading(false);
+      let tinh = JSON.parse(thongtin.Tinh);
+
+      if (tinh.ID == 0 || tinh.ID == "") {
+        alert("Mời bạn chọn Tỉnh/Thành phố");
+      } else {
+        navigation.navigate("Trang chủ", { ...data });
+      }
     } else if (DoiTuong == 2) {
       let truong = JSON.parse(thongtin.Truong);
       madonvisudung = truong.MaDonViSuDung;
-      API_DangNhap(madonvisudung, data);
+      API_DangNhap(madonvisudung, DoiTuong, data);
+      setLoading(false);
     } else if (DoiTuong == 3) {
       let pgd = JSON.parse(thongtin.PGD);
       madonvisudung = pgd.MaDonViSuDung;
-      API_DangNhap(madonvisudung, data);
+      API_DangNhap(madonvisudung, DoiTuong, data);
+      setLoading(false);
     } else if (DoiTuong == 4) {
       let sgd = JSON.parse(thongtin.SGD);
       madonvisudung = sgd.MaDonViSuDung;
-      API_DangNhap(madonvisudung, data);
+      API_DangNhap(madonvisudung, DoiTuong, data);
+      setLoading(false);
     }
   };
   //#endregion
@@ -656,6 +699,23 @@ export default function Dangnhap({ route, navigation }) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
+      {loading && (
+        <View
+          style={{
+            width: SCREEN_WIDTH,
+            height: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            zIndex: 4000,
+            paddingBottom: SCREEN_HEIGHT,
+            opacity: 0.1,
+            backgroundColor: "black",
+          }}
+        >
+          <Spinner color="green" />
+        </View>
+      )}
       <View style={styles.chonDonVi}>
         {donvi.map((donvi_item, donvi_index) => (
           <TouchableOpacity
@@ -1167,7 +1227,8 @@ export default function Dangnhap({ route, navigation }) {
 const marginAvatar = 10;
 const sumAvatarPerRow = 4;
 const widthPerAvatar =
-  ((width - 2 * marginAvatar * sumAvatarPerRow) * 0.88) / sumAvatarPerRow; // (width - 2 * margin * rowElement) / rowElement
+  ((SCREEN_WIDTH - 2 * marginAvatar * sumAvatarPerRow) * 0.88) /
+  sumAvatarPerRow; // (SCREEN_WIDTH - 2 * margin * rowElement) / rowElement
 const styles = StyleSheet.create({
   container: {
     flex: 1,

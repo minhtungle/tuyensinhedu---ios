@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 
-const Kehoachtuyensinh = () => {
+const Thongke = () => {
   return (
     <View>
       <Text></Text>
@@ -9,4 +9,4 @@ const Kehoachtuyensinh = () => {
   );
 };
 
-export default Kehoachtuyensinh;
+export default Thongke;

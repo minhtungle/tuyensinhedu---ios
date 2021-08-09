@@ -16,7 +16,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { STYLE, TAB_HEADER_HEIGHT } from "./style";
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
-
+const lst_Test = Array(5).fill(
+  "https://images.unsplash.com/photo-1556740749-887f6717d7e4"
+);
 const Baocao = ({ hoso, setHoSo }) => {
   //   console.log(hoso);
   const HEADER_HEIGHT = useHeaderHeight();
@@ -29,7 +31,21 @@ const Baocao = ({ hoso, setHoSo }) => {
 
   const scrollX = useRef(new Animated.Value(0)).current;
 
-  const ChuyenDoi_TrangThaiHoSo = () => {};
+  const ChuyenDoi_TrangThaiHoSo = (_hoso_index) => {
+    let _hoso = hoso.map((hoso_item, hoso_index) =>
+      hoso_index == _hoso_index
+        ? {
+            ...hoso_item,
+            HienThi: true,
+          }
+        : {
+            ...hoso_item,
+            HienThi: false,
+          }
+    );
+    console.log(_hoso);
+    setHoSo(_hoso);
+  };
   const ChuyenDoi_LoaiHoSo = (_hoso_index, _loai_hoso_index) => {
     let _hoso = hoso.map((hoso_item, hoso_index) =>
       hoso_index == _hoso_index
@@ -57,7 +73,7 @@ const Baocao = ({ hoso, setHoSo }) => {
       <View
         style={{
           width: "100%",
-          height: BODY_CONTAINER_HEIGHT,
+          height: BODY_CONTAINER_HEIGHT - TAB_HEADER_HEIGHT,
           //   borderWidth: 1,
           //   borderBottomColor: "red",
         }}
@@ -113,10 +129,48 @@ const Baocao = ({ hoso, setHoSo }) => {
                           height: BODY_CONTAINER_HEIGHT - TAB_HEADER_HEIGHT,
                           width: "100%",
                           backgroundColor: "white",
+                          //   paddingBottom: 200,
                           //   borderWidth: 1,
                           //   borderColor: "red",
                         }}
-                      ></ScrollView>
+                      >
+                        {
+                          // lst_Test
+                          loai_hoso_item.DanhSach.map(
+                            (ds_hoso_item, ds_hoso_index) => {
+                              return (
+                                <View
+                                  key={ds_hoso_index.toString()}
+                                  style={
+                                    (styles.center,
+                                    {
+                                      width: "100%",
+                                      minHeight: 200,
+                                      paddingHorizontal: 10,
+                                      paddingVertical: 5,
+                                      // borderWidth: 1,
+                                      // backgroundColor: "yellow",
+                                    })
+                                  }
+                                >
+                                  <View
+                                    style={[
+                                      styles.shadow,
+                                      {
+                                        height: 180,
+                                        width: "100%",
+                                        backgroundColor: "#FEFFE2",
+                                        borderRadius: 20,
+                                        // borderWidth: 1,
+                                      },
+                                    ]}
+                                  ></View>
+                                </View>
+                              );
+                            }
+                          )
+                        }
+                      </ScrollView>
                     )
                   );
                 })}
@@ -124,8 +178,6 @@ const Baocao = ({ hoso, setHoSo }) => {
             )
           );
         })}
-        {/*Trực tuyến*/}
-        <View></View>
       </View>
     );
   };
@@ -185,8 +237,31 @@ const Baocao = ({ hoso, setHoSo }) => {
                     ...styles.shadow,
                     // borderWidth: 1,
                   }}
-                  onPress={() => ChuyenDoi_TrangThaiHoSo()}
+                  onPress={() => ChuyenDoi_TrangThaiHoSo(hoso_index)}
                 >
+                  {hoso_item.HienThi && (
+                    <View
+                      style={[
+                        styles.center,
+                        {
+                          borderRadius: 25,
+                          height: 20,
+                          width: 20,
+                          backgroundColor: "#61b15a",
+                          position: "absolute",
+                          top: 10,
+                          left: 10,
+                        },
+                      ]}
+                    >
+                      <MaterialCommunityIcons
+                        name={"check"}
+                        //   size={45}
+                        color={"white"}
+                      />
+                    </View>
+                  )}
+
                   <View
                     style={{
                       height: "60%",
@@ -201,7 +276,13 @@ const Baocao = ({ hoso, setHoSo }) => {
                       size={45}
                       color={"#0965B0"}
                     />
-                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        textAlign: "center",
+                      }}
+                    >
                       {hoso_item.Ten}
                     </Text>
                   </View>
