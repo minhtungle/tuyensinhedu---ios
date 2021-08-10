@@ -49,215 +49,204 @@ const Baocao = ({ kythi, setKyThi }) => {
   const DanhSach_KyThi = () => {
     return (
       <View
-        style={{
-          width: "100%",
-          height: BODY_CONTAINER_HEIGHT,
-          //   borderWidth: 1,
-          //   borderBottomColor: "red",
-        }}
+        style={[
+          styles.center,
+          {
+            height: BODY_CONTAINER_HEIGHT,
+          },
+        ]}
       >
         <View
-          style={[
-            styles.center,
-            {
-              height: BODY_CONTAINER_HEIGHT,
-            },
-          ]}
+          style={{
+            ...styles.shadow,
+            height: "90%",
+            width: "90%",
+            paddingVertical: 30,
+            paddingHorizontal: 20,
+            backgroundColor: "white",
+            borderRadius: 25,
+          }}
         >
-          <View
+          <ScrollView
+            nestedScrollEnabled
             style={{
-              ...styles.shadow,
-              height: "90%",
-              width: "90%",
-              paddingVertical: 30,
-              paddingHorizontal: 20,
-              backgroundColor: "white",
-              borderRadius: 25,
+              height: BODY_CONTAINER_HEIGHT * 0.9,
+              width: "100%",
+              // borderWidth: 1,
             }}
           >
-            <ScrollView
-              nestedScrollEnabled
-              style={{
-                height: BODY_CONTAINER_HEIGHT * 0.9,
-                width: "100%",
-                // borderWidth: 1,
-              }}
-            >
-              {kythi.map((kythi_item, kythi_index) => {
-                return (
-                  kythi_item.HienThi && (
-                    <View
-                      key={kythi_index.toString()}
+            {kythi.map((kythi_item, kythi_index) => {
+              return (
+                kythi_item.HienThi && (
+                  <View
+                    key={kythi_index.toString()}
+                    style={{
+                      width: "100%",
+                    }}
+                  >
+                    <Text
                       style={{
-                        width: "100%",
+                        fontWeight: "500",
+                        fontSize: 16,
                       }}
                     >
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Lịch trình tuyển sinh:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.TrangThai_HienThi}
-                        </Text>
+                      ● Lịch trình tuyển sinh:{" "}
+                      <Text style={styles.ketqua}>
+                        {kythi_item.TrangThai_HienThi}
                       </Text>
+                    </Text>
 
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Năm học:{" "}
-                        <Text style={styles.ketqua}>{kythi_item.NamHoc}</Text>
-                      </Text>
+                    <Text
+                      style={{
+                        fontWeight: "500",
+                        fontSize: 16,
+                      }}
+                    >
+                      ● Năm học:{" "}
+                      <Text style={styles.ketqua}>{kythi_item.NamHoc}</Text>
+                    </Text>
 
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Điểm sàn:{" "}
-                        <Text style={styles.ketqua}>{kythi_item.DiemSan}</Text>
-                      </Text>
+                    <Text
+                      style={{
+                        fontWeight: "500",
+                        fontSize: 16,
+                      }}
+                    >
+                      ● Điểm sàn:{" "}
+                      <Text style={styles.ketqua}>{kythi_item.DiemSan}</Text>
+                    </Text>
 
-                      <Text
-                        style={{
-                          marginTop: 25,
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Mã kỳ thi:{" "}
-                        <Text style={styles.ketqua}>{kythi_item.MaKyThi}</Text>
-                      </Text>
+                    <Text
+                      style={{
+                        marginTop: 25,
+                        fontWeight: "500",
+                        fontSize: 16,
+                      }}
+                    >
+                      ● Mã kỳ thi:{" "}
+                      <Text style={styles.ketqua}>{kythi_item.MaKyThi}</Text>
+                    </Text>
 
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Số lượng nguyện vọng:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.SoLuongNguyenVong}
-                        </Text>
+                    <Text
+                      style={{
+                        fontWeight: "500",
+                        fontSize: 16,
+                      }}
+                    >
+                      ● Số lượng nguyện vọng:{" "}
+                      <Text style={styles.ketqua}>
+                        {kythi_item.SoLuongNguyenVong}
                       </Text>
+                    </Text>
 
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Số lượng hội đồng thi:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.SoLuongHDT}
-                        </Text>
-                      </Text>
+                    <Text
+                      style={{
+                        fontWeight: "500",
+                        fontSize: 16,
+                      }}
+                    >
+                      ● Số lượng hội đồng thi:{" "}
+                      <Text style={styles.ketqua}>{kythi_item.SoLuongHDT}</Text>
+                    </Text>
 
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Số lượng học sinh:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.SoLuongHocSinh}
-                        </Text>
+                    <Text
+                      style={{
+                        fontWeight: "500",
+                        fontSize: 16,
+                      }}
+                    >
+                      ● Số lượng học sinh:{" "}
+                      <Text style={styles.ketqua}>
+                        {kythi_item.SoLuongHocSinh}
                       </Text>
+                    </Text>
 
-                      <Text
-                        style={{
-                          marginTop: 25,
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Thời gian bắt đầu thi:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.ThoiGianBatDauThi}
-                        </Text>
+                    <Text
+                      style={{
+                        marginTop: 25,
+                        fontWeight: "500",
+                        fontSize: 16,
+                      }}
+                    >
+                      ● Thời gian bắt đầu thi:{" "}
+                      <Text style={styles.ketqua}>
+                        {kythi_item.ThoiGianBatDauThi}
                       </Text>
+                    </Text>
 
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Thời gian đăng ký thi:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.ThoiGianDangKyThi}
-                        </Text>
+                    <Text
+                      style={{
+                        fontWeight: "500",
+                        fontSize: 16,
+                      }}
+                    >
+                      ● Thời gian đăng ký thi:{" "}
+                      <Text style={styles.ketqua}>
+                        {kythi_item.ThoiGianDangKyThi}
                       </Text>
+                    </Text>
 
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Thời gian tổ chức thi:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.ThoiGianToChucThi}
-                        </Text>
+                    <Text
+                      style={{
+                        fontWeight: "500",
+                        fontSize: 16,
+                      }}
+                    >
+                      ● Thời gian tổ chức thi:{" "}
+                      <Text style={styles.ketqua}>
+                        {kythi_item.ThoiGianToChucThi}
                       </Text>
+                    </Text>
 
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Thời gian chấm thi:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.ThoiGianChamThi}
-                        </Text>
+                    <Text
+                      style={{
+                        fontWeight: "500",
+                        fontSize: 16,
+                      }}
+                    >
+                      ● Thời gian chấm thi:{" "}
+                      <Text style={styles.ketqua}>
+                        {kythi_item.ThoiGianChamThi}
                       </Text>
+                    </Text>
 
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Thời gian kết thúc thi:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.ThoiGianKetThucThi}
-                        </Text>
+                    <Text
+                      style={{
+                        fontWeight: "500",
+                        fontSize: 16,
+                      }}
+                    >
+                      ● Thời gian kết thúc thi:{" "}
+                      <Text style={styles.ketqua}>
+                        {kythi_item.ThoiGianKetThucThi}
                       </Text>
+                    </Text>
 
-                      <Text
-                        style={{
-                          marginTop: 25,
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Ngày tạo:{" "}
-                        <Text style={styles.ketqua}>{kythi_item.NgayTao}</Text>
-                      </Text>
+                    <Text
+                      style={{
+                        marginTop: 25,
+                        fontWeight: "500",
+                        fontSize: 16,
+                      }}
+                    >
+                      ● Ngày tạo:{" "}
+                      <Text style={styles.ketqua}>{kythi_item.NgayTao}</Text>
+                    </Text>
 
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Ngày sửa:{" "}
-                        <Text style={styles.ketqua}>{kythi_item.NgaySua}</Text>
-                      </Text>
-                    </View>
-                  )
-                );
-              })}
-            </ScrollView>
-          </View>
+                    <Text
+                      style={{
+                        fontWeight: "500",
+                        fontSize: 16,
+                      }}
+                    >
+                      ● Ngày sửa:{" "}
+                      <Text style={styles.ketqua}>{kythi_item.NgaySua}</Text>
+                    </Text>
+                  </View>
+                )
+              );
+            })}
+          </ScrollView>
         </View>
       </View>
     );

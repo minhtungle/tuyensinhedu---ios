@@ -6,12 +6,14 @@ import {
   TextInput,
   KeyboardAvoidingView,
   KeyboardAvoidingViewBase,
+  ActivityIndicator,
   ScrollView,
   Alert,
 } from "react-native";
 import { Button, Picker, Text, View, Spinner } from "native-base";
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { TAB_HEADER_HEIGHT } from "../../Admin/Kythi/style";
 
 export default function Dangnhap({ route, navigation }) {
   const [donvi, setDonVi] = useState([
@@ -147,6 +149,7 @@ export default function Dangnhap({ route, navigation }) {
   //#region API - Call:  tỉnh-huyện-xã
   //* Huyện + Trường:
   useEffect(() => {
+    setLoading(true);
     fetch(
       "http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=1&level=1"
     )
@@ -379,6 +382,7 @@ export default function Dangnhap({ route, navigation }) {
               ],
             }));
           });
+        setLoading(false);
       })
       .catch((error) => {
         const arrDataFail = [
@@ -392,7 +396,9 @@ export default function Dangnhap({ route, navigation }) {
           ...prevState,
           Tinh: arrDataFail,
         }));
+        setLoading(false);
       });
+    setLoading(false);
   }, [0]);
   //* Huyện
   useEffect(() => {
@@ -639,6 +645,8 @@ export default function Dangnhap({ route, navigation }) {
               "Tài khoản của bạn không chính xác. Vui lòng kiểm tra lại thông tin đã nhập";
           }
         }
+        setLoading(false);
+
         console.log({ ...data, ...responseJson.Result.data });
         responseJson.Result.status
           ? navigation.navigate("Quản trị viên", {
@@ -679,17 +687,14 @@ export default function Dangnhap({ route, navigation }) {
       let truong = JSON.parse(thongtin.Truong);
       madonvisudung = truong.MaDonViSuDung;
       API_DangNhap(madonvisudung, DoiTuong, data);
-      setLoading(false);
     } else if (DoiTuong == 3) {
       let pgd = JSON.parse(thongtin.PGD);
       madonvisudung = pgd.MaDonViSuDung;
       API_DangNhap(madonvisudung, DoiTuong, data);
-      setLoading(false);
     } else if (DoiTuong == 4) {
       let sgd = JSON.parse(thongtin.SGD);
       madonvisudung = sgd.MaDonViSuDung;
       API_DangNhap(madonvisudung, DoiTuong, data);
-      setLoading(false);
     }
   };
   //#endregion
@@ -703,17 +708,16 @@ export default function Dangnhap({ route, navigation }) {
         <View
           style={{
             width: SCREEN_WIDTH,
-            height: "100%",
+            height: SCREEN_HEIGHT,
             justifyContent: "center",
             alignItems: "center",
             position: "absolute",
             zIndex: 4000,
-            paddingBottom: SCREEN_HEIGHT,
-            opacity: 0.1,
-            backgroundColor: "black",
+            paddingBottom: 2 * TAB_HEADER_HEIGHT,
+            backgroundColor: "#0000006e",
           }}
         >
-          <Spinner color="green" />
+          <Spinner color="white" />
         </View>
       )}
       <View style={styles.chonDonVi}>

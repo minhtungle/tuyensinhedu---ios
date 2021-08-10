@@ -3,7 +3,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { useHeaderHeight } from "@react-navigation/stack";
 import { BlurView } from "expo-blur";
 import Constants from "expo-constants";
-import { Button, CheckBox, Picker, Text, View } from "native-base";
+import { Button, CheckBox, Picker, Text, View, Spinner } from "native-base";
 import RadioButtonRN from "radio-buttons-react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
@@ -2291,31 +2291,6 @@ export default function Trangdangky({ route, navigation }) {
       {
         //Trạng thái chờ
         loading && (
-          // <BlurView
-          //   style={[
-          //     StyleSheet.absoluteFill,
-          //     {
-          //       flex: 1,
-          //       justifyContent: "center",
-          //       alignItems: "center",
-          //       position: "absolute",
-          //       zIndex: 4000,
-          //       paddingBottom: headerHeight,
-          //     },
-          //   ]}
-          //   intensity={100}
-          // >
-          //   <AnimatedEllipsis
-          //     numberOfDots={3}
-          //     minOpacity={0.4}
-          //     animationDelay={200}
-          //     style={{
-          //       color: "#61b15a",
-          //       fontSize: 100,
-          //       letterSpacing: -15,
-          //     }}
-          //   />
-          // </BlurView>
           <View
             style={{
               width: "100%",
@@ -2325,20 +2300,10 @@ export default function Trangdangky({ route, navigation }) {
               position: "absolute",
               zIndex: 4000,
               paddingBottom: headerHeight,
-              opacity: 0.5,
-              backgroundColor: "black",
+              backgroundColor: "#0000006e",
             }}
           >
-            <AnimatedEllipsis
-              numberOfDots={3}
-              minOpacity={0.4}
-              animationDelay={200}
-              style={{
-                color: "#61b15a",
-                fontSize: 100,
-                letterSpacing: -15,
-              }}
-            />
+            <Spinner color="white" />
           </View>
         )
       }
@@ -2355,8 +2320,7 @@ export default function Trangdangky({ route, navigation }) {
                 position: "absolute",
                 zIndex: 4000,
                 paddingBottom: headerHeight,
-                opacity: 0.1,
-                backgroundColor: "black",
+                backgroundColor: "#0000006e",
               }}
             />
           </TouchableWithoutFeedback>

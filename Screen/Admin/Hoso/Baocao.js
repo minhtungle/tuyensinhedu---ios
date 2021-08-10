@@ -7,19 +7,45 @@ import {
   Dimensions,
   Animated,
   ScrollView,
+  FlatList,
   ImageBackground,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
+
 import { useHeaderHeight } from "@react-navigation/stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { STYLE, TAB_HEADER_HEIGHT } from "./style";
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
-const lst_Test = Array(5).fill(
+const lst_Test = Array(2).fill(
   "https://images.unsplash.com/photo-1556740749-887f6717d7e4"
 );
-const Baocao = ({ hoso, setHoSo }) => {
+const obj_Test = [
+  {
+    ID: 3423,
+    MaHocSinh: "0335THPTLX3423",
+    HoTen: "Học sinh test thử",
+    NgaySinh: "01/07/1998",
+    MaHoSo: "HS3423",
+    NgayTao: "07/08/2021",
+    LaHoSoTrucTiep: true,
+    TrangThai: 1,
+    TenTruong_NguyenVong1: "THPT Lê Xoay",
+  },
+  {
+    ID: 3423,
+    MaHocSinh: "0335THPTLX3423",
+    HoTen: "Học sinh test thử",
+    NgaySinh: "01/07/1998",
+    MaHoSo: "HS3423",
+    NgayTao: "07/08/2021",
+    LaHoSoTrucTiep: true,
+    TrangThai: 1,
+    TenTruong_NguyenVong1: "THPT Lê Xoay",
+  },
+];
+const Baocao = ({ hoso, setHoSo, setLoading }) => {
   //   console.log(hoso);
   const HEADER_HEIGHT = useHeaderHeight();
 
@@ -32,6 +58,7 @@ const Baocao = ({ hoso, setHoSo }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const ChuyenDoi_TrangThaiHoSo = (_hoso_index) => {
+    setLoading(true);
     let _hoso = hoso.map((hoso_item, hoso_index) =>
       hoso_index == _hoso_index
         ? {
@@ -43,7 +70,8 @@ const Baocao = ({ hoso, setHoSo }) => {
             HienThi: false,
           }
     );
-    console.log(_hoso);
+    setLoading(false);
+    // console.log(_hoso);
     setHoSo(_hoso);
   };
   const ChuyenDoi_LoaiHoSo = (_hoso_index, _loai_hoso_index) => {
@@ -67,6 +95,91 @@ const Baocao = ({ hoso, setHoSo }) => {
     );
     // console.log(_hoso);
     setHoSo(_hoso);
+  };
+  const renderHoSo = ({ item }) => {
+    return (
+      <View
+        style={
+          (styles.center,
+          {
+            width: "100%",
+            minHeight: 200,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            // borderWidth: 1,
+            // backgroundColor: "yellow",
+          })
+        }
+      >
+        <View
+          style={[
+            styles.shadow,
+            {
+              height: 180,
+              width: "100%",
+              backgroundColor: "#FEFFE2",
+              borderRadius: 20,
+              // borderWidth: 1,
+            },
+          ]}
+        >
+          <View
+            style={{
+              height: "30%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: "bold",
+                alignSelf: "center",
+                textAlign: "center",
+              }}
+            >
+              {item.HoTen}
+              {" - "}
+              <Text
+                style={{
+                  fontWeight: "normal",
+                }}
+              >
+                {item.NgaySinh}
+              </Text>
+            </Text>
+          </View>
+          <View
+            style={{
+              height: "70%",
+              justifyContent: "space-around",
+              borderTopWidth: 0.5,
+              paddingHorizontal: 20,
+            }}
+          >
+            <Text>
+              • Mã học sinh:{" "}
+              <Text style={styles.thongtinHoSo}> {item.MaHocSinh} </Text>
+            </Text>
+            <Text>
+              • Mã hồ sơ:{" "}
+              <Text style={styles.thongtinHoSo}> {item.MaHoSo} </Text>
+            </Text>
+            <Text>
+              • Ngày tạo:{" "}
+              <Text style={styles.thongtinHoSo}> {item.NgayTao} </Text>
+            </Text>
+            <Text>
+              • Tên nguyện vọng 1:{" "}
+              <Text style={styles.thongtinHoSo}>
+                {" "}
+                {item.TenTruong_NguyenVong1}
+              </Text>
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
   };
   const DanhSach_HoSo = () => {
     return (
@@ -123,7 +236,19 @@ const Baocao = ({ hoso, setHoSo }) => {
                 {hoso_item.Loai.map((loai_hoso_item, loai_hoso_index) => {
                   return (
                     loai_hoso_item.HienThi && (
-                      <ScrollView
+                      <FlatList
+                        key={loai_hoso_index.toString()}
+                        style={{
+                          height: BODY_CONTAINER_HEIGHT - TAB_HEADER_HEIGHT,
+                          width: "100%",
+                          backgroundColor: "white",
+                        }}
+                        data={loai_hoso_item.DanhSach}
+                        renderItem={renderHoSo}
+                        keyExtractor={(item) => item.ID.toString()}
+                        // extraData={selectedId}
+                      />
+                      /*  <ScrollView
                         key={loai_hoso_index.toString()}
                         style={{
                           height: BODY_CONTAINER_HEIGHT - TAB_HEADER_HEIGHT,
@@ -134,43 +259,17 @@ const Baocao = ({ hoso, setHoSo }) => {
                           //   borderColor: "red",
                         }}
                       >
-                        {
-                          // lst_Test
+                      
+                          {
+                          // lst_Test - obj_Test -loai_hoso_item.DanhSach
                           loai_hoso_item.DanhSach.map(
                             (ds_hoso_item, ds_hoso_index) => {
                               return (
-                                <View
-                                  key={ds_hoso_index.toString()}
-                                  style={
-                                    (styles.center,
-                                    {
-                                      width: "100%",
-                                      minHeight: 200,
-                                      paddingHorizontal: 10,
-                                      paddingVertical: 5,
-                                      // borderWidth: 1,
-                                      // backgroundColor: "yellow",
-                                    })
-                                  }
-                                >
-                                  <View
-                                    style={[
-                                      styles.shadow,
-                                      {
-                                        height: 180,
-                                        width: "100%",
-                                        backgroundColor: "#FEFFE2",
-                                        borderRadius: 20,
-                                        // borderWidth: 1,
-                                      },
-                                    ]}
-                                  ></View>
-                                </View>
-                              );
+                               );
                             }
                           )
                         }
-                      </ScrollView>
+                      </ScrollView> */
                     )
                   );
                 })}
@@ -322,42 +421,15 @@ const Baocao = ({ hoso, setHoSo }) => {
                                 tyle =
                                   (loai_hoso_item.SoLuong * 100) /
                                   tongsoluong_hoso;
-                                return `${loai_hoso_item.SoLuong} (${tyle}%)`;
+                                return `${
+                                  loai_hoso_item.SoLuong
+                                } (${tyle.toFixed(2)}%)`;
                               })()}
                             </Text>
                           </Text>
                         </View>
                       );
                     })}
-                    {/*Trực tuyến*/}
-                    {/* <View
-                      style={{
-                        width: "50%",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Text>
-                        Trực tuyến:{" "}
-                        <Text style={{ color: "red" }}>
-                          {(() => {
-                            let tyle_tructuyen = 0;
-                            if (
-                              hoso_item.Loai[0].SoLuong +
-                                hoso_item.Loai[1].SoLuong ==
-                              0
-                            ) {
-                              return `${hoso_item.Loai[1].SoLuong} (0%)`;
-                            }
-                            tyle_tructuyen =
-                              (hoso_item.Loai[1].SoLuong * 100) /
-                              (hoso_item.Loai[1].SoLuong +
-                                hoso_item.Loai[0].SoLuong);
-                            return `${hoso_item.Loai[1].SoLuong} (${tyle_tructuyen}%)`;
-                          })()}
-                        </Text>
-                      </Text>
-                    </View> */}
                   </View>
                 </TouchableOpacity>
               </View>
@@ -404,6 +476,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     // borderWidth: 1,
+  },
+  thongtinHoSo: {
+    color: "red",
   },
 });
 export default Baocao;

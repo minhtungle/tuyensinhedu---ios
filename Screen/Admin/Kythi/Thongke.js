@@ -13,7 +13,15 @@ import {
 } from "react-native";
 import { useHeaderHeight } from "@react-navigation/stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { STYLE, TAB_HEADER_HEIGHT } from "./style";
+import { STYLE, TAB_HEADER_HEIGHT, COLORS } from "./style";
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  ProgressChart,
+  ContributionGraph,
+  StackedBarChart,
+} from "react-native-chart-kit";
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 const lst_Test = Array(5).fill(
@@ -26,238 +34,370 @@ const Thongke = ({ kythi, setKyThi }) => {
   // Chiều cao mà từng màn hình riêng có thể sử dụng
   const CONTAINER_HEIGHT =
     SCREEN_HEIGHT - HEADER_HEIGHT - 1 * TAB_HEADER_HEIGHT;
-  const TOP_CONTAINER_HEIGHT = CONTAINER_HEIGHT * 0.3;
+  const TOP_CONTAINER_HEIGHT = CONTAINER_HEIGHT * 0.2;
   const BODY_CONTAINER_HEIGHT = CONTAINER_HEIGHT - TOP_CONTAINER_HEIGHT;
 
-  const scrollX = useRef(new Animated.Value(0)).current;
-  //#region Danh sách kỳ thi
-  const ChuyenDoi_TrangThaiKyThi = (_kythi_index) => {
-    let _kythi = kythi.map((kythi_item, kythi_index) =>
-      kythi_index == _kythi_index
+  //#region Thống kê
+  const [loaithongke, setLoaiThongKe] = useState([
+    {
+      Ten: "Lịch trình tuyển sinh",
+      HienThi: true,
+    },
+    {
+      Ten: "Học sinh",
+      HienThi: false,
+    },
+  ]);
+  const ChuyenDoi_LoaiTK = (_loaiTK_index) => {
+    let _loaithongke = loaithongke.map((loaiTK_item, loaiTK_index) =>
+      loaiTK_index == _loaiTK_index
         ? {
-            ...kythi_item,
+            ...loaiTK_item,
             HienThi: true,
           }
         : {
-            ...kythi_item,
+            ...loaiTK_item,
             HienThi: false,
           }
     );
     // console.log(_kythi);
-    setKyThi(_kythi);
+    setLoaiThongKe(_loaithongke);
   };
-  const DanhSach_KyThi = () => {
+  const SoLieu_ThongKe = () => {
     return (
       <View
-        style={{
-          width: "100%",
-          height: BODY_CONTAINER_HEIGHT,
-          //   borderWidth: 1,
-          //   borderBottomColor: "red",
-        }}
+        style={[
+          styles.center,
+          {
+            height: TOP_CONTAINER_HEIGHT,
+          },
+        ]}
       >
         <View
-          style={[
-            styles.center,
-            {
-              height: BODY_CONTAINER_HEIGHT,
-            },
-          ]}
+          style={{
+            ...styles.shadow,
+            height: "90%",
+            width: "90%",
+            backgroundColor: "white",
+            borderRadius: 25,
+          }}
         >
-          <View
-            style={{
-              ...styles.shadow,
-              height: "90%",
-              width: "90%",
-              paddingVertical: 30,
-              paddingHorizontal: 20,
-              backgroundColor: "white",
-              borderRadius: 25,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
+          {loaithongke.map((loaiTK_item, loaiTK_index) => {
+            return (
+              <TouchableOpacity
+                key={loaiTK_index.toString()}
+                style={{
+                  height: "50%",
+                  width: "100%",
+                  justifyContent: "center",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  paddingHorizontal: 20,
+                  borderColor: "#F1F1F1",
+                  borderBottomWidth: loaiTK_index == 0 ? 0.5 : 0,
+                  borderTopWidth:
+                    loaiTK_index == loaithongke.length - 1 ? 0.5 : 0,
+                }}
+                onPress={() => ChuyenDoi_LoaiTK(loaiTK_index)}
+              >
+                <Text
+                  style={{
+                    fontSize: 16,
+                  }}
+                >
+                  {loaiTK_item.Ten}
+                </Text>
+                <View
+                  style={[
+                    styles.center,
+                    {
+                      borderRadius: 25,
+                      height: 20,
+                      width: 20,
+                      backgroundColor: loaiTK_item.HienThi
+                        ? "#61b15a"
+                        : "#F1F1F1",
+                    },
+                  ]}
+                >
+                  {loaiTK_item.HienThi && (
+                    <MaterialCommunityIcons
+                      name={"check"}
+                      //   size={45}
+                      color={"white"}
+                    />
+                  )}
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </View>
+    );
+  };
+  const PieChart_Custom = ({ data_chart }) => {
+    /*  const data_chart = hocsinh.map((hs_item, hs_index) => ({
+            name: hs_item.MaKyThi,
+            soluong: hs_item.SoLuong,
+            color: COLORS[hs_index],
+            legendFontColor: COLORS[hs_index],
+            legendFontSize: 13,
+          })); */
+    return (
+      <PieChart
+        data={data_chart}
+        // hasLegend={false} // hiện chú thích
+        width={SCREEN_WIDTH * 0.9 - 40}
+        height={220}
+        chartConfig={{
+          backgroundColor: "#1cc910",
+          backgroundGradientFrom: "#eff3ff",
+          backgroundGradientTo: "#efefef",
+          decimalPlaces: 2,
+          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          style: {
+            borderRadius: 16,
+          },
+        }}
+        style={{
+          alignItems: "center",
+          // borderWidth: 1,
+        }}
+        accessor="soluong"
+        backgroundColor="transparent"
+        paddingLeft="15"
+        // absolute // Cái này sẽ là trạng thái true: hiện số, false : hiện %
+      />
+    );
+  };
+  const BarChart_Custom = ({ data_chart }) => (
+    <BarChart
+      data={data_chart}
+      segments={2}
+      // fromZero={true}
+      style={{ marginBottom: 20 }}
+      width={SCREEN_WIDTH * 0.9 - 40}
+      height={220}
+      // yAxisLabel={"Rs"}
+      chartConfig={{
+        backgroundColor: "#1cc910",
+        backgroundGradientFrom: "#eff3ff",
+        backgroundGradientTo: "#efefef",
+        decimalPlaces: 2,
+        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        style: {
+          borderRadius: 16,
+        },
+      }}
+    />
+  );
+  const Chart = () => {
+    return loaithongke.map((loaiTK_item, loaiTK_index) => {
+      if (loaiTK_item.HienThi) {
+        if (loaiTK_item.Ten == "Lịch trình tuyển sinh") {
+          const lichtrinh = [
+            {
+              Ten: "Không có lịch trình",
+              Ma: "KCLT",
+              SoLuong: kythi.filter(
+                (item) => item.TrangThai_HienThi == "Chưa có lịch trình"
+              ).length,
+              DanhSach: kythi.map(
+                (item) =>
+                  item.TrangThai_HienThi == "Chưa có lịch trình" && item.Ten
+              ),
+            },
+            {
+              Ten: "Chưa đến thời gian",
+              Ma: "CDTG",
+              SoLuong: kythi.filter(
+                (item) => item.TrangThai_HienThi == "Chưa đến thời gian"
+              ).length,
+              DanhSach: kythi.map(
+                (item) =>
+                  item.TrangThai_HienThi == "Chưa đến thời gian" && item.Ten
+              ),
+            },
+            {
+              Ten: "Trong thời gian",
+              Ma: "TTG",
+              SoLuong: kythi.filter(
+                (item) => item.TrangThai_HienThi == "Trong thời gian"
+              ).length,
+              DanhSach: kythi.map(
+                (item) =>
+                  item.TrangThai_HienThi == "Trong thời gian" && item.Ten
+              ),
+            },
+            {
+              Ten: "Quá thời gian",
+              Ma: "QTG",
+              SoLuong: kythi.filter(
+                (item) => item.TrangThai_HienThi == "Quá thời gian"
+              ).length,
+              DanhSach: kythi.map(
+                (item) => item.TrangThai_HienThi == "Quá thời gian" && item.Ten
+              ),
+            },
+          ];
+          // console.log(lichtrinh);
+          const data_chart = {
+            labels: lichtrinh.map((item) => item.Ma),
+            datasets: [
+              {
+                data: lichtrinh.map((item) => item.SoLuong),
+                // colors: [(opacity = 1) => `rgba(0, 0, 0, ${opacity})`],
+              },
+            ],
+          };
+          return (
+            <View
+              key={loaiTK_index.toString()}
               style={{
-                height: BODY_CONTAINER_HEIGHT * 0.9,
                 width: "100%",
-                // borderWidth: 1,
               }}
             >
-              {kythi.map((kythi_item, kythi_index) => {
-                return (
-                  kythi_item.HienThi && (
-                    <View
-                      key={kythi_index.toString()}
+              <BarChart_Custom {...{ data_chart }} />
+              <Text>
+                Tổng số kỳ thi đang có:{" "}
+                <Text
+                  style={{
+                    color: "red",
+                  }}
+                >
+                  {kythi.length} kỳ thi
+                </Text>
+              </Text>
+
+              {lichtrinh.map((lt_item, lt_index) => (
+                <View key={lt_index.toString()} style={{ paddingVertical: 5 }}>
+                  <Text style={{ fontWeight: "bold" }}>
+                    {`${lt_item.Ma}: `}
+                    <Text
                       style={{
-                        width: "100%",
+                        fontWeight: "normal",
+                        color: "red",
                       }}
                     >
+                      {`${lt_item.Ten} - ${lt_item.SoLuong} kỳ thi`}
+                    </Text>
+                  </Text>
+                  {lt_item.SoLuong > 0 &&
+                    lt_item.DanhSach.map((dslt_item, dslt_index) => (
                       <Text
                         style={{
-                          fontWeight: "500",
-                          fontSize: 16,
+                          fontSize: 12,
+                          margin: 3,
                         }}
                       >
-                        ● Lịch trình tuyển sinh:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.TrangThai_HienThi}
-                        </Text>
+                        {`• ${dslt_item}`}
                       </Text>
+                    ))}
+                </View>
+              ))}
+            </View>
+          );
+        } else if (loaiTK_item.Ten == "Học sinh") {
+          const hocsinh = kythi.map((kt_item, kt_index) => ({
+            Ten: kt_item.Ten,
+            Ma: kt_item.MaKyThi,
+            SoLuong: kt_item.SoLuongHocSinh,
+          }));
+          const tongHocSinh = hocsinh.reduce(
+            (prevNum, nextNum) => prevNum + nextNum.SoLuong,
+            0
+          );
 
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Năm học:{" "}
-                        <Text style={styles.ketqua}>{kythi_item.NamHoc}</Text>
-                      </Text>
+          const data_chart = {
+            labels: hocsinh.map((item) => item.Ma),
+            datasets: [
+              {
+                data: hocsinh.map((item) => item.SoLuong),
+                // colors: [(opacity = 1) => `rgba(0, 0, 0, ${opacity})`],
+              },
+            ],
+          };
 
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Điểm sàn:{" "}
-                        <Text style={styles.ketqua}>{kythi_item.DiemSan}</Text>
-                      </Text>
+          // console.log(hocsinh);
+          return (
+            <View
+              key={loaiTK_index.toString()}
+              style={{
+                width: "100%",
+              }}
+            >
+              <BarChart_Custom {...{ data_chart }} />
+              <Text>
+                Tổng số học sinh các kỳ thi:{" "}
+                <Text
+                  style={{
+                    color: "red",
+                  }}
+                >
+                  {tongHocSinh} học sinh
+                </Text>
+              </Text>
 
-                      <Text
-                        style={{
-                          marginTop: 25,
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Mã kỳ thi:{" "}
-                        <Text style={styles.ketqua}>{kythi_item.MaKyThi}</Text>
-                      </Text>
-
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Số lượng nguyện vọng:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.SoLuongNguyenVong}
-                        </Text>
-                      </Text>
-
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Số lượng hội đồng thi:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.SoLuongHDT}
-                        </Text>
-                      </Text>
-
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Số lượng học sinh:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.SoLuongHocSinh}
-                        </Text>
-                      </Text>
-
-                      <Text
-                        style={{
-                          marginTop: 25,
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Thời gian bắt đầu thi:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.ThoiGianBatDauThi}
-                        </Text>
-                      </Text>
-
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Thời gian đăng ký thi:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.ThoiGianDangKyThi}
-                        </Text>
-                      </Text>
-
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Thời gian tổ chức thi:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.ThoiGianToChucThi}
-                        </Text>
-                      </Text>
-
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Thời gian chấm thi:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.ThoiGianChamThi}
-                        </Text>
-                      </Text>
-
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Thời gian kết thúc thi:{" "}
-                        <Text style={styles.ketqua}>
-                          {kythi_item.ThoiGianKetThucThi}
-                        </Text>
-                      </Text>
-
-                      <Text
-                        style={{
-                          marginTop: 25,
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Ngày tạo:{" "}
-                        <Text style={styles.ketqua}>{kythi_item.NgayTao}</Text>
-                      </Text>
-
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 16,
-                        }}
-                      >
-                        ● Ngày sửa:{" "}
-                        <Text style={styles.ketqua}>{kythi_item.NgaySua}</Text>
-                      </Text>
-                    </View>
-                  )
-                );
-              })}
-            </ScrollView>
-          </View>
+              {hocsinh.map((hs_item, hs_index) => (
+                <View key={hs_index.toString()} style={{ paddingVertical: 5 }}>
+                  <Text style={{ fontWeight: "bold" }}>
+                    {`${hs_item.Ma}: `}
+                    <Text
+                      style={{
+                        fontWeight: "normal",
+                        color: "red",
+                      }}
+                    >
+                      {`${hs_item.Ten} - ${
+                        hs_item.SoLuong
+                      } học sinh - ${(() => {
+                        if (tongHocSinh > 0) {
+                          let tile = (hs_item.SoLuong * 100) / tongHocSinh;
+                          return tile.toFixed(2);
+                        }
+                        return 0;
+                      })()}%`}
+                    </Text>
+                  </Text>
+                </View>
+              ))}
+            </View>
+          );
+        }
+      }
+    });
+  };
+  const BieuDo_ThongKe = () => {
+    return (
+      <View
+        style={[
+          styles.center,
+          {
+            height: BODY_CONTAINER_HEIGHT,
+          },
+        ]}
+      >
+        <View
+          style={{
+            ...styles.shadow,
+            height: "90%",
+            width: "90%",
+            paddingVertical: 30,
+            paddingHorizontal: 20,
+            backgroundColor: "white",
+            borderRadius: 25,
+          }}
+        >
+          <ScrollView
+            nestedScrollEnabled
+            style={{
+              width: "100%",
+              // borderWidth: 1,
+            }}
+          >
+            <Chart />
+          </ScrollView>
         </View>
       </View>
     );
@@ -266,135 +406,9 @@ const Thongke = ({ kythi, setKyThi }) => {
 
   return (
     <View style={styles.center}>
-      {/*Chọn kỳ thi*/}
-      <View
-        style={[
-          styles.center,
-          {
-            height: TOP_CONTAINER_HEIGHT,
-            paddingVertical: 10,
-            // justifyContent: "space-between",
-            // borderWidth: 1,
-          },
-        ]}
-      >
-        <ScrollView
-          horizontal={true}
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onScroll={Animated.event(
-            [
-              {
-                nativeEvent: {
-                  contentOffset: {
-                    x: scrollX,
-                  },
-                },
-              },
-            ],
-            {
-              useNativeDriver: false,
-            }
-          )}
-          scrollEventThrottle={1}
-        >
-          {kythi.map((kythi_item, kythi_index) => {
-            return (
-              <View
-                style={{
-                  width: SCREEN_WIDTH,
-                  // height: TOP_CONTAINER_HEIGHT - 40 - 2 * 5,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  // borderWidth: 1,
-                }}
-                key={kythi_index.toString()}
-              >
-                <TouchableOpacity
-                  style={{
-                    width: "90%",
-                    height: TOP_CONTAINER_HEIGHT * 0.7,
-                    borderRadius: 25,
-                    backgroundColor: "white",
-                    ...styles.shadow,
-                    // borderWidth: 1,
-                  }}
-                  onPress={() => ChuyenDoi_TrangThaiKyThi(kythi_index)}
-                >
-                  {kythi_item.HienThi && (
-                    <View
-                      style={[
-                        styles.center,
-                        {
-                          borderRadius: 25,
-                          height: 20,
-                          width: 20,
-                          backgroundColor: "#61b15a",
-                          position: "absolute",
-                          top: 10,
-                          left: 10,
-                        },
-                      ]}
-                    >
-                      <MaterialCommunityIcons
-                        name={"check"}
-                        //   size={45}
-                        color={"white"}
-                      />
-                    </View>
-                  )}
-
-                  <View
-                    style={{
-                      height: "100%",
-                      width: "100%",
-                      alignItems: "center",
-                      justifyContent: "space-evenly",
-                      // borderWidth: 1,
-                    }}
-                  >
-                    <MaterialCommunityIcons
-                      name={"calculator-variant"}
-                      size={45}
-                      color={"#0965B0"}
-                    />
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        fontWeight: "bold",
-                        textAlign: "center",
-                      }}
-                    >
-                      {kythi_item.Ten}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            );
-          })}
-        </ScrollView>
-        <View style={styles.indicatorContainer}>
-          {kythi.map((kythi_item, kythi_index) => {
-            const dot_width = scrollX.interpolate({
-              inputRange: [
-                SCREEN_WIDTH * (kythi_index - 1),
-                SCREEN_WIDTH * kythi_index,
-                SCREEN_WIDTH * (kythi_index + 1),
-              ],
-              outputRange: [8, 16, 8],
-              extrapolate: "clamp",
-            });
-            return (
-              <Animated.View
-                key={kythi_index.toString()}
-                style={[styles.normalDot, { width: dot_width }]}
-              />
-            );
-          })}
-        </View>
-      </View>
-      {/*Danh sách hồ sơ*/}
-      <DanhSach_KyThi />
+      {/*Danh sách thông kê*/}
+      <SoLieu_ThongKe />
+      <BieuDo_ThongKe />
     </View>
   );
 };

@@ -11,7 +11,7 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
-import { Picker } from "native-base";
+import { Picker, Spinner } from "native-base";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useHeaderHeight } from "@react-navigation/stack";
 import { STYLE, TAB_HEADER_HEIGHT } from "./style";
@@ -27,6 +27,8 @@ const Hoso = ({ route, navigation }) => {
     });
   });
   const data = route.params;
+
+  const [loading, setLoading] = useState(false);
 
   const [kythi, setKyThi] = useState(0);
   const [hoso, setHoSo] = useState([
@@ -118,6 +120,8 @@ const Hoso = ({ route, navigation }) => {
   });
   //* Call API kỳ thi
   useEffect(() => {
+    setLoading(true);
+
     let doituong = data.DoiTuong;
     let cap = 0;
     if (doituong == 2 || doituong == 3) {
@@ -160,6 +164,7 @@ const Hoso = ({ route, navigation }) => {
           ],
         }));
       });
+    setLoading(false);
   }, [0]);
   //#endregion
   //#region Gọi dữ liệu hồ sơ
@@ -174,7 +179,20 @@ const Hoso = ({ route, navigation }) => {
       return (responseJson = {});
     }
   };
+  const Reset_HoSo = () => {
+    const _hoso = hoso.map((hoso_item, hoso_index) => ({
+      ...hoso_item,
+      Loai: hoso_item.Loai.map((loai_hoso_item, loai_hoso_index) => ({
+        ...loai_hoso_item,
+        SoLuong: 0,
+        DanhSach: [],
+      })),
+    }));
+    setHoSo(_hoso);
+  };
   useEffect(() => {
+    setLoading(true);
+    // console.log(kythi);
     if (kythi != 0) {
       (async () => {
         const doituong = data.DoiTuong;
@@ -202,7 +220,7 @@ const Hoso = ({ route, navigation }) => {
           idtruong = 0;
           url = `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getallhoso?cap=${cap}&idtinh=${idtinh}&idquan=${idquan}&idphuong=${idphuong}&idtruong=${idtruong}&idkythi=${idkythi}`;
 
-          console.log(url);
+          // console.log(url);
           res = await GET_API(url);
         }
         // Đối tượng đăng nhập là PGD
@@ -223,7 +241,9 @@ const Hoso = ({ route, navigation }) => {
         }
         solieu_Hoso = res.Result.data.lstHoSoGroup_TrangThai;
         danhsach_Hoso = res.Result.data.lstHoSo;
-        // console.log(danhsach_Hoso);
+        // Xoá toàn bộ danh sách hồ sơ các loại
+        Reset_HoSo();
+        // console.log(solieu_Hoso, danhsach_Hoso.length);
         solieu_Hoso.map((solieu_item, solieu_index) => {
           //Tạo bản sao hồ sơ
           const _hoso = [...hoso];
@@ -235,31 +255,88 @@ const Hoso = ({ route, navigation }) => {
           setHoSo(_hoso);
         });
 
-        // Xoá toàn bộ danh sách hồ sơ các loại
-        const _hoso = [...hoso];
-        _hoso.map((hoso_item, hoso_index) =>
-          hoso_item.Loai.map(
-            (loai_hoso_item, loai_hoso_index) =>
-              (loai_hoso_item.DanhSach.length = 0)
-          )
-        );
-        setHoSo(_hoso);
-        // Có hồ sơ thì gán hô sơ vào danh sách hồ sơ các loại tương ứng
-        danhsach_Hoso.map((ds_item, ds_index) => {
-          // Tạo bản sao hồ sơ
-          const _hoso = [...hoso];
-          // Gán số liệu hồ sơ tương ứng cho loại hồ sơ cùng trạng thái
-          if (ds_item.LaHoSoTrucTiep) {
-            // _hoso[ds_item.TrangThai - 1].Loai[0].DanhSach.length = 0;
-            _hoso[ds_item.TrangThai - 1].Loai[0].DanhSach.push(ds_item);
-          } else {
-            // _hoso[ds_item.TrangThai - 1].Loai[1].DanhSach.length = 0;
-            _hoso[ds_item.TrangThai - 1].Loai[1].DanhSach.push(ds_item);
-          }
+        ((danhsach_Hoso) => {
+          let HS = {
+            HSDK: {
+              TrucTiep: [],
+              TrucTuyen: [],
+            },
+            HSXD: {
+              TrucTiep: [],
+              TrucTuyen: [],
+            },
+            HSTT: {
+              TrucTiep: [],
+              TrucTuyen: [],
+            },
+            HSTL: {
+              TrucTiep: [],
+              TrucTuyen: [],
+            },
+          };
+          // Lọc ra các loại hồ sơ
+          danhsach_Hoso.map((ds_item, ds_index) => {
+            if (ds_item.TrangThai == 1) {
+              ds_item.LaHoSoTrucTiep
+                ? HS.HSDK.TrucTiep.push(ds_item)
+                : HS.HSDK.TrucTuyen.push(ds_item);
+            } else if (ds_item.TrangThai == 2) {
+              ds_item.LaHoSoTrucTiep
+                ? HS.HSXD.TrucTiep.push(ds_item)
+                : HS.HSXD.TrucTuyen.push(ds_item);
+            } else if (ds_item.TrangThai == 3) {
+              ds_item.LaHoSoTrucTiep
+                ? HS.HSTT.TrucTiep.push(ds_item)
+                : HS.HSTT.TrucTuyen.push(ds_item);
+            } else {
+              ds_item.LaHoSoTrucTiep
+                ? HS.HSTL.TrucTiep.push(ds_item)
+                : HS.HSTL.TrucTuyen.push(ds_item);
+            }
+          });
+          /*   let _HS = {
+            HSDK: {
+              TrucTiep: HS.HSDK.TrucTiep.length,
+              TrucTuyen: HS.HSDK.TrucTuyen.length,
+            },
+            HSXD: {
+              TrucTiep: HS.HSXD.TrucTiep.length,
+              TrucTuyen: HS.HSXD.TrucTuyen.length,
+            },
+            HSTT: {
+              TrucTiep: HS.HSTT.TrucTiep.length,
+              TrucTuyen: HS.HSTT.TrucTuyen.length,
+            },
+            HSTL: {
+              TrucTiep: HS.HSTL.TrucTiep.length,
+              TrucTuyen: HS.HSTL.TrucTuyen.length,
+            },
+          };
+          console.log(_HS); */
+          let _hoso = [...hoso];
+          // console.log(_hoso);
+
+          _hoso.map((hs_item, hs_index) => {
+            if (hs_item.Ten == "HỒ SƠ ĐĂNG KÝ") {
+              hs_item.Loai[0].DanhSach = [...HS.HSDK.TrucTiep];
+              hs_item.Loai[1].DanhSach = [...HS.HSDK.TrucTuyen];
+            } else if (hs_item.Ten == "HỒ SƠ CHỜ XÉT DUYỆT") {
+              hs_item.Loai[0].DanhSach = [...HS.HSXD.TrucTiep];
+              hs_item.Loai[1].DanhSach = [...HS.HSXD.TrucTuyen];
+            } else if (hs_item.Ten == "HỒ SƠ TRÚNG TUYỂN") {
+              hs_item.Loai[0].DanhSach = [...HS.HSTT.TrucTiep];
+              hs_item.Loai[1].DanhSach = [...HS.HSTT.TrucTuyen];
+            } else if (hs_item.Ten == "HỒ SƠ TRẢ LẠI") {
+              hs_item.Loai[0].DanhSach = [...HS.HSTL.TrucTiep];
+              hs_item.Loai[1].DanhSach = [...HS.HSTL.TrucTuyen];
+            }
+          });
+          console.log(_hoso.map((item) => item.Ten));
           setHoSo(_hoso);
-        });
+        })(danhsach_Hoso);
       })();
     }
+    setLoading(false);
   }, [kythi]);
   //#endregion
   //#region Xử lý thanh chọn chung
@@ -329,6 +406,22 @@ const Hoso = ({ route, navigation }) => {
         flex: 1,
       }}
     >
+      {loading && (
+        <View
+          style={{
+            width: SCREEN_WIDTH,
+            height: SCREEN_HEIGHT,
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            zIndex: 4000,
+            paddingBottom: 2 * TAB_HEADER_HEIGHT,
+            backgroundColor: "#0000006e",
+          }}
+        >
+          <Spinner color="white" />
+        </View>
+      )}
       {/*Thanh lựa chọn chung*/}
       <View style={styles.center}>
         <View
@@ -404,9 +497,9 @@ const Hoso = ({ route, navigation }) => {
           },
         ]}
       >
-        <Baocao {...{ hoso, setHoSo }} />
+        <Baocao {...{ hoso, setHoSo, setLoading }} />
         {/*Thống kê*/}
-        <Thongke {...{ hoso, setHoSo }} />
+        <Thongke {...{ hoso, setHoSo, setLoading }} />
       </Animated.View>
     </View>
   );

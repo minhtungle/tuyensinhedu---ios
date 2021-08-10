@@ -301,6 +301,7 @@ const Baocao = ({ kythi, setKyThi }) => {
           {kythi.map((kythi_item, kythi_index) => {
             return (
               <View
+                key={kythi_index.toString()}
                 style={{
                   width: SCREEN_WIDTH,
                   // height: TOP_CONTAINER_HEIGHT - 40 - 2 * 5,
@@ -308,7 +309,6 @@ const Baocao = ({ kythi, setKyThi }) => {
                   justifyContent: "center",
                   // borderWidth: 1,
                 }}
-                key={kythi_index.toString()}
               >
                 <TouchableOpacity
                   style={{
