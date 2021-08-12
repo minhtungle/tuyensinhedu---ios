@@ -13,7 +13,8 @@ import {
   Dimensions,
 } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
-import AnimatedEllipsis from "react-native-animated-ellipsis";
+import { Picker, Spinner } from "native-base";
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useHeaderHeight } from "@react-navigation/stack";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -102,20 +103,11 @@ function Trangchu({ route, navigation }) {
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "#DEEBFE",
-          display: "none", // Nhớ đổi lại
+          // display: "none", // Nhớ đổi lại
           // paddingBottom: headerHeight,
         }}
       >
-        <AnimatedEllipsis
-          numberOfDots={3}
-          minOpacity={0.4}
-          animationDelay={200}
-          style={{
-            color: "#61b15a",
-            fontSize: 100,
-            letterSpacing: -15,
-          }}
-        />
+        <Spinner color="tomato" />
         <Text>Vui lòng kiểm tra kết nối mạng</Text>
       </View>
     );

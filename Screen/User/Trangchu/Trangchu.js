@@ -1,23 +1,18 @@
-import React, { useLayoutEffect, useState, useEffect, useRef } from "react";
-import {
-  Text,
-  View,
-  ImageBackground,
-  Button,
-  StyleSheet,
-  ScrollView,
-  Animated,
-  Easing,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-} from "react-native";
-import NetInfo from "@react-native-community/netinfo";
-import AnimatedEllipsis from "react-native-animated-ellipsis";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useHeaderHeight } from "@react-navigation/stack";
+import NetInfo from "@react-native-community/netinfo";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { useNavigation } from "@react-navigation/native";
+import { useHeaderHeight } from "@react-navigation/stack";
+import { Spinner } from "native-base";
+import React, { useEffect, useState } from "react";
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 const { height, width } = Dimensions.get("window");
 
 function Trangchu({ route, navigation }) {
@@ -99,19 +94,11 @@ function Trangchu({ route, navigation }) {
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "#DEEBFE",
+          // display: "none", // Nhớ đổi lại
           // paddingBottom: headerHeight,
         }}
       >
-        <AnimatedEllipsis
-          numberOfDots={3}
-          minOpacity={0.4}
-          animationDelay={200}
-          style={{
-            color: "#61b15a",
-            fontSize: 100,
-            letterSpacing: -15,
-          }}
-        />
+        <Spinner color="tomato" />
         <Text>Vui lòng kiểm tra kết nối mạng</Text>
       </View>
     );

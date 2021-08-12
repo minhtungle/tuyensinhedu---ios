@@ -310,6 +310,7 @@ const Thongke = ({ kythi, setKyThi }) => {
                   {lt_item.SoLuong > 0 &&
                     lt_item.DanhSach.map((dslt_item, dslt_index) => (
                       <Text
+                        key={dslt_index.toString()}
                         style={{
                           fontSize: 12,
                           margin: 3,

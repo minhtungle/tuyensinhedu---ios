@@ -11,6 +11,7 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import { Picker, Spinner } from "native-base";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useHeaderHeight } from "@react-navigation/stack";
@@ -334,16 +335,17 @@ const Hoso = ({ route, navigation }) => {
         // Xoá toàn bộ danh sách hồ sơ các loại
         Reset_HoSo();
         // console.log(solieu_Hoso, danhsach_Hoso.length);
-        solieu_Hoso.map((solieu_item, solieu_index) => {
+        /*  solieu_Hoso.map((solieu_item, solieu_index) => {
           //Tạo bản sao hồ sơ
           const _hoso = [...hoso];
+          console.log(_hoso);
           //Gán số liệu hồ sơ tương ứng cho loại hồ sơ cùng trạng thái
           _hoso[solieu_item.TrangThai - 1].Loai[0].SoLuong =
             solieu_item.HoSoTrucTiep; // Trực tiếp
           _hoso[solieu_item.TrangThai - 1].Loai[1].SoLuong =
             solieu_item.HoSoOnline; // Trực tuyến
           setHoSo(_hoso);
-        });
+        }); */
 
         ((danhsach_Hoso) => {
           let HS = {
@@ -411,15 +413,27 @@ const Hoso = ({ route, navigation }) => {
             if (hs_item.Ten == "HỒ SƠ ĐĂNG KÝ") {
               hs_item.Loai[0].DanhSach = [...HS.HSDK.TrucTiep];
               hs_item.Loai[1].DanhSach = [...HS.HSDK.TrucTuyen];
+
+              hs_item.Loai[0].SoLuong = HS.HSDK.TrucTiep.length;
+              hs_item.Loai[1].SoLuong = HS.HSDK.TrucTuyen.length;
             } else if (hs_item.Ten == "HỒ SƠ CHỜ XÉT DUYỆT") {
               hs_item.Loai[0].DanhSach = [...HS.HSXD.TrucTiep];
               hs_item.Loai[1].DanhSach = [...HS.HSXD.TrucTuyen];
+
+              hs_item.Loai[0].SoLuong = HS.HSXD.TrucTiep.length;
+              hs_item.Loai[1].SoLuong = HS.HSXD.TrucTuyen.length;
             } else if (hs_item.Ten == "HỒ SƠ TRÚNG TUYỂN") {
               hs_item.Loai[0].DanhSach = [...HS.HSTT.TrucTiep];
               hs_item.Loai[1].DanhSach = [...HS.HSTT.TrucTuyen];
+
+              hs_item.Loai[0].SoLuong = HS.HSTT.TrucTiep.length;
+              hs_item.Loai[1].SoLuong = HS.HSTT.TrucTuyen.length;
             } else if (hs_item.Ten == "HỒ SƠ TRẢ LẠI") {
               hs_item.Loai[0].DanhSach = [...HS.HSTL.TrucTiep];
               hs_item.Loai[1].DanhSach = [...HS.HSTL.TrucTuyen];
+
+              hs_item.Loai[0].SoLuong = HS.HSTL.TrucTiep.length;
+              hs_item.Loai[1].SoLuong = HS.HSTL.TrucTuyen.length;
             }
           });
           _tieuchi.map((tc_item, tc_index) => {
@@ -521,6 +535,38 @@ const Hoso = ({ route, navigation }) => {
     _loaiHT_index == 0 ? Xem_BaoCao() : Xem_ThongKe();
     setLoaiHienThi(_loaiHT);
   };
+  //#endregion
+  //#region Kiểm tra kết nối mạng
+  const [connected, setConnected] = useState(true);
+  useEffect(() => {
+    const interval = setInterval(
+      () =>
+        NetInfo.fetch().then((state) => {
+          setConnected(state.isConnected);
+        }),
+      3000
+    );
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+  if (!connected) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#DEEBFE",
+          // display: "none", // Nhớ đổi lại
+          // paddingBottom: headerHeight,
+        }}
+      >
+        <Spinner color="tomato" />
+        <Text>Vui lòng kiểm tra kết nối mạng</Text>
+      </View>
+    );
+  }
   //#endregion
   return (
     <View

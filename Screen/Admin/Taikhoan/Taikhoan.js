@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import { Picker, Spinner } from "native-base";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useHeaderHeight } from "@react-navigation/stack";
@@ -416,6 +417,38 @@ const Taikhoan = ({ route, navigation }) => {
       return null;
     });
   };
+  //#region Kiểm tra kết nối mạng
+  const [connected, setConnected] = useState(true);
+  useEffect(() => {
+    const interval = setInterval(
+      () =>
+        NetInfo.fetch().then((state) => {
+          setConnected(state.isConnected);
+        }),
+      3000
+    );
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+  if (!connected) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#DEEBFE",
+          // display: "none", // Nhớ đổi lại
+          // paddingBottom: headerHeight,
+        }}
+      >
+        <Spinner color="tomato" />
+        <Text>Vui lòng kiểm tra kết nối mạng</Text>
+      </View>
+    );
+  }
+  //#endregion
   return (
     <View
       style={{

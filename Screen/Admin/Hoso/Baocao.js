@@ -296,6 +296,7 @@ const Baocao = ({ hoso, setHoSo, setLoading }) => {
           {hoso.map((hoso_item, hoso_index) => {
             return (
               <View
+                key={hoso_index.toString()}
                 style={{
                   width: SCREEN_WIDTH,
                   // height: TOP_CONTAINER_HEIGHT - 40 - 2 * 5,
@@ -303,7 +304,6 @@ const Baocao = ({ hoso, setHoSo, setLoading }) => {
                   justifyContent: "center",
                   // borderWidth: 1,
                 }}
-                key={hoso_index.toString()}
               >
                 <TouchableOpacity
                   style={{
