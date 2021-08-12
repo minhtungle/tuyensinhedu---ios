@@ -109,6 +109,88 @@ const Hoso = ({ route, navigation }) => {
       ],
     },
   ]);
+  const [tieuchi, setTieuChi] = useState([
+    {
+      Ten: "TẤT CẢ HỒ SƠ",
+      Ma: "TCHS",
+      TrangThai: 0,
+      HienThi: true,
+      Loai: [
+        {
+          Ten: "Trực tiếp",
+          SoLuong: 0,
+        },
+        {
+          Ten: "Trực tuyến",
+          SoLuong: 0,
+        },
+      ],
+    },
+    {
+      Ten: "HỒ SƠ ĐĂNG KÝ",
+      Ma: "HSDK",
+      TrangThai: 1,
+      HienThi: true,
+      Loai: [
+        {
+          Ten: "Trực tiếp",
+          SoLuong: 0,
+        },
+        {
+          Ten: "Trực tuyến",
+          SoLuong: 0,
+        },
+      ],
+    },
+    {
+      Ten: "HỒ SƠ CHỜ XÉT DUYỆT",
+      Ma: "HSXD",
+      TrangThai: 2,
+      HienThi: false,
+      Loai: [
+        {
+          Ten: "Trực tiếp",
+          SoLuong: 0,
+        },
+        {
+          Ten: "Trực tuyến",
+          SoLuong: 0,
+        },
+      ],
+    },
+    {
+      Ten: "HỒ SƠ TRÚNG TUYỂN",
+      Ma: "HSTT",
+      TrangThai: 3,
+      HienThi: false,
+      Loai: [
+        {
+          Ten: "Trực tiếp",
+          SoLuong: 0,
+        },
+        {
+          Ten: "Trực tuyến",
+          SoLuong: 0,
+        },
+      ],
+    },
+    {
+      Ten: "HỒ SƠ TRẢ LẠI",
+      Ma: "HSTL",
+      TrangThai: 4,
+      HienThi: false,
+      Loai: [
+        {
+          Ten: "Trực tiếp",
+          SoLuong: 0,
+        },
+        {
+          Ten: "Trực tuyến",
+          SoLuong: 0,
+        },
+      ],
+    },
+  ]);
   //#region Picker
   const [picker, setPicker] = useState({
     KyThi: [
@@ -188,7 +270,15 @@ const Hoso = ({ route, navigation }) => {
         DanhSach: [],
       })),
     }));
+    const _tieuchi = tieuchi.map((tieuchi_item, tieuchi_index) => ({
+      ...tieuchi_item,
+      Loai: tieuchi_item.Loai.map((loai_tc_item, loai_tc_index) => ({
+        ...loai_tc_item,
+        SoLuong: 0,
+      })),
+    }));
     setHoSo(_hoso);
+    setTieuChi(_tieuchi);
   };
   useEffect(() => {
     setLoading(true);
@@ -314,6 +404,7 @@ const Hoso = ({ route, navigation }) => {
           };
           console.log(_HS); */
           let _hoso = [...hoso];
+          let _tieuchi = [...tieuchi];
           // console.log(_hoso);
 
           _hoso.map((hs_item, hs_index) => {
@@ -331,11 +422,42 @@ const Hoso = ({ route, navigation }) => {
               hs_item.Loai[1].DanhSach = [...HS.HSTL.TrucTuyen];
             }
           });
-          console.log(_hoso.map((item) => item.Ten));
+          _tieuchi.map((tc_item, tc_index) => {
+            if (tc_item.Ten == "HỒ SƠ ĐĂNG KÝ") {
+              tc_item.Loai[0].SoLuong = HS.HSDK.TrucTiep.length;
+              tc_item.Loai[1].SoLuong = HS.HSDK.TrucTuyen.length;
+            } else if (tc_item.Ten == "HỒ SƠ CHỜ XÉT DUYỆT") {
+              tc_item.Loai[0].SoLuong = HS.HSXD.TrucTiep.length;
+              tc_item.Loai[1].SoLuong = HS.HSXD.TrucTuyen.length;
+            } else if (tc_item.Ten == "HỒ SƠ TRÚNG TUYỂN") {
+              tc_item.Loai[0].SoLuong = HS.HSTT.TrucTiep.length;
+              tc_item.Loai[1].SoLuong = HS.HSTT.TrucTuyen.length;
+            } else if (tc_item.Ten == "HỒ SƠ TRẢ LẠI") {
+              tc_item.Loai[0].SoLuong = HS.HSTL.TrucTiep.length;
+              tc_item.Loai[1].SoLuong = HS.HSTL.TrucTuyen.length;
+            } else {
+              tc_item.Loai[0].SoLuong =
+                HS.HSDK.TrucTiep.length +
+                HS.HSXD.TrucTiep.length +
+                HS.HSTT.TrucTiep.length +
+                HS.HSTL.TrucTiep.length;
+              tc_item.Loai[1].SoLuong =
+                HS.HSDK.TrucTuyen.length +
+                HS.HSXD.TrucTuyen.length +
+                HS.HSTT.TrucTuyen.length +
+                HS.HSTL.TrucTuyen.length;
+            }
+          });
+          // console.log(_tieuchi);
           setHoSo(_hoso);
+          setTieuChi(_tieuchi);
         })(danhsach_Hoso);
       })();
+    } else {
+      Reset_HoSo();
+      // console.log(tieuchi);
     }
+
     setLoading(false);
   }, [kythi]);
   //#endregion
@@ -499,7 +621,9 @@ const Hoso = ({ route, navigation }) => {
       >
         <Baocao {...{ hoso, setHoSo, setLoading }} />
         {/*Thống kê*/}
-        <Thongke {...{ hoso, setHoSo, setLoading }} />
+        <Thongke
+          {...{ hoso, setHoSo, kythi, setLoading, tieuchi, setTieuChi }}
+        />
       </Animated.View>
     </View>
   );

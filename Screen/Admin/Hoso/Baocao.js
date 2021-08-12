@@ -186,7 +186,7 @@ const Baocao = ({ hoso, setHoSo, setLoading }) => {
       <View
         style={{
           width: "100%",
-          height: BODY_CONTAINER_HEIGHT - TAB_HEADER_HEIGHT,
+          height: BODY_CONTAINER_HEIGHT,
           //   borderWidth: 1,
           //   borderBottomColor: "red",
         }}
@@ -210,7 +210,7 @@ const Baocao = ({ hoso, setHoSo, setLoading }) => {
                           styles.center,
                           {
                             height: "100%",
-                            width: "50%",
+                            width: `${100 / hoso_item.Loai.length}%`,
                             backgroundColor: loai_hoso_item.HienThi
                               ? "white"
                               : "",
@@ -248,28 +248,6 @@ const Baocao = ({ hoso, setHoSo, setLoading }) => {
                         keyExtractor={(item) => item.ID.toString()}
                         // extraData={selectedId}
                       />
-                      /*  <ScrollView
-                        key={loai_hoso_index.toString()}
-                        style={{
-                          height: BODY_CONTAINER_HEIGHT - TAB_HEADER_HEIGHT,
-                          width: "100%",
-                          backgroundColor: "white",
-                          //   paddingBottom: 200,
-                          //   borderWidth: 1,
-                          //   borderColor: "red",
-                        }}
-                      >
-                      
-                          {
-                          // lst_Test - obj_Test -loai_hoso_item.DanhSach
-                          loai_hoso_item.DanhSach.map(
-                            (ds_hoso_item, ds_hoso_index) => {
-                              return (
-                               );
-                            }
-                          )
-                        }
-                      </ScrollView> */
                     )
                   );
                 })}
@@ -282,7 +260,7 @@ const Baocao = ({ hoso, setHoSo, setLoading }) => {
   };
 
   return (
-    <View style={styles.center}>
+    <View style={[styles.center, { justifyContent: "flex-start" }]}>
       {/*Chọn hồ sơ*/}
       <View
         style={[

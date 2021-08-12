@@ -179,6 +179,7 @@ const Thongke = ({ kythi, setKyThi }) => {
       style={{ marginBottom: 20 }}
       width={SCREEN_WIDTH * 0.9 - 40}
       height={220}
+      showValuesOnTopOfBars={true}
       // yAxisLabel={"Rs"}
       chartConfig={{
         backgroundColor: "#1cc910",
