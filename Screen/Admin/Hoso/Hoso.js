@@ -204,14 +204,8 @@ const Hoso = ({ route, navigation }) => {
   //* Call API kỳ thi
   useEffect(() => {
     setLoading(true);
+    let cap = data.Cap == 5 ? 3 : data.Cap == 4 ? 2 : data.Cap;
 
-    let doituong = data.DoiTuong;
-    let cap = 0;
-    if (doituong == 2 || doituong == 3) {
-      cap = 2;
-    } else {
-      cap = 3;
-    }
     let namnay = new Date().getFullYear();
     fetch(
       `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getkythi?tunam=${namnay}&dennam=${namnay}&cap=${cap}`

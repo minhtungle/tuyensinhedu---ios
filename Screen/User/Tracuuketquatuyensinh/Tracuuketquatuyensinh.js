@@ -1,4 +1,5 @@
 import React, { useLayoutEffect, useState, useEffect } from "react";
+import { Spinner } from "native-base";
 import { StyleSheet, View, Text } from "react-native";
 import ComboBox from "./ComboBox";
 import NetInfo from "@react-native-community/netinfo";
@@ -37,16 +38,7 @@ function Tracuuketquatuyensinh({ navigation }) {
           paddingBottom: headerHeight,
         }}
       >
-        <AnimatedEllipsis
-          numberOfDots={3}
-          minOpacity={0.4}
-          animationDelay={200}
-          style={{
-            color: "#61b15a",
-            fontSize: 100,
-            letterSpacing: -15,
-          }}
-        />
+        <Spinner color="tomato" />
         <Text>Vui lòng kiểm tra kết nối mạng</Text>
       </View>
     );

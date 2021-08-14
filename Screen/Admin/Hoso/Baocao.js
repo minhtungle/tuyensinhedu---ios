@@ -234,22 +234,42 @@ const Baocao = ({ hoso, setHoSo, setLoading }) => {
                   })}
                 </View>
                 {hoso_item.Loai.map((loai_hoso_item, loai_hoso_index) => {
-                  return (
-                    loai_hoso_item.HienThi && (
+                  if (loai_hoso_item.HienThi) {
+                    return loai_hoso_item.DanhSach.length > 0 ? (
                       <FlatList
                         key={loai_hoso_index.toString()}
                         style={{
                           height: BODY_CONTAINER_HEIGHT - TAB_HEADER_HEIGHT,
                           width: "100%",
                           backgroundColor: "white",
+                          // borderWidth: 1,
                         }}
                         data={loai_hoso_item.DanhSach}
                         renderItem={renderHoSo}
                         keyExtractor={(item) => item.ID.toString()}
                         // extraData={selectedId}
                       />
-                    )
-                  );
+                    ) : (
+                      <View
+                        key={loai_hoso_index.toString()}
+                        style={{
+                          height: BODY_CONTAINER_HEIGHT - TAB_HEADER_HEIGHT,
+                          width: "100%",
+                          backgroundColor: "white",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexDirection: "row",
+                        }}
+                      >
+                        <MaterialCommunityIcons
+                          name={"file-cancel"}
+                          size={23}
+                        />
+                        <Text>Không có hồ sơ tương ứng</Text>
+                      </View>
+                    );
+                  }
+                  return null;
                 })}
               </View>
             )

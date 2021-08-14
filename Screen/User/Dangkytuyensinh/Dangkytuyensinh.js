@@ -8,6 +8,7 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
+import { Picker, Spinner } from "native-base";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
 import NetInfo from "@react-native-community/netinfo";
 import { useHeaderHeight } from "@react-navigation/stack";
@@ -55,16 +56,7 @@ export default function Dangkytuyensinh({ navigation }) {
   const Load_View = () => {
     return (
       <SafeAreaView style={styles.container}>
-        <AnimatedEllipsis
-          numberOfDots={3}
-          minOpacity={0.4}
-          animationDelay={200}
-          style={{
-            color: "#61b15a",
-            fontSize: 100,
-            letterSpacing: -15,
-          }}
-        />
+        <Spinner color="tomato" />
       </SafeAreaView>
     );
   };
@@ -200,16 +192,7 @@ export default function Dangkytuyensinh({ navigation }) {
           paddingBottom: headerHeight,
         }}
       >
-        <AnimatedEllipsis
-          numberOfDots={3}
-          minOpacity={0.4}
-          animationDelay={200}
-          style={{
-            color: "#61b15a",
-            fontSize: 100,
-            letterSpacing: -15,
-          }}
-        />
+        <Spinner color="tomato" />
         <Text>Vui lòng kiểm tra kết nối mạng</Text>
       </View>
     );

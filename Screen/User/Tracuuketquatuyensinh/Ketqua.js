@@ -149,82 +149,219 @@ export default function Ketqua(props) {
                   {/*Bảng nguyện vọng*/}
                   <View style={styles.thongtinBlock}>
                     <Text style={styles.textField}>Kết quả:</Text>
-                    {/*  {!data.ThoiGianCongBo ? (
+                    {!data.ThoiGianCongBo ? (
                       <Text style={styles.textData}>
                         Chưa đến thời gian công bố kết quả. Vui lòng theo dõi
                         lịch trình tuyển sinh
                       </Text>
                     ) : (
-                      <></>
-                    )} */}
-                    <Table
-                      style={{ flexDirection: "column", marginTop: 5 }}
-                      borderStyle={{ borderWidth: 1 }}
-                    >
-                      {/*---------Trên--------*/}
-                      <TableWrapper
-                        style={{
-                          flexDirection: "row",
-                          backgroundColor: "#cee5d0",
-                          borderWidth: 0.2,
-                          borderBottomWidth: 0,
-                        }}
-                      >
-                        <Cell
-                          textStyle={styles.tableCell_TextHead}
-                          data="Nguyện vọng"
-                        />
-                        <Cell
-                          textStyle={styles.tableCell_TextHead}
-                          data="Tên trường"
-                        />
-                        <Cell
-                          textStyle={styles.tableCell_TextHead}
-                          data="Trạng thái"
-                        />
-                        <Cell
-                          textStyle={styles.tableCell_TextHead}
-                          data="Lý do"
-                        />
-                      </TableWrapper>
-                      {/*---------Dưới--------*/}
-                      {data.lst_NguyenVong_HopLe.map((item, index) => (
-                        <TableWrapper
-                          key={index.toString()}
-                          style={{
-                            flexDirection: "row",
-                            backgroundColor: "#ffeedb",
-                            borderWidth: 0.2,
-                          }}
-                        >
-                          <Cell
-                            textStyle={styles.tableCell_TextData}
-                            data={item.NguyenVong}
-                          />
-                          <Cell
-                            textStyle={styles.tableCell_TextData}
-                            data={item.TenTruong}
-                          />
-                          <Cell
-                            textStyle={styles.tableCell_TextData}
-                            data={
-                              item.TrangThai === 1
-                                ? "Hồ sơ đã đăng ký - Chưa có kết quả"
-                                : data.ThongTinHoSo.TrangThai === 2
-                                ? "Hồ sơ đã được duyệt - Chưa có kết quả"
-                                : data.ThongTinHoSo.TrangThai === 3
-                                ? "Hồ sơ đã trúng tuyển"
-                                : data.ThongTinHoSo.TrangThai === 4 &&
-                                  "Hồ sơ bị trả lại"
-                            }
-                          />
-                          <Cell
-                            textStyle={styles.tableCell_TextData}
-                            data={item.TrangThai_Mail_Str}
-                          />
-                        </TableWrapper>
-                      ))}
-                    </Table>
+                      ((data) => {
+                        if (data.Cap) {
+                          if (data.ThongTinHoSo.lstKetQua.length > 0) {
+                            return (
+                              <View
+                                style={{
+                                  width: "100%",
+                                }}
+                              >
+                                <Table
+                                  style={{
+                                    flexDirection: "column",
+                                    marginTop: 5,
+                                  }}
+                                  borderStyle={{ borderWidth: 1 }}
+                                >
+                                  <TableWrapper
+                                    style={{
+                                      flexDirection: "row",
+                                      backgroundColor: "#cee5d0",
+                                      borderWidth: 0.2,
+                                      borderBottomWidth: 0,
+                                    }}
+                                  >
+                                    {data.ThongTinHoSo.lstKetQua.map(
+                                      (kq, kq_index) => (
+                                        <Cell
+                                          key={kq_index.toString()}
+                                          textStyle={styles.tableCell_TextHead}
+                                          data={kq.TenMon}
+                                        />
+                                      )
+                                    )}
+                                    <Cell
+                                      textStyle={styles.tableCell_TextHead}
+                                      data="Điểm ưu tiên"
+                                    />
+                                    <Cell
+                                      textStyle={styles.tableCell_TextHead}
+                                      data="Tổng điểm"
+                                    />
+                                  </TableWrapper>
+                                </Table>
+                                <Table
+                                  style={{
+                                    flexDirection: "column",
+                                    marginTop: 10,
+                                  }}
+                                  borderStyle={{ borderWidth: 1 }}
+                                >
+                                  {/*---------Trên--------*/}
+                                  <TableWrapper
+                                    style={{
+                                      flexDirection: "row",
+                                      backgroundColor: "#cee5d0",
+                                      borderWidth: 0.2,
+                                      borderBottomWidth: 0,
+                                    }}
+                                  >
+                                    <Cell
+                                      textStyle={styles.tableCell_TextHead}
+                                      data="Nguyện vọng"
+                                    />
+                                    <Cell
+                                      textStyle={styles.tableCell_TextHead}
+                                      data="Tên trường"
+                                    />
+                                    <Cell
+                                      textStyle={styles.tableCell_TextHead}
+                                      data="Trạng thái"
+                                    />
+                                    <Cell
+                                      textStyle={styles.tableCell_TextHead}
+                                      data="Lý do"
+                                    />
+                                  </TableWrapper>
+                                  {/*---------Dưới--------*/}
+                                  {data.lst_NguyenVong_HopLe.map(
+                                    (item, index) => (
+                                      <TableWrapper
+                                        key={index.toString()}
+                                        style={{
+                                          flexDirection: "row",
+                                          backgroundColor: "#ffeedb",
+                                          borderWidth: 0.2,
+                                        }}
+                                      >
+                                        <Cell
+                                          textStyle={styles.tableCell_TextData}
+                                          data={item.NguyenVong}
+                                        />
+                                        <Cell
+                                          textStyle={styles.tableCell_TextData}
+                                          data={item.TenTruong}
+                                        />
+                                        <Cell
+                                          textStyle={styles.tableCell_TextData}
+                                          data={
+                                            item.TrangThai === 1
+                                              ? "Hồ sơ đã đăng ký - Chưa có kết quả"
+                                              : data.ThongTinHoSo.TrangThai ===
+                                                2
+                                              ? "Hồ sơ đã được duyệt - Chưa có kết quả"
+                                              : data.ThongTinHoSo.TrangThai ===
+                                                3
+                                              ? "Hồ sơ đã trúng tuyển"
+                                              : data.ThongTinHoSo.TrangThai ===
+                                                  4 && "Hồ sơ bị trả lại"
+                                          }
+                                        />
+                                        <Cell
+                                          textStyle={styles.tableCell_TextData}
+                                          data={item.TrangThai_Mail_Str}
+                                        />
+                                      </TableWrapper>
+                                    )
+                                  )}
+                                </Table>
+                              </View>
+                            );
+                          } else if (data.ThongTinHoSo.DoiTuongTuyenThang) {
+                            return (
+                              <Text style={styles.textData}>
+                                {`Đã được tuyển thẳng ${data.lst_NguyenVong_HopLe[0].NguyenVong} trường ${data.lst_NguyenVong_HopLe[0].MaTruong} - ${data.lst_NguyenVong_HopLe[0].TenTruong}`}
+                              </Text>
+                            );
+                          } else {
+                            return (
+                              <Text style={styles.textData}>
+                                Chưa có kết quả
+                              </Text>
+                            );
+                          }
+                        } else {
+                          return (
+                            <Table
+                              style={{ flexDirection: "column", marginTop: 10 }}
+                              borderStyle={{ borderWidth: 1 }}
+                            >
+                              {/*---------Trên--------*/}
+                              <TableWrapper
+                                style={{
+                                  flexDirection: "row",
+                                  backgroundColor: "#cee5d0",
+                                  borderWidth: 0.2,
+                                  borderBottomWidth: 0,
+                                }}
+                              >
+                                <Cell
+                                  textStyle={styles.tableCell_TextHead}
+                                  data="Nguyện vọng"
+                                />
+                                <Cell
+                                  textStyle={styles.tableCell_TextHead}
+                                  data="Tên trường"
+                                />
+                                <Cell
+                                  textStyle={styles.tableCell_TextHead}
+                                  data="Trạng thái"
+                                />
+                                <Cell
+                                  textStyle={styles.tableCell_TextHead}
+                                  data="Lý do"
+                                />
+                              </TableWrapper>
+                              {/*---------Dưới--------*/}
+                              {data.lst_NguyenVong_HopLe.map((item, index) => (
+                                <TableWrapper
+                                  key={index.toString()}
+                                  style={{
+                                    flexDirection: "row",
+                                    backgroundColor: "#ffeedb",
+                                    borderWidth: 0.2,
+                                  }}
+                                >
+                                  <Cell
+                                    textStyle={styles.tableCell_TextData}
+                                    data={item.NguyenVong}
+                                  />
+                                  <Cell
+                                    textStyle={styles.tableCell_TextData}
+                                    data={item.TenTruong}
+                                  />
+                                  <Cell
+                                    textStyle={styles.tableCell_TextData}
+                                    data={
+                                      item.TrangThai === 1
+                                        ? "Hồ sơ đã đăng ký - Chưa có kết quả"
+                                        : data.ThongTinHoSo.TrangThai === 2
+                                        ? "Hồ sơ đã được duyệt - Chưa có kết quả"
+                                        : data.ThongTinHoSo.TrangThai === 3
+                                        ? "Hồ sơ đã trúng tuyển"
+                                        : data.ThongTinHoSo.TrangThai === 4 &&
+                                          "Hồ sơ bị trả lại"
+                                    }
+                                  />
+                                  <Cell
+                                    textStyle={styles.tableCell_TextData}
+                                    data={item.TrangThai_Mail_Str}
+                                  />
+                                </TableWrapper>
+                              ))}
+                            </Table>
+                          );
+                        }
+                      })(data)
+                    )}
                   </View>
                 </View>
               </View>

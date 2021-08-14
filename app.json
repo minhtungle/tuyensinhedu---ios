@@ -2,7 +2,7 @@
   "expo": {
     "name": "Đăng ký và tra cứu tuyển sinh đầu cấp",
     "slug": "Tuyensinh",
-    "version": "3.0.0",
+    "version": "4.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -13,16 +13,14 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "entitlements": {
         "com.apple.developer.networking.wifi-info": "true"
       },
       "bundleIdentifier": "com.minhtungle.TraCuuTuyenSinh1",
-      "buildNumber": "5.0.0"
+      "buildNumber": "6.0.0"
     },
     "android": {
       "adaptiveIcon": {
@@ -38,7 +36,7 @@
         "MEDIA_LIBRARY_WRITE_ONLY",
         "INTERNET"
       ],
-      "versionCode": 5
+      "versionCode": 6
     },
     "web": {
       "favicon": "./assets/favicon.png"

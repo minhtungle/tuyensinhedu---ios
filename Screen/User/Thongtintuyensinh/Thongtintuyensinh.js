@@ -1,4 +1,4 @@
-import { Button, Picker, Text, View } from "native-base";
+import { Button, Picker, Text, View, Spinner } from "native-base";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   Linking,
@@ -505,16 +505,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
           paddingBottom: headerHeight,
         }}
       >
-        <AnimatedEllipsis
-          numberOfDots={3}
-          minOpacity={0.4}
-          animationDelay={200}
-          style={{
-            color: "#61b15a",
-            fontSize: 100,
-            letterSpacing: -15,
-          }}
-        />
+        <Spinner color="tomato" />
         <Text>Vui lòng kiểm tra kết nối mạng</Text>
       </View>
     );
@@ -526,7 +517,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
       <View style={styles.block}>
         {/*// Tỉnh thành phố */}
         <View style={[styles.field, { zIndex: 11003, display: "none" }]}>
-          {data.IDTinh == "" || null ? null : (
+          {/*   {data.IDTinh == "" || null ? null : (
             <View style={styles.label}>
               <IconButton
                 style={{ backgroundColor: "#61b15a" }}
@@ -535,7 +526,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
                 size={10}
               />
             </View>
-          )}
+          )} */}
           <Picker
             selectedValue={data.IDTinh}
             style={styles.picker}
@@ -556,7 +547,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
         </View>
         {/*// Quận huyện */}
         <View style={[styles.field, { zIndex: 11002 }]}>
-          {data.IDHuyen == "" || null ? null : (
+          {/*  {data.IDHuyen == "" || null ? null : (
             <View style={styles.label}>
               <IconButton
                 style={{ backgroundColor: "#61b15a" }}
@@ -565,7 +556,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
                 size={10}
               />
             </View>
-          )}
+          )} */}
           <Picker
             selectedValue={data.IDHuyen}
             style={styles.picker}
@@ -586,7 +577,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
         </View>
         {/*// Phường xã */}
         <View style={[styles.field, { zIndex: 11001 }]}>
-          {data.IDXa == "" || null ? null : (
+          {/* {data.IDXa == "" || null ? null : (
             <View style={styles.label}>
               <IconButton
                 style={{ backgroundColor: "#61b15a" }}
@@ -595,7 +586,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
                 size={10}
               />
             </View>
-          )}
+          )} */}
           <Picker
             selectedValue={data.IDXa}
             style={styles.picker}
@@ -616,7 +607,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
         </View>
         {/*// Cấp tuyển sinh */}
         <View style={[styles.field, { zIndex: 11001 }]}>
-          {data.CapTS == "" || null ? null : (
+          {/*   {data.CapTS == "" || null ? null : (
             <View style={styles.label}>
               <IconButton
                 style={{ backgroundColor: "#61b15a" }}
@@ -625,7 +616,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
                 size={10}
               />
             </View>
-          )}
+          )} */}
           <Picker
             selectedValue={data.CapTS}
             style={styles.picker}
@@ -646,7 +637,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
         </View>
         {/*// Trường */}
         <View style={[styles.field, { zIndex: 11001 }]}>
-          {data.IDTruong == "" ? null : (
+          {/*  {data.IDTruong == "" ? null : (
             <View style={styles.label}>
               <IconButton
                 style={{ backgroundColor: "#61b15a" }}
@@ -655,7 +646,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
                 size={10}
               />
             </View>
-          )}
+          )} */}
           <Picker
             selectedValue={data.IDTruong}
             style={styles.picker}

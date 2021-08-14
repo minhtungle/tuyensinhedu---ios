@@ -12,22 +12,28 @@ import {
   Text,
   TouchableOpacity,
   View,
+  NativeModules,
 } from "react-native";
-const { height, width } = Dimensions.get("window");
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
 function Trangchu({ route, navigation }) {
   const data = route.params;
-
-  // console.log(data);
+  const headerHeight = useHeaderHeight();
+  const TAB_NAVIGATION_HEIGHT = 80;
+  const CONTAINER_HEIGHT = SCREEN_HEIGHT - headerHeight;
+  const TOP_CONTAINER_HEIGHT = CONTAINER_HEIGHT * 0.4;
+  const BODY_CONTAINER_HEIGHT = CONTAINER_HEIGHT - TOP_CONTAINER_HEIGHT;
 
   // Tạo chiều cao cho từng screenCard
-  const headerHeight = useHeaderHeight();
   let heighthPerScreen = 0;
-  heighthPerScreen = (((height - headerHeight) * 0.6 - 2 * 5 * 3) * 0.95) / 3; // (width - 2 * margin * rowElement) / rowElement
+  heighthPerScreen = ((BODY_CONTAINER_HEIGHT - 2 * 5 * 3) * 0.95) / 3; // (SCREEN_WIDTH - 2 * margin * rowElement) / rowElement
   if (data.DoiTuong != 1) {
-    const bottomHeight = useBottomTabBarHeight();
-    heighthPerScreen =
-      (((height - headerHeight - bottomHeight) * 0.6 - 2 * 5 * 3) * 0.95) / 3; // (width - 2 * margin * rowElement) / rowElement
+    // const bottomHeight = useBottomTabBarHeight();
+    // bottomHeight = 80;
+    CONTAINER_HEIGHT = SCREEN_HEIGHT - headerHeight - TAB_NAVIGATION_HEIGHT;
+    TOP_CONTAINER_HEIGHT = CONTAINER_HEIGHT * 0.4;
+    BODY_CONTAINER_HEIGHT = CONTAINER_HEIGHT - TOP_CONTAINER_HEIGHT;
+    heighthPerScreen = ((BODY_CONTAINER_HEIGHT - 2 * 5 * 3) * 0.95) / 3; // (SCREEN_WIDTH - 2 * margin * rowElement) / rowElement
   }
 
   //#region Hieu ung spin logo
@@ -114,12 +120,19 @@ function Trangchu({ route, navigation }) {
           // backgroundColor: "#7AB4A5",
         }}
       >
-        {/*Head*/}
-        <View style={styles.headBox}>
+        {/*Top*/}
+        <View
+          style={[
+            styles.top_container,
+            {
+              height: TOP_CONTAINER_HEIGHT,
+            },
+          ]}
+        >
           <Animated.Image
             style={{
-              height: width * 0.3,
-              width: width * 0.3,
+              height: SCREEN_WIDTH * 0.3,
+              width: SCREEN_WIDTH * 0.3,
               transform: [{ rotate: spin }],
             }}
             source={require("../../../assets/logo.png")}
@@ -157,7 +170,14 @@ function Trangchu({ route, navigation }) {
           </Text>
         </View>
         {/*Body*/}
-        <View style={styles.bodyBox}>
+        <View
+          style={[
+            styles.body_container,
+            {
+              height: BODY_CONTAINER_HEIGHT,
+            },
+          ]}
+        >
           {screenCard.map((sc_item, sc_index) => (
             <TouchableOpacity
               key={sc_index.toString()}
@@ -202,17 +222,16 @@ function Trangchu({ route, navigation }) {
 const marginScreen = 5;
 const sumScreenPerRow = 2;
 const widthPerScreen =
-  (width - 2 * marginScreen * sumScreenPerRow) / sumScreenPerRow;
+  (SCREEN_WIDTH - 2 * marginScreen * sumScreenPerRow) / sumScreenPerRow;
 
 const styles = StyleSheet.create({
-  headBox: {
+  top_container: {
     width: "100%",
-    height: "40%",
     alignItems: "center",
     justifyContent: "space-evenly",
     // borderWidth: 1,
   },
-  bodyBox: {
+  body_container: {
     width: "100%",
     height: "60%",
     justifyContent: "center",

@@ -208,7 +208,7 @@ const Thongke = ({ kythi, setKyThi }) => {
         backgroundColor: "#1cc910",
         backgroundGradientFrom: "#eff3ff",
         backgroundGradientTo: "#efefef",
-        decimalPlaces: 2,
+        decimalPlaces: 0,
         color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
         style: {
           borderRadius: 16,

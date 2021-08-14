@@ -98,7 +98,7 @@ const Baocao = ({ kythi, setKyThi }) => {
                           fontSize: 16,
                         }}
                       >
-                        ● Lịch trình tuyển sinh:{" "}
+                        • Lịch trình tuyển sinh:{" "}
                         <Text style={styles.ketqua}>
                           {kythi_item.TrangThai_HienThi}
                         </Text>
@@ -110,7 +110,7 @@ const Baocao = ({ kythi, setKyThi }) => {
                           fontSize: 16,
                         }}
                       >
-                        ● Năm học:{" "}
+                        • Năm học:{" "}
                         <Text style={styles.ketqua}>{kythi_item.NamHoc}</Text>
                       </Text>
 
@@ -120,7 +120,7 @@ const Baocao = ({ kythi, setKyThi }) => {
                           fontSize: 16,
                         }}
                       >
-                        ● Điểm sàn:{" "}
+                        • Điểm sàn:{" "}
                         <Text style={styles.ketqua}>{kythi_item.DiemSan}</Text>
                       </Text>
 
@@ -131,7 +131,7 @@ const Baocao = ({ kythi, setKyThi }) => {
                           fontSize: 16,
                         }}
                       >
-                        ● Mã kỳ thi:{" "}
+                        • Mã kỳ thi:{" "}
                         <Text style={styles.ketqua}>{kythi_item.MaKyThi}</Text>
                       </Text>
 
@@ -141,7 +141,7 @@ const Baocao = ({ kythi, setKyThi }) => {
                           fontSize: 16,
                         }}
                       >
-                        ● Số lượng nguyện vọng:{" "}
+                        • Số lượng nguyện vọng:{" "}
                         <Text style={styles.ketqua}>
                           {kythi_item.SoLuongNguyenVong}
                         </Text>
@@ -153,7 +153,7 @@ const Baocao = ({ kythi, setKyThi }) => {
                           fontSize: 16,
                         }}
                       >
-                        ● Số lượng hội đồng thi:{" "}
+                        • Số lượng hội đồng thi:{" "}
                         <Text style={styles.ketqua}>
                           {kythi_item.SoLuongHDT}
                         </Text>
@@ -165,7 +165,7 @@ const Baocao = ({ kythi, setKyThi }) => {
                           fontSize: 16,
                         }}
                       >
-                        ● Số lượng học sinh:{" "}
+                        • Số lượng học sinh:{" "}
                         <Text style={styles.ketqua}>
                           {kythi_item.SoLuongHocSinh}
                         </Text>
@@ -178,7 +178,7 @@ const Baocao = ({ kythi, setKyThi }) => {
                           fontSize: 16,
                         }}
                       >
-                        ● Thời gian bắt đầu thi:{" "}
+                        • Thời gian bắt đầu thi:{" "}
                         <Text style={styles.ketqua}>
                           {kythi_item.ThoiGianBatDauThi}
                         </Text>
@@ -190,7 +190,7 @@ const Baocao = ({ kythi, setKyThi }) => {
                           fontSize: 16,
                         }}
                       >
-                        ● Thời gian đăng ký thi:{" "}
+                        • Thời gian đăng ký thi:{" "}
                         <Text style={styles.ketqua}>
                           {kythi_item.ThoiGianDangKyThi}
                         </Text>
@@ -202,7 +202,7 @@ const Baocao = ({ kythi, setKyThi }) => {
                           fontSize: 16,
                         }}
                       >
-                        ● Thời gian tổ chức thi:{" "}
+                        • Thời gian tổ chức thi:{" "}
                         <Text style={styles.ketqua}>
                           {kythi_item.ThoiGianToChucThi}
                         </Text>
@@ -214,7 +214,7 @@ const Baocao = ({ kythi, setKyThi }) => {
                           fontSize: 16,
                         }}
                       >
-                        ● Thời gian chấm thi:{" "}
+                        • Thời gian chấm thi:{" "}
                         <Text style={styles.ketqua}>
                           {kythi_item.ThoiGianChamThi}
                         </Text>
@@ -226,7 +226,7 @@ const Baocao = ({ kythi, setKyThi }) => {
                           fontSize: 16,
                         }}
                       >
-                        ● Thời gian kết thúc thi:{" "}
+                        • Thời gian kết thúc thi:{" "}
                         <Text style={styles.ketqua}>
                           {kythi_item.ThoiGianKetThucThi}
                         </Text>
@@ -239,7 +239,7 @@ const Baocao = ({ kythi, setKyThi }) => {
                           fontSize: 16,
                         }}
                       >
-                        ● Ngày tạo:{" "}
+                        • Ngày tạo:{" "}
                         <Text style={styles.ketqua}>{kythi_item.NgayTao}</Text>
                       </Text>
 
@@ -249,7 +249,7 @@ const Baocao = ({ kythi, setKyThi }) => {
                           fontSize: 16,
                         }}
                       >
-                        ● Ngày sửa:{" "}
+                        • Ngày sửa:{" "}
                         <Text style={styles.ketqua}>{kythi_item.NgaySua}</Text>
                       </Text>
                     </View>

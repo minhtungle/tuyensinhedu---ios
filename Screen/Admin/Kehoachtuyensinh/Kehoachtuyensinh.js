@@ -30,9 +30,7 @@ const Kehoachtuyensinh = ({ route, navigation }) => {
   const BODY_CONTAINER_HEIGHT = CONTAINER_HEIGHT - TOP_CONTAINER_HEIGHT;
   const [kehoach, setKeHoach] = useState([]);
   useEffect(() => {
-    const doituong = data.DoiTuong;
-    let cap = 0;
-    cap = doituong == 2 ? 2 : doituong == 3 ? 2 : 3;
+    let cap = data.Cap == 5 ? 3 : data.Cap == 4 ? 2 : data.Cap;
     fetch(
       `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getkehoachbyyear?idquanhuyen&idphuongxa&idtruong&cap=${cap}&type=1`
     )

@@ -108,7 +108,7 @@ function GenaralTab_Screen({ route, navigation }) {
             tabName = "Trang chủ";
             if (focused) {
               iconName = "home";
-              iconSize = 32;
+              iconSize = 26;
               color = "tomato";
               fontWeight = "bold";
               fontSize = 15;
@@ -123,7 +123,7 @@ function GenaralTab_Screen({ route, navigation }) {
             tabName = "Quản lý";
             if (focused) {
               iconName = "equalizer";
-              iconSize = 32;
+              iconSize = 26;
               color = "tomato";
               fontWeight = "bold";
               fontSize = 15;
@@ -142,9 +142,9 @@ function GenaralTab_Screen({ route, navigation }) {
                 alignItems: "center",
                 justifyContent: "center",
                 top: 10,
-                // borderWidth: 1,
                 width: "100%",
                 height: "100%",
+                // borderWidth: 1,
               }}
             >
               <MaterialCommunityIcons
@@ -169,17 +169,18 @@ function GenaralTab_Screen({ route, navigation }) {
         activeTintColor: "tomato",
         inactiveTintColor: "gray",
         showLabel: false,
-        /* style: {
+        style: {
           position: "absolute",
-          bottom: 25,
-          left: 20,
-          right: 20,
           elevation: 0,
           backgroundColor: "#FFF",
-          borderRadius: 25,
-          height: 60,
-          ...styles.shadow,
-        }, */
+          height: 80,
+          // paddingBottom: 10,
+          // bottom: 20,
+          // left: 20,
+          // right: 20,
+          // borderRadius: 25,
+          // ...styles.shadow,
+        },
       }}
     >
       <GenaralTab.Screen

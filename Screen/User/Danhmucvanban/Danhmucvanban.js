@@ -6,9 +6,8 @@ import {
   ImageBackground,
   Text,
 } from "react-native";
-import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
 
+import { Picker, Spinner } from "native-base";
 import DataWithSearchBar from "./DataWithSearchBar";
 import NetInfo from "@react-native-community/netinfo";
 import { useHeaderHeight } from "@react-navigation/stack";
@@ -21,10 +20,6 @@ function Danhmucvanban({ navigation }) {
       title: "Danh mục văn bản",
     });
   });
-  // const [fontLoaded] = Font.useFonts({
-  //   Roboto: require("native-base/Fonts/Roboto.ttf"),
-  //   Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-  // });
 
   //#region Kiểm tra kết nối mạng
   const [connected, setConnected] = useState(true);
@@ -52,26 +47,13 @@ function Danhmucvanban({ navigation }) {
           paddingBottom: headerHeight,
         }}
       >
-        <AnimatedEllipsis
-          numberOfDots={3}
-          minOpacity={0.4}
-          animationDelay={200}
-          style={{
-            color: "#61b15a",
-            fontSize: 100,
-            letterSpacing: -15,
-          }}
-        />
+        <Spinner color="tomato" />
         <Text>Vui lòng kiểm tra kết nối mạng</Text>
       </View>
     );
   }
   //#endregion
 
-  // if (!fontLoaded) {
-  //   console.log(fontLoaded);
-  //   return <AppLoading />;
-  // }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.block}>

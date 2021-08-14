@@ -8,6 +8,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { Picker, Spinner } from "native-base";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Colors, IconButton } from "react-native-paper";

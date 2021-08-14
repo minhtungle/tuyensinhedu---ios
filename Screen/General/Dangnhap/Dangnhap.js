@@ -9,7 +9,9 @@ import {
   ActivityIndicator,
   ScrollView,
   Alert,
+  StatusBar,
 } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import { Button, Picker, Text, View, Spinner } from "native-base";
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -44,9 +46,9 @@ export default function Dangnhap({ route, navigation }) {
   ]);
   const [thongtin, setThongTin] = useState({
     Tinh: JSON.stringify({
-      ID: 5351,
-      MaDonViSuDung: 202,
-      Ten: "Vĩnh Phúc",
+      ID: "",
+      MaDonViSuDung: 0,
+      Ten: "Chọn Tỉnh/Thành phố",
     }),
     Huyen: JSON.stringify({
       ID: "",
@@ -698,12 +700,44 @@ export default function Dangnhap({ route, navigation }) {
     }
   };
   //#endregion
-
+  //#region Kiểm tra kết nối mạng
+  const [connected, setConnected] = useState(true);
+  useEffect(() => {
+    const interval = setInterval(
+      () =>
+        NetInfo.fetch().then((state) => {
+          setConnected(state.isConnected);
+        }),
+      3000
+    );
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+  if (!connected) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#DEEBFE",
+          // display: "none", // Nhớ đổi lại
+          // paddingBottom: headerHeight,
+        }}
+      >
+        <Spinner color="tomato" />
+        <Text>Vui lòng kiểm tra kết nối mạng</Text>
+      </View>
+    );
+  }
+  //#endregion
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
+      <StatusBar hidden />
       {loading && (
         <View
           style={{

@@ -253,7 +253,7 @@ const Thongke = ({ hoso, setHoSo, kythi, setLoading, tieuchi, setTieuChi }) => {
           backgroundColor: "#1cc910",
           backgroundGradientFrom: "#eff3ff",
           backgroundGradientTo: "#efefef",
-          decimalPlaces: 2,
+          decimalPlaces: 0, // số thập phân
           color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
           style: {
             borderRadius: 16,

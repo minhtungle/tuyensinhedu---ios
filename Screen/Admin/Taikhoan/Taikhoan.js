@@ -45,13 +45,13 @@ const Taikhoan = ({ route, navigation }) => {
     {
       Ten: "Người dùng",
       TrangThai: 1,
-      HienThi: false,
+      HienThi: true,
       DanhSach: [],
     },
     {
       Ten: "Kiểu người dùng",
       TrangThai: 2,
-      HienThi: true,
+      HienThi: false,
       DanhSach: [],
     },
   ]);
@@ -128,7 +128,8 @@ const Taikhoan = ({ route, navigation }) => {
           </Text>
           <View
             style={{
-              width: "100%",
+              // width: "100%",
+              alignSelf: "center",
               paddingVertical: 20,
             }}
           >
@@ -301,7 +302,8 @@ const Taikhoan = ({ route, navigation }) => {
                   </Text>
                   <View
                     style={{
-                      width: "100%",
+                      // width: "100%",
+                      alignSelf: "center",
                     }}
                   >
                     <Text
