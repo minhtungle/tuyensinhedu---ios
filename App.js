@@ -85,6 +85,11 @@ function UserStack_Screen() {
         name="Hướng dẫn đăng ký trực tuyến"
         component={_User.Huongdandangkytructuyen}
       />
+      {/* Lịch trình tuyển sinh */}
+      <UserStack.Screen
+        name="Lịch trình tuyển sinh"
+        component={_User.Lichtrinhtuyensinh}
+      />
     </UserStack.Navigator>
   );
 }
@@ -238,6 +243,10 @@ function App() {
         <UserStack.Screen
           name="Hướng dẫn đăng ký trực tuyến"
           component={_User.Huongdandangkytructuyen}
+        />
+        <UserStack.Screen
+          name="Lịch trình tuyển sinh"
+          component={_User.Lichtrinhtuyensinh}
         />
         {/* Admin */}
         <AdminStack.Screen
