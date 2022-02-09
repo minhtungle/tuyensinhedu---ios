@@ -13,6 +13,8 @@ import Ketqua from "./Tracuuketquatuyensinh/Ketqua";
 import Danhmucvanban from "./Danhmucvanban/Danhmucvanban";
 //* Hướng dẫn đăng ký
 import Huongdandangkytructuyen from "./Huongdandangkytructuyen/Huongdandangkytructuyen";
+//* Lịch trình tuyển sinh
+import Lichtrinhtuyensinh from "./Lichtrinhtuyensinh/Lichtrinhtuyensinh";
 //* Góp ý
 import Gopy from "./Gopy/Gopy";
 
@@ -26,5 +28,6 @@ export {
   Tracuuketquatuyensinh,
   Ketqua,
   Huongdandangkytructuyen,
+  Lichtrinhtuyensinh,
   Gopy,
 };
