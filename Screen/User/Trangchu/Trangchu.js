@@ -20,9 +20,9 @@ function Trangchu({ route, navigation }) {
   const data = route.params;
   const headerHeight = useHeaderHeight();
   const TAB_NAVIGATION_HEIGHT = 80;
-  const CONTAINER_HEIGHT = SCREEN_HEIGHT - headerHeight;
-  const TOP_CONTAINER_HEIGHT = CONTAINER_HEIGHT * 0.4;
-  const BODY_CONTAINER_HEIGHT = CONTAINER_HEIGHT - TOP_CONTAINER_HEIGHT;
+  let CONTAINER_HEIGHT = SCREEN_HEIGHT - headerHeight;
+  let TOP_CONTAINER_HEIGHT = CONTAINER_HEIGHT * 0.4;
+  let BODY_CONTAINER_HEIGHT = CONTAINER_HEIGHT - TOP_CONTAINER_HEIGHT;
 
   // Tạo chiều cao cho từng screenCard
   let heighthPerScreen = 0;
@@ -74,8 +74,13 @@ function Trangchu({ route, navigation }) {
     },
     {
       page: "Hướng dẫn đăng ký trực tuyến",
-      title: "Hướng dẫn đăng ký trực tuyến",
+      title: "Hướng dẫn đăng ký",
       icon: "teach",
+    },
+    {
+      page: "Lịch trình tuyển sinh",
+      title: "Lịch trình tuyển sinh",
+      icon: "clock",
     },
   ];
   //#region Kiểm tra kết nối mạng
@@ -139,8 +144,8 @@ function Trangchu({ route, navigation }) {
           />
           <Text
             style={{
-              width: "90%",
-              fontSize: 28,
+              width: "95%",
+              fontSize: 26,
               fontWeight: "bold",
               textAlign: "center",
             }}
@@ -253,6 +258,7 @@ const styles = StyleSheet.create({
   },
   screenText: {
     fontSize: 16,
+    textAlign: "center",
   },
   shadow: {
     shadowColor: "#000",
