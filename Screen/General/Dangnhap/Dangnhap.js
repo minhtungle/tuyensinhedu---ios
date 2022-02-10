@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  KeyboardAvoidingViewBase,
-  ActivityIndicator,
-  ScrollView,
-  Alert,
-  StatusBar,
-} from "react-native";
-import NetInfo from "@react-native-community/netinfo";
-import { Button, Picker, Text, View, Spinner } from "native-base";
-const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { TAB_HEADER_HEIGHT } from "../../Admin/Kythi/style";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from "@react-native-community/netinfo";
+import { Button, Picker, Spinner, Text, View } from "native-base";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Dimensions,
+  KeyboardAvoidingView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import { tenmienDonVi } from "../../../assets/generalData";
+import { TAB_HEADER_HEIGHT } from "../../Admin/Kythi/style";
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function Dangnhap({ route, navigation }) {
   const [donvi, setDonVi] = useState([
@@ -76,10 +75,11 @@ export default function Dangnhap({ route, navigation }) {
       MaDonViSuDung: 0,
       Ten: "Chọn Sở GD&ĐT",
     }),
-    Cap: "",
+    Cap: "6",
     TenDangNhap: "",
     MatKhau: "",
   });
+  // console.log(thongtin);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [loading, setLoading] = useState(false);
 
@@ -130,7 +130,7 @@ export default function Dangnhap({ route, navigation }) {
     ],
     Cap: [
       {
-        ID: "",
+        ID: "6",
         Ten: "Chọn Cấp",
       },
       {
@@ -158,10 +158,160 @@ export default function Dangnhap({ route, navigation }) {
       ...arg,
     }));
   };
+  //* Lấy dữ liệu asycnStorage
+  const getDataAsycnStorage = () => {
+    try {
+      AsyncStorage.getItem("UserData").then((ASData) => {
+        if (ASData != null) {
+          // Chọn loại đơn vị
+          console.log(JSON.parse(ASData));
+          // Chon_DonVi(donvi_item, donvi_index);
+          // Nhập thông tin
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //#endregion
   //#region API - Call:  tỉnh-huyện-xã
   //* Tỉnh:
   useEffect(() => {
+    LayDanhSach_Tinh();
+  }, [0]);
+  //* Huyện - PGD - SGD
+  useEffect(() => {
+    LayDanhSach_Huyen();
+    LayDanhSach_PGD();
+    LayDanhSach_SGD();
+  }, [thongtin.Tinh]);
+  //* Xã
+  useEffect(() => {
+    LayDanhSach_Xa();
+  }, [thongtin.Huyen]);
+  //* Trường
+  useEffect(() => {
+    LayDanhSach_Truong();
+  }, [thongtin.Huyen, thongtin.Xa, thongtin.Cap]);
+  //#endregion
+  //#region Function
+  const Chon_DonVi = (_donvi_item, _donvi_index) => {
+    let _donvi = donvi.map((donvi_item, donvi_index) =>
+      donvi_index == _donvi_index
+        ? {
+            ...donvi_item,
+            trangthai: true,
+          }
+        : {
+            ...donvi_item,
+            trangthai: false,
+          }
+    );
+    setDonVi(_donvi);
+  };
+  const API_DangNhap = async (madonvisudung, doituong, data) => {
+    let url = `${tenmienDonVi}/api/TSAPIService/login?username=${thongtin.TenDangNhap}&password=${thongtin.MatKhau}&madonvisudung=${madonvisudung}&captruong=${thongtin.Cap}`;
+    // let url = `${tenmienDonVi}/api/TSAPIService/login?username=tkadmin&password=123456&madonvisudung=562`;
+    await fetch(url, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+      // body: JSON.stringify(DataPush),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        // console.log(responseJson.Result);
+        console.log(url);
+        let mess = "";
+
+        if (doituong == 2) {
+          let truong = JSON.parse(thongtin.Truong);
+          let idtruong = truong.ID;
+          if (idtruong == 0 || idtruong == "") {
+            mess = "Mời bạn chọn Trường";
+          } else {
+            mess =
+              "Tài khoản của bạn không chính xác. Vui lòng kiểm tra lại thông tin đã nhập";
+          }
+        } else if (doituong == 3) {
+          let pgd = JSON.parse(thongtin.PGD);
+          let idpgd = pgd.ID;
+          if (idpgd == 0 || idpgd == "") {
+            mess = "Mời bạn chọn Phòng GD&ĐT";
+          } else {
+            mess =
+              "Tài khoản của bạn không chính xác. Vui lòng kiểm tra lại thông tin đã nhập";
+          }
+        } else if (doituong == 4) {
+          let sgd = JSON.parse(thongtin.SGD);
+          let idsgd = sgd.ID;
+          if (idsgd == 0 || idsgd == "") {
+            mess = "Mời bạn chọn Sở GD&ĐT";
+          } else {
+            mess =
+              "Tài khoản của bạn không chính xác. Vui lòng kiểm tra lại thông tin đã nhập";
+          }
+        }
+        setLoading(false);
+        console.log({ ...data, ...responseJson.Result.data });
+        if (responseJson.Result.status) {
+          AsyncStorage.setItem("UserData", JSON.stringify(data));
+          navigation.navigate("Quản trị viên", {
+            ...data,
+            ...responseJson.Result.data,
+          });
+        } else {
+          Alert.alert("Thông báo !", mess);
+        }
+      });
+  };
+  const DangNhap = () => {
+    // Cho hiệu ứng chờ
+    setLoading(true);
+
+    let DoiTuong = 0;
+    let madonvisudung = 0;
+    // Kiểm tra loại đối tượng đăng nhập
+    donvi.forEach((donvi_item, donvi_index) => {
+      if (donvi_item.trangthai) {
+        DoiTuong = donvi_item.loai;
+      }
+    });
+    // Tạo data truyền vào từng trang
+    const data = {
+      // tenmienDonVi,
+      DoiTuong,
+      ...thongtin,
+    };
+    // console.log(data);
+    if (DoiTuong == 1) {
+      setLoading(false);
+      let tinh = JSON.parse(thongtin.Tinh);
+
+      if (tinh.ID == 0 || tinh.ID == "") {
+        Alert.alert("Thông báo !", "Mời bạn chọn Tỉnh/Thành phố");
+      } else {
+        navigation.navigate("Trang chủ", { ...data });
+      }
+    } else if (DoiTuong == 2) {
+      let truong = JSON.parse(thongtin.Truong);
+      madonvisudung = truong.MaDonViSuDung;
+      API_DangNhap(madonvisudung, DoiTuong, data);
+    } else if (DoiTuong == 3) {
+      let pgd = JSON.parse(thongtin.PGD);
+      madonvisudung = pgd.MaDonViSuDung;
+      API_DangNhap(madonvisudung, DoiTuong, data);
+    } else if (DoiTuong == 4) {
+      let sgd = JSON.parse(thongtin.SGD);
+      madonvisudung = sgd.MaDonViSuDung;
+      API_DangNhap(madonvisudung, DoiTuong, data);
+    }
+  };
+  const LayDanhSach_Tinh = () => {
+    // console.log("Lấy tỉnh");
     setLoading(true);
     fetch(`${tenmienDonVi}/api/TSAPIService/getaddress?idParent=1&level=1`)
       .then((response) => response.json())
@@ -192,56 +342,9 @@ export default function Dangnhap({ route, navigation }) {
           ...prevState,
           Tinh: arrData,
         }));
-        // Set thong tin Tinh mặc định
-        // changeValuePicker({
-        //   Tinh: JSON.stringify({
-        //     ID: 5351,
-        //     MaDonViSuDung: 202,
-        //     Ten: "Vĩnh Phúc",
-        //   }),
-        // });
-        // Set lại thông tin Huyen và Xa
-        changeValuePicker({
-          Huyen: JSON.stringify({
-            ID: "",
-            MaDonViSuDung: 0,
-            Ten: "Chọn Quận/Huyện",
-          }),
-          Xa: JSON.stringify({
-            ID: "",
-            MaDonViSuDung: 0,
-            Ten: "Chọn Phường/Xã",
-          }),
-        });
-        setPicker((prevState) => ({
-          ...prevState,
-          Huyen: [
-            {
-              ID: "",
-              MaDonViSuDung: 0,
-              Ten: "Chọn Quận/Huyện",
-            },
-          ],
-          Xa: [
-            {
-              ID: "",
-              MaDonViSuDung: 0,
-              Ten: "Chọn Phường/Xã",
-            },
-          ],
-        }));
-        /*  // Gọi dữ liệu Quận/Huyện của Tỉnh
-     
-        // GỌi dữ liệu Trường của Tỉnh
-      
-        // GỌi dữ liệu Phòng của Tỉnh
-        
-        // GỌi dữ liệu SỞ của Tỉnh
-     */
         setLoading(false);
       })
       .catch((error) => {
-        console.log("ok");
         const arrDataFail = [
           {
             ID: "",
@@ -256,9 +359,9 @@ export default function Dangnhap({ route, navigation }) {
         setLoading(false);
       });
     setLoading(false);
-  }, [0]);
-  //* Huyện
-  useEffect(() => {
+  };
+  const LayDanhSach_Huyen = () => {
+    // console.log("Lấy huyện");
     changeValuePicker({
       Huyen: JSON.stringify({
         ID: "",
@@ -327,9 +430,70 @@ export default function Dangnhap({ route, navigation }) {
           ],
         }));
       });
-  }, [thongtin.Tinh]);
-  //* PGD
-  useEffect(() => {
+  };
+  const LayDanhSach_Xa = () => {
+    // console.log("Lấy xã");
+    //! Cứ khi ID huyện thay đổi thì set id và picker xã về null
+    changeValuePicker({
+      Xa: JSON.stringify({
+        ID: "",
+        MaDonViSuDung: 0,
+        Ten: "Chọn Phường/Xã",
+      }),
+    });
+    setPicker((prevState) => ({
+      ...prevState,
+      Xa: [
+        {
+          ID: "",
+          MaDonViSuDung: 0,
+          Ten: "Chọn Phường/Xã",
+        },
+      ],
+    }));
+    //! Lấy thông tin Tinh - Huyen - Xa
+    let huyen = JSON.parse(thongtin.Huyen);
+    // console.log(huyen);
+    fetch(
+      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${huyen.ID}&level=3`
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        const arrData = [
+          {
+            ID: "",
+            MaDonViSuDung: 0,
+            Ten: "Chọn Phường/Xã",
+          },
+        ];
+        responseJson.Result.results.map((item, index) => {
+          const obj = {
+            ID: item.ID,
+            MaDonViSuDung: item.MaDonViSuDung,
+            Ten: item.TenDiaChi,
+          };
+          arrData.push(obj);
+        });
+        setPicker((prevState) => ({
+          ...prevState,
+          Xa: arrData,
+        }));
+      })
+      .catch((error) => {
+        setPicker((prevState) => ({
+          ...prevState,
+          Xa: [
+            {
+              ID: "",
+              MaDonViSuDung: 0,
+              Ten: "Chọn Phường/Xã",
+            },
+          ],
+        }));
+      });
+  };
+  const LayDanhSach_PGD = () => {
+    // console.log("Lấy PGD");
     changeValuePicker({
       PGD: JSON.stringify({
         ID: "",
@@ -387,9 +551,9 @@ export default function Dangnhap({ route, navigation }) {
           ],
         }));
       });
-  }, [thongtin.Tinh]);
-  //* SGD
-  useEffect(() => {
+  };
+  const LayDanhSach_SGD = () => {
+    // console.log("Lấy SGD");
     changeValuePicker({
       SGD: JSON.stringify({
         ID: "",
@@ -455,70 +619,9 @@ export default function Dangnhap({ route, navigation }) {
           ],
         }));
       });
-  }, [thongtin.Tinh]);
-  //* Xã
-  useEffect(() => {
-    //! Cứ khi ID huyện thay đổi thì set id và picker xã về null
-    changeValuePicker({
-      Xa: JSON.stringify({
-        ID: "",
-        MaDonViSuDung: 0,
-        Ten: "Chọn Phường/Xã",
-      }),
-    });
-    setPicker((prevState) => ({
-      ...prevState,
-      Xa: [
-        {
-          ID: "",
-          MaDonViSuDung: 0,
-          Ten: "Chọn Phường/Xã",
-        },
-      ],
-    }));
-    //! Lấy thông tin Tinh - Huyen - Xa
-    let huyen = JSON.parse(thongtin.Huyen);
-    // console.log(huyen);
-    fetch(
-      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${huyen.ID}&level=3`
-    )
-      .then((response) => response.json())
-      .then((responseJson) => {
-        const arrData = [
-          {
-            ID: "",
-            MaDonViSuDung: 0,
-            Ten: "Chọn Phường/Xã",
-          },
-        ];
-        responseJson.Result.results.map((item, index) => {
-          const obj = {
-            ID: item.ID,
-            MaDonViSuDung: item.MaDonViSuDung,
-            Ten: item.TenDiaChi,
-          };
-          arrData.push(obj);
-        });
-        setPicker((prevState) => ({
-          ...prevState,
-          Xa: arrData,
-        }));
-      })
-      .catch((error) => {
-        setPicker((prevState) => ({
-          ...prevState,
-          Xa: [
-            {
-              ID: "",
-              MaDonViSuDung: 0,
-              Ten: "Chọn Phường/Xã",
-            },
-          ],
-        }));
-      });
-  }, [thongtin.Huyen]);
-  //* Trường
-  useEffect(() => {
+  };
+  const LayDanhSach_Truong = () => {
+    // console.log("Lấy trường");
     //! Cứ khi ID huyện || phường || cấp thay đổi thì set id và picker trường về null
     changeValuePicker({
       Truong: JSON.stringify({
@@ -580,120 +683,6 @@ export default function Dangnhap({ route, navigation }) {
           ],
         }));
       });
-  }, [thongtin.Huyen, thongtin.Xa, thongtin.Cap]);
-  //#endregion
-  //#region Function
-  const Chon_DonVi = (_donvi_item, _donvi_index) => {
-    let _donvi = donvi.map((donvi_item, donvi_index) =>
-      donvi_index == _donvi_index
-        ? {
-            ...donvi_item,
-            trangthai: true,
-          }
-        : {
-            ...donvi_item,
-            trangthai: false,
-          }
-    );
-    setDonVi(_donvi);
-  };
-  const API_DangNhap = async (madonvisudung, doituong, data) => {
-    let url = `${tenmienDonVi}/api/TSAPIService/login?username=${thongtin.TenDangNhap}&password=${thongtin.MatKhau}&madonvisudung=${madonvisudung}&captruong=${thongtin.Cap}`;
-    // let url = `${tenmienDonVi}/api/TSAPIService/login?username=tkadmin&password=123456&madonvisudung=562`;
-    await fetch(url, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json; charset=UTF-8",
-      },
-      // body: JSON.stringify(DataPush),
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        // console.log(responseJson.Result);
-        console.log(url);
-        let mess = "";
-
-        if (doituong == 2) {
-          let truong = JSON.parse(thongtin.Truong);
-          let idtruong = truong.ID;
-          if (idtruong == 0 || idtruong == "") {
-            mess = "Mời bạn chọn Trường";
-          } else {
-            mess =
-              "Tài khoản của bạn không chính xác. Vui lòng kiểm tra lại thông tin đã nhập";
-          }
-        } else if (doituong == 3) {
-          let pgd = JSON.parse(thongtin.PGD);
-          let idpgd = pgd.ID;
-          if (idpgd == 0 || idpgd == "") {
-            mess = "Mời bạn chọn Phòng GD&ĐT";
-          } else {
-            mess =
-              "Tài khoản của bạn không chính xác. Vui lòng kiểm tra lại thông tin đã nhập";
-          }
-        } else if (doituong == 4) {
-          let sgd = JSON.parse(thongtin.SGD);
-          let idsgd = sgd.ID;
-          if (idsgd == 0 || idsgd == "") {
-            mess = "Mời bạn chọn Sở GD&ĐT";
-          } else {
-            mess =
-              "Tài khoản của bạn không chính xác. Vui lòng kiểm tra lại thông tin đã nhập";
-          }
-        }
-        setLoading(false);
-        console.log({ ...data, ...responseJson.Result.data });
-        responseJson.Result.status
-          ? navigation.navigate("Quản trị viên", {
-              ...data,
-              ...responseJson.Result.data,
-            })
-          : Alert.alert("Thông báo !", mess);
-      });
-  };
-  const DangNhap = () => {
-    // Cho hiệu ứng chờ
-    setLoading(true);
-
-    let DoiTuong = 0;
-    let madonvisudung = 0;
-    // Kiểm tra loại đối tượng đăng nhập
-    donvi.forEach((donvi_item, donvi_index) => {
-      if (donvi_item.trangthai) {
-        DoiTuong = donvi_item.loai;
-      }
-    });
-    // Tạo data truyền vào từng trang
-    const data = {
-      tenmienDonVi,
-      DoiTuong,
-      ...thongtin,
-    };
-    // console.log(data);
-    if (DoiTuong == 1) {
-      setLoading(false);
-      let tinh = JSON.parse(thongtin.Tinh);
-
-      if (tinh.ID == 0 || tinh.ID == "") {
-        Alert.alert("Thông báo !", "Mời bạn chọn Tỉnh/Thành phố");
-      } else {
-        navigation.navigate("Trang chủ", { ...data });
-      }
-    } else if (DoiTuong == 2) {
-      let truong = JSON.parse(thongtin.Truong);
-      madonvisudung = truong.MaDonViSuDung;
-      API_DangNhap(madonvisudung, DoiTuong, data);
-    } else if (DoiTuong == 3) {
-      let pgd = JSON.parse(thongtin.PGD);
-      madonvisudung = pgd.MaDonViSuDung;
-      API_DangNhap(madonvisudung, DoiTuong, data);
-    } else if (DoiTuong == 4) {
-      let sgd = JSON.parse(thongtin.SGD);
-      madonvisudung = sgd.MaDonViSuDung;
-      API_DangNhap(madonvisudung, DoiTuong, data);
-    }
   };
   //#endregion
   //#region Kiểm tra kết nối mạng

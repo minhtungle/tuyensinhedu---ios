@@ -20,9 +20,9 @@ function Trangchu({ route, navigation }) {
   // console.log(data);
   const headerHeight = useHeaderHeight();
   const TAB_NAVIGATION_HEIGHT = 80;
-  const CONTAINER_HEIGHT = SCREEN_HEIGHT - headerHeight;
-  const TOP_CONTAINER_HEIGHT = CONTAINER_HEIGHT * 0.4;
-  const BODY_CONTAINER_HEIGHT = CONTAINER_HEIGHT - TOP_CONTAINER_HEIGHT;
+  let CONTAINER_HEIGHT = SCREEN_HEIGHT - headerHeight;
+  let TOP_CONTAINER_HEIGHT = CONTAINER_HEIGHT * 0.4;
+  let BODY_CONTAINER_HEIGHT = CONTAINER_HEIGHT - TOP_CONTAINER_HEIGHT;
   // Tạo chiều cao cho từng screenCard
   let heighthPerScreen = 0;
   heighthPerScreen = ((BODY_CONTAINER_HEIGHT - 2 * 5 * 3) * 0.95) / 3; // (SCREEN_WIDTH - 2 * margin * rowElement) / rowElement
