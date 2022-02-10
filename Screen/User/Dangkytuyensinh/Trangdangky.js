@@ -30,8 +30,9 @@ import {
   TableWrapper,
 } from "react-native-table-component";
 import { Camera } from "expo-camera";
-
 import FileDinhKem from "./FileDinhKem";
+import { tenmienDonVi } from "../../../assets/generalData";
+
 const { height, width } = Dimensions.get("window");
 const { statusBarHeight } = Constants;
 
@@ -303,9 +304,7 @@ export default function Trangdangky({ route, navigation }) {
   };
   //* Gọi API danh sách học bạ
   useEffect(() => {
-    fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/gethocba?idKyThi=${IDKyThi}`
-    )
+    fetch(`${tenmienDonVi}/api/TSAPIService/gethocba?idKyThi=${IDKyThi}`)
       .then((response) => response.json())
       .then((responseJson) => {
         const diemData = [];
@@ -520,7 +519,7 @@ export default function Trangdangky({ route, navigation }) {
   //* Gọi API loại minh chứng
   useEffect(() => {
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getminhchung?cap=${DoiTuongTuyenSinh}`
+      `${tenmienDonVi}/api/TSAPIService/getminhchung?cap=${DoiTuongTuyenSinh}`
     )
       .then((res) => res.json())
       .then((responseJson) => {
@@ -564,7 +563,7 @@ export default function Trangdangky({ route, navigation }) {
   //* Nguyện vọng 1
   useEffect(() => {
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getschoolall?cap=${DoiTuongTuyenSinh}`
+      `${tenmienDonVi}/api/TSAPIService/getschoolall?cap=${DoiTuongTuyenSinh}`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -680,7 +679,7 @@ export default function Trangdangky({ route, navigation }) {
     if (itemValue !== null && itemValue !== "" && itemValue !== undefined) {
       // Gọi dữ liệu NV khác và trường chuyên
       fetch(
-        `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getschools?idTruong=${itemValue}&idKyThi=${IDKyThi}`
+        `${tenmienDonVi}/api/TSAPIService/getschools?idTruong=${itemValue}&idKyThi=${IDKyThi}`
       )
         .then((response) => response.json())
         .then((responseJson) => {
@@ -783,7 +782,7 @@ export default function Trangdangky({ route, navigation }) {
     if (itemValue !== null && itemValue !== "" && itemValue !== undefined) {
       // Gọi dữ liệu NV khác và trường chuyên
       fetch(
-        `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/gettruongchuyen?idTruong=${itemValue}`
+        `${tenmienDonVi}/api/TSAPIService/gettruongchuyen?idTruong=${itemValue}`
       )
         .then((response) => response.json())
         .then((responseJson) => {
@@ -1043,9 +1042,7 @@ export default function Trangdangky({ route, navigation }) {
   //#region Tỉnh
   //* Tỉnh:
   useEffect(() => {
-    fetch(
-      "http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=1&level=1"
-    )
+    fetch(`${tenmienDonVi}/api/TSAPIService/getaddress?idParent=1&level=1`)
       .then((response) => response.json())
       .then((responseJson) => {
         const arrData = [
@@ -1109,7 +1106,7 @@ export default function Trangdangky({ route, navigation }) {
       ],
     }));
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${data.IDTinhNS}&level=2`
+      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${data.IDTinhNS}&level=2`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -1163,7 +1160,7 @@ export default function Trangdangky({ route, navigation }) {
       ],
     }));
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${data.IDTinhTT}&level=2`
+      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${data.IDTinhTT}&level=2`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -1217,7 +1214,7 @@ export default function Trangdangky({ route, navigation }) {
       ],
     }));
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${data.IDTinhTamTru}&level=2`
+      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${data.IDTinhTamTru}&level=2`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -1271,7 +1268,7 @@ export default function Trangdangky({ route, navigation }) {
       ],
     }));
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${data.IDTinh}&level=2`
+      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${data.IDTinh}&level=2`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -1325,7 +1322,7 @@ export default function Trangdangky({ route, navigation }) {
       ],
     }));
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${data.IDTinhCT}&level=2`
+      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${data.IDTinhCT}&level=2`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -1375,7 +1372,7 @@ export default function Trangdangky({ route, navigation }) {
       ],
     }));
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${data.IDHuyenNS}&level=3`
+      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${data.IDHuyenNS}&level=3`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -1423,7 +1420,7 @@ export default function Trangdangky({ route, navigation }) {
       ],
     }));
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${data.IDHuyenTT}&level=3`
+      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${data.IDHuyenTT}&level=3`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -1471,7 +1468,7 @@ export default function Trangdangky({ route, navigation }) {
       ],
     }));
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${data.IDHuyenTamTru}&level=3`
+      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${data.IDHuyenTamTru}&level=3`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -1519,7 +1516,7 @@ export default function Trangdangky({ route, navigation }) {
       ],
     }));
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${data.IDHuyen}&level=3`
+      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${data.IDHuyen}&level=3`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -1567,7 +1564,7 @@ export default function Trangdangky({ route, navigation }) {
       ],
     }));
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${data.IDHuyenCT}&level=3`
+      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${data.IDHuyenCT}&level=3`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -1604,9 +1601,7 @@ export default function Trangdangky({ route, navigation }) {
   //#endregion
   //#region Đối tượng ưu tiên
   useEffect(() => {
-    fetch(
-      "http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getdoituonguutien"
-    )
+    fetch(`${tenmienDonVi}/api/TSAPIService/getdoituonguutien`)
       .then((response) => response.json())
       .then((responseJson) => {
         const arrData = [];
@@ -1917,7 +1912,7 @@ export default function Trangdangky({ route, navigation }) {
       // Hiển thị trạng thái chờ
       setLoading(true);
       await fetch(
-        "http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/dangkytuyensinh",
+        `${tenmienDonVi}/api/TSAPIService/dangkytuyensinh`,
         // "https://localhost:44384//api/TSAPIService/dangkytuyensinh",
         {
           method: "POST",

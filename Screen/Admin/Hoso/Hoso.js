@@ -1,25 +1,23 @@
-import React, { useLayoutEffect, useState, useEffect, useRef } from "react";
-
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  Animated,
-  Easing,
-  ScrollView,
-  ImageBackground,
-  TouchableOpacity,
-} from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import NetInfo from "@react-native-community/netinfo";
 import { Picker, Spinner } from "native-base";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useHeaderHeight } from "@react-navigation/stack";
-import { STYLE, TAB_HEADER_HEIGHT } from "./style";
-const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 // Gọi các chức năng
 import Baocao from "./Baocao";
+import { STYLE, TAB_HEADER_HEIGHT } from "./style";
 import Thongke from "./Thongke";
+import { tenmienDonVi } from "../../../assets/generalData";
+
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const Hoso = ({ route, navigation }) => {
   useLayoutEffect(() => {
@@ -208,7 +206,7 @@ const Hoso = ({ route, navigation }) => {
 
     let namnay = new Date().getFullYear();
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getkythi?tunam=${namnay}&dennam=${namnay}&cap=${cap}`
+      `${tenmienDonVi}/api/TSAPIService/getkythi?tunam=${namnay}&dennam=${namnay}&cap=${cap}`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -303,7 +301,7 @@ const Hoso = ({ route, navigation }) => {
           const truong = JSON.parse(data.Truong);
           idtruong = truong.ID;
           idtruong = 0;
-          url = `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getallhoso?cap=${cap}&idtinh=${idtinh}&idquan=${idquan}&idphuong=${idphuong}&idtruong=${idtruong}&idkythi=${idkythi}`;
+          url = `${tenmienDonVi}/api/TSAPIService/getallhoso?cap=${cap}&idtinh=${idtinh}&idquan=${idquan}&idphuong=${idphuong}&idtruong=${idtruong}&idkythi=${idkythi}`;
 
           // console.log(url);
           res = await GET_API(url);
@@ -313,14 +311,14 @@ const Hoso = ({ route, navigation }) => {
           const pgd = JSON.parse(data.PGD);
           idtruong = pgd.ID;
           cap = 2;
-          url = `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getallhoso?cap=${cap}&idtinh=${idtinh}&idquan=${idquan}&idphuong=${idphuong}&idtruong=${idtruong}&idkythi=${idkythi}`;
+          url = `${tenmienDonVi}/api/TSAPIService/getallhoso?cap=${cap}&idtinh=${idtinh}&idquan=${idquan}&idphuong=${idphuong}&idtruong=${idtruong}&idkythi=${idkythi}`;
 
           res = await GET_API(url);
         }
         // Đối tượng đăng nhập là SGD
         else if (doituong == 4) {
           cap = 3;
-          url = `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getallhoso?cap=${cap}&idtinh=${idtinh}&idquan=${idquan}&idphuong=${idphuong}&idtruong=${idtruong}&idkythi=${idkythi}`;
+          url = `${tenmienDonVi}/api/TSAPIService/getallhoso?cap=${cap}&idtinh=${idtinh}&idquan=${idquan}&idphuong=${idphuong}&idtruong=${idtruong}&idkythi=${idkythi}`;
 
           res = await GET_API(url);
         }

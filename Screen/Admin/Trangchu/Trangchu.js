@@ -1,23 +1,18 @@
-import React, { useLayoutEffect, useState, useEffect, useRef } from "react";
-import {
-  Text,
-  View,
-  ImageBackground,
-  Button,
-  StyleSheet,
-  ScrollView,
-  Animated,
-  Easing,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-} from "react-native";
-import NetInfo from "@react-native-community/netinfo";
-import { Picker, Spinner } from "native-base";
-
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import NetInfo from "@react-native-community/netinfo";
 import { useHeaderHeight } from "@react-navigation/stack";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { Spinner } from "native-base";
+import React, { useEffect, useState } from "react";
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
 function Trangchu({ route, navigation }) {

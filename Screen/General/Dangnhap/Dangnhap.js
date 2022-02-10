@@ -16,6 +16,7 @@ import { Button, Picker, Text, View, Spinner } from "native-base";
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TAB_HEADER_HEIGHT } from "../../Admin/Kythi/style";
+import { tenmienDonVi } from "../../../assets/generalData";
 
 export default function Dangnhap({ route, navigation }) {
   const [donvi, setDonVi] = useState([
@@ -61,17 +62,17 @@ export default function Dangnhap({ route, navigation }) {
       Ten: "Chọn Phường/Xã",
     }),
     Truong: JSON.stringify({
-      ID: 0,
+      ID: "",
       MaDonViSuDung: 0,
       Ten: "Chọn Trường",
     }),
     PGD: JSON.stringify({
-      ID: 0,
+      ID: "",
       MaDonViSuDung: 0,
       Ten: "Chọn Phòng GD&ĐT",
     }),
     SGD: JSON.stringify({
-      ID: 0,
+      ID: "",
       MaDonViSuDung: 0,
       Ten: "Chọn Sở GD&ĐT",
     }),
@@ -87,34 +88,44 @@ export default function Dangnhap({ route, navigation }) {
   const [picker, setPicker] = useState({
     Tinh: [
       {
-        ID: 0,
+        ID: "",
+        MaDonViSuDung: 0,
         Ten: "Chọn Tỉnh/Thành phố",
       },
     ],
     Huyen: [
       {
-        ID: 0,
+        ID: "",
+        MaDonViSuDung: 0,
         name: "Chọn Quận/Huyện",
       },
     ],
     Xa: [
       {
-        ID: 0,
+        ID: "",
+        MaDonViSuDung: 0,
         name: "Chọn Phường/Xã",
       },
     ],
     Truong: [
       {
-        ID: 0,
+        ID: "",
         MaDonViSuDung: 0,
         Ten: "Chọn Trường",
       },
     ],
     SGD: [
       {
-        ID: 0,
+        ID: "",
         MaDonViSuDung: 0,
         Ten: "Chọn Sở GD&ĐT",
+      },
+    ],
+    PGD: [
+      {
+        ID: "",
+        MaDonViSuDung: 0,
+        Ten: "Chọn Phòng GD&ĐT",
       },
     ],
     Cap: [
@@ -149,12 +160,10 @@ export default function Dangnhap({ route, navigation }) {
   };
   //#endregion
   //#region API - Call:  tỉnh-huyện-xã
-  //* Huyện + Trường:
+  //* Tỉnh:
   useEffect(() => {
     setLoading(true);
-    fetch(
-      "http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=1&level=1"
-    )
+    fetch(`${tenmienDonVi}/api/TSAPIService/getaddress?idParent=1&level=1`)
       .then((response) => response.json())
       .then((responseJson) => {
         //console.log(responseJson);
@@ -166,30 +175,31 @@ export default function Dangnhap({ route, navigation }) {
           },
         ];
         // Chỉ chọn ra tỉnh Vĩnh Phúc
-        const obj = responseJson.Result.results.filter(
-          (item, index) => item.ID === 5351 // ID tỉnh Vĩnh Phúc
-        );
-        // console.log(obj);
-        // Reset dữ liệu tỉnh để nhận duy nhất tỉnh đang chọn từ đăng nhập
-        // arrData.length = 0;
-        arrData.push({
-          ID: obj[0].ID,
-          MaDonViSuDung: obj[0].MaDonViSuDung,
-          Ten: obj[0].TenDiaChi,
-        });
-        //console.log(obj[0]);
+        responseJson.Result.results
+          .filter(
+            (item, index) => item.ID === 5351 || item.ID === 5485 // ID tỉnh Vĩnh Phúc
+          )
+          .map((item) => {
+            let obj = {
+              ID: item.ID,
+              MaDonViSuDung: item.MaDonViSuDung,
+              Ten: item.TenDiaChi,
+            };
+            arrData.push(obj);
+          });
+        // console.log(arrData);
         setPicker((prevState) => ({
           ...prevState,
           Tinh: arrData,
         }));
         // Set thong tin Tinh mặc định
-        changeValuePicker({
-          Tinh: JSON.stringify({
-            ID: 5351,
-            MaDonViSuDung: 202,
-            Ten: "Vĩnh Phúc",
-          }),
-        });
+        // changeValuePicker({
+        //   Tinh: JSON.stringify({
+        //     ID: 5351,
+        //     MaDonViSuDung: 202,
+        //     Ten: "Vĩnh Phúc",
+        //   }),
+        // });
         // Set lại thông tin Huyen và Xa
         changeValuePicker({
           Huyen: JSON.stringify({
@@ -220,173 +230,18 @@ export default function Dangnhap({ route, navigation }) {
             },
           ],
         }));
-        // Gọi dữ liệu Quận/Huyện của Tỉnh
-        fetch(
-          `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${obj[0].ID}&level=2`
-        )
-          .then((response) => response.json())
-          .then((responseJson) => {
-            // console.log(responseJson);
-            const arrData = [
-              {
-                ID: "",
-                MaDonViSuDung: 0,
-                Ten: "Chọn Quận/Huyện",
-              },
-            ];
-            responseJson.Result.results.map((item, index) => {
-              const obj = {
-                ID: item.ID,
-                MaDonViSuDung: item.MaDonViSuDung,
-                Ten: item.TenDiaChi,
-              };
-              arrData.push(obj);
-            });
-            setPicker((prevState) => ({
-              ...prevState,
-              Huyen: arrData,
-            }));
-          })
-          .catch((error) => {
-            setPicker((prevState) => ({
-              ...prevState,
-              Huyen: [
-                {
-                  ID: "",
-                  MaDonViSuDung: 0,
-                  Ten: "Chọn Quận/Huyện",
-                },
-              ],
-            }));
-          });
+        /*  // Gọi dữ liệu Quận/Huyện của Tỉnh
+     
         // GỌi dữ liệu Trường của Tỉnh
-        fetch(
-          `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getschoolbyaddress?idtinh=${obj[0].ID}&idquanhuyen=&idphuongxa=&cap=${thongtin.Cap}`
-        )
-          .then((response) => response.json())
-          .then((responseJson) => {
-            const arrData = [
-              {
-                ID: 0,
-                MaDonViSuDung: 0,
-                Ten: "Chọn Trường",
-              },
-            ];
-            responseJson.Result.results.map((item, index) => {
-              const obj = {
-                ID: item.ID,
-                MaDonViSuDung: item.MaDonViSuDung,
-                Ten: item.TenTruong,
-              };
-              arrData.push(obj);
-            });
-            // console.log(arrData);
-            setPicker((prevState) => ({
-              ...prevState,
-              Truong: arrData,
-            }));
-          })
-          .catch((error) => {
-            setPicker((prevState) => ({
-              ...prevState,
-              Truong: [
-                {
-                  ID: 0,
-                  MaDonViSuDung: 0,
-                  Ten: "Chọn Trường",
-                },
-              ],
-            }));
-          });
+      
         // GỌi dữ liệu Phòng của Tỉnh
-        fetch(
-          `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getschoolbyaddress?idtinh=${obj[0].ID}&idquanhuyen=&idphuongxa=&cap=4`
-        )
-          .then((response) => response.json())
-          .then((responseJson) => {
-            const arrData = [
-              {
-                ID: 0,
-                MaDonViSuDung: 0,
-                Ten: "Chọn Phòng GD&ĐT",
-              },
-            ];
-            responseJson.Result.results.map((item, index) => {
-              const obj = {
-                ID: item.ID,
-                MaDonViSuDung: item.MaDonViSuDung,
-                Ten: item.TenTruong,
-              };
-              arrData.push(obj);
-            });
-            setPicker((prevState) => ({
-              ...prevState,
-              PGD: arrData,
-            }));
-            //console.log(arrData);
-          })
-          .catch((error) => {
-            setPicker((prevState) => ({
-              ...prevState,
-              PGD: [
-                {
-                  ID: 0,
-                  MaDonViSuDung: 0,
-                  Ten: "Chọn Phòng GD&ĐT",
-                },
-              ],
-            }));
-          });
+        
         // GỌi dữ liệu SỞ của Tỉnh
-        fetch(
-          `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getschoolbyaddress?idtinh=${obj[0].ID}&idquanhuyen=&idphuongxa=&cap=5`
-        )
-          .then((response) => response.json())
-          .then((responseJson) => {
-            const arrData = [
-              {
-                ID: 0,
-                MaDonViSuDung: 0,
-                Ten: "Chọn Sở GD&ĐT",
-              },
-            ];
-            responseJson.Result.results.map((item, index) => {
-              const obj = {
-                ID: item.ID,
-                MaDonViSuDung: item.MaDonViSuDung,
-                Ten: item.TenTruong,
-              };
-              arrData.push(obj);
-            });
-            setPicker((prevState) => ({
-              ...prevState,
-              SGD: arrData,
-            }));
-            // Set thong tin Sở mặc định
-            changeValuePicker({
-              SGD: JSON.stringify({
-                ID: 6167,
-                MaDonViSuDung: 241,
-                Ten: "Sở GD&ĐT Vĩnh Phúc",
-              }),
-            });
-            //console.log(arrData);
-          })
-          .catch((error) => {
-            setPicker((prevState) => ({
-              ...prevState,
-              SGD: [
-                {
-                  ID: 0,
-                  MaDonViSuDung: 0,
-                  Ten: "Chọn Sở GD&ĐT",
-                },
-              ],
-            }));
-          });
+     */
         setLoading(false);
       })
       .catch((error) => {
+        console.log("ok");
         const arrDataFail = [
           {
             ID: "",
@@ -404,6 +259,18 @@ export default function Dangnhap({ route, navigation }) {
   }, [0]);
   //* Huyện
   useEffect(() => {
+    changeValuePicker({
+      Huyen: JSON.stringify({
+        ID: "",
+        MaDonViSuDung: 0,
+        Ten: "Chọn Quận/Huyện",
+      }),
+      Xa: JSON.stringify({
+        ID: "",
+        MaDonViSuDung: 0,
+        Ten: "Chọn Phường/Xã",
+      }),
+    });
     setPicker((prevState) => ({
       ...prevState,
       Huyen: [
@@ -424,7 +291,7 @@ export default function Dangnhap({ route, navigation }) {
     //! Lấy thông tin Tinh - Huyen - Xa
     let tinh = JSON.parse(thongtin.Tinh);
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${tinh.ID}&level=2`
+      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${tinh.ID}&level=2`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -461,6 +328,134 @@ export default function Dangnhap({ route, navigation }) {
         }));
       });
   }, [thongtin.Tinh]);
+  //* PGD
+  useEffect(() => {
+    changeValuePicker({
+      PGD: JSON.stringify({
+        ID: "",
+        MaDonViSuDung: 0,
+        Ten: "Chọn Phòng GD&ĐT",
+      }),
+    });
+    setPicker((prevState) => ({
+      ...prevState,
+      PGD: [
+        {
+          ID: "",
+          MaDonViSuDung: 0,
+          Ten: "Chọn Phòng GD&ĐT",
+        },
+      ],
+    }));
+    //! Lấy thông tin PGD
+    let tinh = JSON.parse(thongtin.Tinh);
+    fetch(
+      `${tenmienDonVi}/api/TSAPIService/getschoolbyaddress?idtinh=${tinh.ID}&idquanhuyen=&idphuongxa=&cap=4`
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        const arrData = [
+          {
+            ID: "",
+            MaDonViSuDung: 0,
+            Ten: "Chọn Phòng GD&ĐT",
+          },
+        ];
+        responseJson.Result.results.map((item, index) => {
+          const obj = {
+            ID: item.ID,
+            MaDonViSuDung: item.MaDonViSuDung,
+            Ten: item.TenTruong,
+          };
+          arrData.push(obj);
+        });
+        setPicker((prevState) => ({
+          ...prevState,
+          PGD: arrData,
+        }));
+        //console.log(arrData);
+      })
+      .catch((error) => {
+        setPicker((prevState) => ({
+          ...prevState,
+          PGD: [
+            {
+              ID: "",
+              MaDonViSuDung: 0,
+              Ten: "Chọn Phòng GD&ĐT",
+            },
+          ],
+        }));
+      });
+  }, [thongtin.Tinh]);
+  //* SGD
+  useEffect(() => {
+    changeValuePicker({
+      SGD: JSON.stringify({
+        ID: "",
+        MaDonViSuDung: 0,
+        Ten: "Chọn Sở GD&ĐT",
+      }),
+    });
+    setPicker((prevState) => ({
+      ...prevState,
+      SGD: [
+        {
+          ID: "",
+          MaDonViSuDung: 0,
+          Ten: "Chọn Sở GD&ĐT",
+        },
+      ],
+    }));
+    //! Lấy thông tin PGD
+    let tinh = JSON.parse(thongtin.Tinh);
+    fetch(
+      `${tenmienDonVi}/api/TSAPIService/getschoolbyaddress?idtinh=${tinh.ID}&idquanhuyen=&idphuongxa=&cap=5`
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        const arrData = [
+          {
+            ID: "",
+            MaDonViSuDung: 0,
+            Ten: "Chọn Sở GD&ĐT",
+          },
+        ];
+        responseJson.Result.results.map((item, index) => {
+          const obj = {
+            ID: item.ID,
+            MaDonViSuDung: item.MaDonViSuDung,
+            Ten: item.TenTruong,
+          };
+          arrData.push(obj);
+        });
+        setPicker((prevState) => ({
+          ...prevState,
+          SGD: arrData,
+        }));
+        // Set thong tin Sở mặc định
+        // changeValuePicker({
+        //   SGD: JSON.stringify({
+        //     ID: 6167,
+        //     MaDonViSuDung: 241,
+        //     Ten: "Sở GD&ĐT Vĩnh Phúc",
+        //   }),
+        // });
+        //console.log(arrData);
+      })
+      .catch((error) => {
+        setPicker((prevState) => ({
+          ...prevState,
+          SGD: [
+            {
+              ID: "",
+              MaDonViSuDung: 0,
+              Ten: "Chọn Sở GD&ĐT",
+            },
+          ],
+        }));
+      });
+  }, [thongtin.Tinh]);
   //* Xã
   useEffect(() => {
     //! Cứ khi ID huyện thay đổi thì set id và picker xã về null
@@ -485,7 +480,7 @@ export default function Dangnhap({ route, navigation }) {
     let huyen = JSON.parse(thongtin.Huyen);
     // console.log(huyen);
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${huyen.ID}&level=3`
+      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${huyen.ID}&level=3`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -527,7 +522,7 @@ export default function Dangnhap({ route, navigation }) {
     //! Cứ khi ID huyện || phường || cấp thay đổi thì set id và picker trường về null
     changeValuePicker({
       Truong: JSON.stringify({
-        ID: 0,
+        ID: "",
         MaDonViSuDung: 0,
         Ten: "Chọn Trường",
       }),
@@ -536,7 +531,7 @@ export default function Dangnhap({ route, navigation }) {
       ...prevState,
       Truong: [
         {
-          ID: 0,
+          ID: "",
           MaDonViSuDung: 0,
           Ten: "Chọn Trường",
         },
@@ -548,13 +543,13 @@ export default function Dangnhap({ route, navigation }) {
     let huyen = JSON.parse(thongtin.Huyen);
     let xa = JSON.parse(thongtin.Xa);
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getschoolbyaddress?idtinh=${tinh.ID}&idquanhuyen=${huyen.ID}&idphuongxa=${xa.ID}&cap=${thongtin.Cap}`
+      `${tenmienDonVi}/api/TSAPIService/getschoolbyaddress?idtinh=${tinh.ID}&idquanhuyen=${huyen.ID}&idphuongxa=${xa.ID}&cap=${thongtin.Cap}`
     )
       .then((response) => response.json())
       .then((responseJson) => {
         const arrData = [
           {
-            ID: 0,
+            ID: "",
             MaDonViSuDung: 0,
             Ten: "Chọn Trường",
           },
@@ -578,7 +573,7 @@ export default function Dangnhap({ route, navigation }) {
           ...prevState,
           Truong: [
             {
-              ID: 0,
+              ID: "",
               MaDonViSuDung: 0,
               Ten: "Chọn Trường",
             },
@@ -603,8 +598,8 @@ export default function Dangnhap({ route, navigation }) {
     setDonVi(_donvi);
   };
   const API_DangNhap = async (madonvisudung, doituong, data) => {
-    let url = `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/login?username=${thongtin.TenDangNhap}&password=${thongtin.MatKhau}&madonvisudung=${madonvisudung}`;
-    // let url = `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/login?username=tkadmin&password=123456&madonvisudung=562`;
+    let url = `${tenmienDonVi}/api/TSAPIService/login?username=${thongtin.TenDangNhap}&password=${thongtin.MatKhau}&madonvisudung=${madonvisudung}&captruong=${thongtin.Cap}`;
+    // let url = `${tenmienDonVi}/api/TSAPIService/login?username=tkadmin&password=123456&madonvisudung=562`;
     await fetch(url, {
       method: "POST",
       mode: "no-cors",
@@ -617,6 +612,7 @@ export default function Dangnhap({ route, navigation }) {
       .then((response) => response.json())
       .then((responseJson) => {
         // console.log(responseJson.Result);
+        console.log(url);
         let mess = "";
 
         if (doituong == 2) {
@@ -648,14 +644,13 @@ export default function Dangnhap({ route, navigation }) {
           }
         }
         setLoading(false);
-
         console.log({ ...data, ...responseJson.Result.data });
         responseJson.Result.status
           ? navigation.navigate("Quản trị viên", {
               ...data,
               ...responseJson.Result.data,
             })
-          : alert(mess);
+          : Alert.alert("Thông báo !", mess);
       });
   };
   const DangNhap = () => {
@@ -672,6 +667,7 @@ export default function Dangnhap({ route, navigation }) {
     });
     // Tạo data truyền vào từng trang
     const data = {
+      tenmienDonVi,
       DoiTuong,
       ...thongtin,
     };
@@ -681,7 +677,7 @@ export default function Dangnhap({ route, navigation }) {
       let tinh = JSON.parse(thongtin.Tinh);
 
       if (tinh.ID == 0 || tinh.ID == "") {
-        alert("Mời bạn chọn Tỉnh/Thành phố");
+        Alert.alert("Thông báo !", "Mời bạn chọn Tỉnh/Thành phố");
       } else {
         navigation.navigate("Trang chủ", { ...data });
       }
@@ -828,6 +824,43 @@ export default function Dangnhap({ route, navigation }) {
                 // justifyContent: "center",
               }}
             >
+              <View
+                style={{
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {/*// TỈnh thành phố  -- Luôn luôn hiện tỉnh*/}
+                <View
+                  style={[styles.field, { zIndex: 11001, ...styles.shadow }]}
+                >
+                  <Picker
+                    selectedValue={thongtin.Tinh}
+                    iosIcon={
+                      <MaterialCommunityIcons
+                        name={"menu-down"}
+                        size={23}
+                        color={"#0965B0"}
+                      />
+                    }
+                    style={styles.picker}
+                    onValueChange={(itemValue, itemIndex) =>
+                      changeValuePicker({ Tinh: itemValue })
+                    }
+                  >
+                    {picker.Tinh.map((item, index) => {
+                      return (
+                        <Picker.Item
+                          key={index.toString()}
+                          label={item.Ten}
+                          value={JSON.stringify(item)}
+                        />
+                      );
+                    })}
+                  </Picker>
+                </View>
+              </View>
               {!donvi[0].trangthai ? (
                 <View
                   style={{
@@ -1148,45 +1181,7 @@ export default function Dangnhap({ route, navigation }) {
                     />
                   </View>
                 </View>
-              ) : (
-                <View
-                  style={{
-                    width: "100%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  {/*// TỈnh thành phố */}
-                  <View
-                    style={[styles.field, { zIndex: 11001, ...styles.shadow }]}
-                  >
-                    <Picker
-                      selectedValue={thongtin.Tinh}
-                      iosIcon={
-                        <MaterialCommunityIcons
-                          name={"menu-down"}
-                          size={23}
-                          color={"#0965B0"}
-                        />
-                      }
-                      style={styles.picker}
-                      onValueChange={(itemValue, itemIndex) =>
-                        changeValuePicker({ Tinh: itemValue })
-                      }
-                    >
-                      {picker.Tinh.map((item, index) => {
-                        return (
-                          <Picker.Item
-                            key={index.toString()}
-                            label={item.Ten}
-                            value={JSON.stringify(item)}
-                          />
-                        );
-                      })}
-                    </Picker>
-                  </View>
-                </View>
-              )}
+              ) : null}
               {/*// Đăng nhập */}
               <Button
                 style={[

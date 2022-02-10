@@ -16,6 +16,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { Picker, Spinner } from "native-base";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useHeaderHeight } from "@react-navigation/stack";
+import { tenmienDonVi } from "../../../assets/generalData";
 import { STYLE, TAB_HEADER_HEIGHT } from "./style";
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -57,9 +58,7 @@ const Taikhoan = ({ route, navigation }) => {
   ]);
   useEffect(() => {
     const manguoidung = data.MaNguoiDung;
-    fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getuserinfo?iduser=${manguoidung}`
-    )
+    fetch(`${tenmienDonVi}/api/TSAPIService/getuserinfo?iduser=${manguoidung}`)
       .then((res) => res.json())
       .then((responseJson) => {
         const _thongtin = responseJson.Result.data;

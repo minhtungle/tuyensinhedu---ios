@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
-  ImageBackground,
 } from "react-native";
 import { Colors, IconButton } from "react-native-paper";
 import { BlurView } from "expo-blur";
@@ -16,7 +15,7 @@ const { height, width } = Dimensions.get("window");
 import * as Font from "expo-font";
 import NetInfo from "@react-native-community/netinfo";
 import { useHeaderHeight } from "@react-navigation/stack";
-import AnimatedEllipsis from "react-native-animated-ellipsis";
+import { tenmienDonVi } from "../../../assets/generalData";
 
 export default function Thongtintuyensinh({ navigation, route }) {
   useLayoutEffect(() => {
@@ -105,9 +104,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
   //#region API - Call:  tỉnh-huyện-xã
   //* Huyện + Trường:
   useEffect(() => {
-    fetch(
-      "http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=1&level=1"
-    )
+    fetch(`${tenmienDonVi}/api/TSAPIService/getaddress?idParent=1&level=1`)
       .then((response) => response.json())
       .then((responseJson) => {
         //console.log(responseJson);
@@ -154,7 +151,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
         }));
         // Gọi dữ liệu Quận/Huyện của Tỉnh
         fetch(
-          `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${obj[0].ID}&level=2`
+          `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${obj[0].ID}&level=2`
         )
           .then((response) => response.json())
           .then((responseJson) => {
@@ -191,7 +188,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
         //console.log(obj);
         // GỌi dữ liệu Trường của Tỉnh
         fetch(
-          `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getschoolbyaddress?idtinh=${obj[0].ID}&idquanhuyen=${data.IDHuyen}&idphuongxa=${data.IDXa}&cap=${data.CapTS}`
+          `${tenmienDonVi}/api/TSAPIService/getschoolbyaddress?idtinh=${obj[0].ID}&idquanhuyen=${data.IDHuyen}&idphuongxa=${data.IDXa}&cap=${data.CapTS}`
         )
           .then((response) => response.json())
           .then((responseJson) => {
@@ -257,7 +254,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
   //     ],
   //   }));
   //   fetch(
-  //     `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${data.IDTinh}&level=2`
+  //     `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${data.IDTinh}&level=2`
   //   )
   //     .then((response) => response.json())
   //     .then((responseJson) => {
@@ -306,7 +303,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
       ],
     }));
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getaddress?idParent=${data.IDHuyen}&level=3`
+      `${tenmienDonVi}/api/TSAPIService/getaddress?idParent=${data.IDHuyen}&level=3`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -355,7 +352,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
     }));
     //console.log(data);
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getschoolbyaddress?idtinh=${data.IDTinh}&idquanhuyen=${data.IDHuyen}&idphuongxa=${data.IDXa}&cap=${data.CapTS}`
+      `${tenmienDonVi}/api/TSAPIService/getschoolbyaddress?idtinh=${data.IDTinh}&idquanhuyen=${data.IDHuyen}&idphuongxa=${data.IDXa}&cap=${data.CapTS}`
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -401,7 +398,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
   const Tracuu = async () => {
     try {
       await fetch(
-        `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getkehoachbyyear?idquanhuyen=${data.IDHuyen}&idphuongxa=${data.IDXa}&idtruong=${data.IDTruong}&cap=${data.CapTS}`
+        `${tenmienDonVi}/api/TSAPIService/getkehoachbyyear?idquanhuyen=${data.IDHuyen}&idphuongxa=${data.IDXa}&idtruong=${data.IDTruong}&cap=${data.CapTS}`
       )
         .then((response) => response.json())
         .then((responseJson) => {

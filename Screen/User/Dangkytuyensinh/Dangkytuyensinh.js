@@ -12,6 +12,7 @@ import { Picker, Spinner } from "native-base";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
 import NetInfo from "@react-native-community/netinfo";
 import { useHeaderHeight } from "@react-navigation/stack";
+import { tenmienDonVi } from "../../../assets/generalData";
 
 export default function Dangkytuyensinh({ navigation }) {
   useLayoutEffect(() => {
@@ -28,9 +29,7 @@ export default function Dangkytuyensinh({ navigation }) {
   ];
   const [data, setData] = useState([]);
   useEffect(() => {
-    fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getkythi?tunam=0&dennam=0&cap=0`
-    )
+    fetch(`${tenmienDonVi}/api/TSAPIService/getkythi?tunam=0&dennam=0&cap=0`)
       .then((response) => response.json())
       .then((responseJson) => {
         const arrData = [];

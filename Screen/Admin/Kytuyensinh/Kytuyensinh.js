@@ -1,25 +1,23 @@
-import React, { useLayoutEffect, useState, useEffect, useRef } from "react";
-
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  Animated,
-  Easing,
-  ScrollView,
-  ImageBackground,
-  TouchableOpacity,
-} from "react-native";
-import NetInfo from "@react-native-community/netinfo";
-import { Picker, Spinner } from "native-base";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useHeaderHeight } from "@react-navigation/stack";
-import { STYLE, TAB_HEADER_HEIGHT } from "./style";
-const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
+import NetInfo from "@react-native-community/netinfo";
+import { Spinner } from "native-base";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { tenmienDonVi } from "../../../assets/generalData";
 // Gọi các chức năng
 import Baocao from "./Baocao.js";
+import { STYLE, TAB_HEADER_HEIGHT } from "./style";
 import Thongke from "./Thongke.js";
+
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const Kytuyensinh = ({ route, navigation }) => {
   useLayoutEffect(() => {
@@ -36,7 +34,7 @@ const Kytuyensinh = ({ route, navigation }) => {
     let namnay = new Date().getFullYear();
     // console.log(namnay);
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getkythi?tunam=${namnay}&dennam=${namnay}&cap=2`
+      `${tenmienDonVi}/api/TSAPIService/getkythi?tunam=${namnay}&dennam=${namnay}&cap=2`
     )
       .then((response) => response.json())
       .then((responseJson) => {

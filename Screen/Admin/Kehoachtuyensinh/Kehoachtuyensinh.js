@@ -1,22 +1,11 @@
-import React, { useLayoutEffect, useState, useEffect, useRef } from "react";
-
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  Animated,
-  Easing,
-  ScrollView,
-  ImageBackground,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
 import NetInfo from "@react-native-community/netinfo";
-import { Picker, Spinner } from "native-base";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useHeaderHeight } from "@react-navigation/stack";
+import { Spinner } from "native-base";
+import React, { useEffect, useState } from "react";
+import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
+import { tenmienDonVi } from "../../../assets/generalData";
 import { STYLE, TAB_HEADER_HEIGHT } from "./style";
+
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const Kehoachtuyensinh = ({ route, navigation }) => {
@@ -32,7 +21,7 @@ const Kehoachtuyensinh = ({ route, navigation }) => {
   useEffect(() => {
     let cap = data.Cap == 5 ? 3 : data.Cap == 4 ? 2 : data.Cap;
     fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getkehoachbyyear?idquanhuyen&idphuongxa&idtruong&cap=${cap}&type=1`
+      `${tenmienDonVi}/api/TSAPIService/getkehoachbyyear?idquanhuyen&idphuongxa&idtruong&cap=${cap}&type=1`
     )
       .then((res) => res.json())
       .then((responseJson) => {

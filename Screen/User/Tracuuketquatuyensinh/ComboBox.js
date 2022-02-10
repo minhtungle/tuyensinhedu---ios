@@ -15,6 +15,7 @@ import { View, Text, CheckBox, Button } from "native-base";
 import { useHeaderHeight } from "@react-navigation/stack";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
 import { Colors, IconButton } from "react-native-paper";
+import { tenmienDonVi } from "../../../assets/generalData";
 
 import Inputs from "./Input";
 import Ketqua from "./Ketqua";
@@ -85,7 +86,7 @@ export default function ComboBox() {
         break;
     }
     await fetch(
-      `http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/tracuuketqua?type=${type}&mahoso=${mahoso}&mahocsinh=${mahocsinh}&matkhau=${matkhau}&sobaodanh=${sbd}&namhoc=${namhoc}`
+      `${tenmienDonVi}/api/TSAPIService/tracuuketqua?type=${type}&mahoso=${mahoso}&mahocsinh=${mahocsinh}&matkhau=${matkhau}&sobaodanh=${sbd}&namhoc=${namhoc}`
       // `https://localhost:44384/api/TSAPIService/tracuuketqua?type=${type}&mahoso=${mahoso}&mahocsinh=${mahocsinh}&matkhau=${matkhau}&sobaodanh=${sbd}&namhoc=${namhoc}`
     )
       .then((response) => response.json())

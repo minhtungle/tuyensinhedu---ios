@@ -8,10 +8,10 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { Picker, Spinner } from "native-base";
 import AnimatedEllipsis from "react-native-animated-ellipsis";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Colors, IconButton } from "react-native-paper";
+import { tenmienDonVi } from "../../../assets/generalData";
 
 const DataWithSearchBar = () => {
   const [search, setSearch] = useState("");
@@ -21,9 +21,7 @@ const DataWithSearchBar = () => {
 
   //* Lấy API
   useEffect(() => {
-    fetch(
-      "http://tuyensinhvinhphuc.eduvi.vn/api/TSAPIService/getquyetdinhtuyensinh"
-    )
+    fetch(`${tenmienDonVi}/api/TSAPIService/getquyetdinhtuyensinh`)
       .then((response) => response.json())
       .then((responseJson) => {
         const arrData = [];
