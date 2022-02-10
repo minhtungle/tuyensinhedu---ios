@@ -95,6 +95,7 @@ export default function ComboBox() {
         // console.log(result);
         result.ThongTinHoSo == null
           ? (Alert.alert(
+              "Thông báo !",
               "Không tồn tại kết quả tra cứu ! Vui lòng kiểm tra lại thông tin đã nhập "
             ),
             setData(null))
@@ -169,7 +170,10 @@ export default function ComboBox() {
     for (var i = 0; i < checkboxValue.length; i++) {
       if (checkboxValue[i].checked) {
         if (EmptyOrNot(i)) {
-          return Alert.alert("Mời bạn nhập đầy đủ thông tin trước khi tra cứu");
+          return Alert.alert(
+            "Thông báo !",
+            "Mời bạn nhập đầy đủ thông tin trước khi tra cứu"
+          );
         }
         return getApi(
           checkboxValue[i].type,

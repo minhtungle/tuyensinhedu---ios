@@ -159,14 +159,20 @@ export default function Dangnhap({ route, navigation }) {
     }));
   };
   //* Lấy dữ liệu asycnStorage
-  const getDataAsycnStorage = () => {
+  const GetDataAsycnStorage = () => {
     try {
-      AsyncStorage.getItem("UserData").then((ASData) => {
-        if (ASData != null) {
+      AsyncStorage.getItem("UserData").then((value) => {
+        if (value != null) {
+          let ASData = JSON.parse(value);
           // Chọn loại đơn vị
-          console.log(JSON.parse(ASData));
-          // Chon_DonVi(donvi_item, donvi_index);
+          Chon_DonVi(ASData.DoiTuong - 1);
           // Nhập thông tin
+          changeValuePicker({
+            ...ASData,
+            // Tinh: ASData.Tinh,
+            // TenDangNhap: ASData.TenDangNhap,
+            // MatKhau: ASData.MatKhau,
+          });
         }
       });
     } catch (error) {
@@ -178,6 +184,7 @@ export default function Dangnhap({ route, navigation }) {
   //* Tỉnh:
   useEffect(() => {
     LayDanhSach_Tinh();
+    GetDataAsycnStorage();
   }, [0]);
   //* Huyện - PGD - SGD
   useEffect(() => {
@@ -195,7 +202,7 @@ export default function Dangnhap({ route, navigation }) {
   }, [thongtin.Huyen, thongtin.Xa, thongtin.Cap]);
   //#endregion
   //#region Function
-  const Chon_DonVi = (_donvi_item, _donvi_index) => {
+  const Chon_DonVi = (_donvi_index) => {
     let _donvi = donvi.map((donvi_item, donvi_index) =>
       donvi_index == _donvi_index
         ? {
@@ -665,7 +672,9 @@ export default function Dangnhap({ route, navigation }) {
           };
           arrData.push(obj);
         });
-        //console.log(arrData);
+        console.log(
+          `${tenmienDonVi}/api/TSAPIService/getschoolbyaddress?idtinh=${tinh.ID}&idquanhuyen=${huyen.ID}&idphuongxa=${xa.ID}&cap=${thongtin.Cap}`
+        );
         setPicker((prevState) => ({
           ...prevState,
           Truong: arrData,
@@ -748,7 +757,7 @@ export default function Dangnhap({ route, navigation }) {
               alignItems: "center",
               justifyContent: "center",
             }}
-            onPress={() => Chon_DonVi(donvi_item, donvi_index)}
+            onPress={() => Chon_DonVi(donvi_index)}
           >
             <View
               style={[

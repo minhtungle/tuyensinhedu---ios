@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Colors, IconButton } from "react-native-paper";
 import { BlurView } from "expo-blur";
@@ -433,7 +434,7 @@ export default function Thongtintuyensinh({ navigation, route }) {
         onPress={() => {
           Linking.openURL(props.url).catch((err) => {
             console.error("Không thể kết nối trang web bởi: ", err);
-            alert("Không tải được tệp");
+            Alert.alert("Không tải được tệp");
           });
         }}
       >

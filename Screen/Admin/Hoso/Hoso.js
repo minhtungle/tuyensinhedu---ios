@@ -10,6 +10,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 // Gọi các chức năng
 import Baocao from "./Baocao";
@@ -249,8 +250,6 @@ const Hoso = ({ route, navigation }) => {
       const responseJson = await res.json();
       return responseJson;
     } catch (e) {
-      console.log(e);
-      alert(e);
       return (responseJson = {});
     }
   };

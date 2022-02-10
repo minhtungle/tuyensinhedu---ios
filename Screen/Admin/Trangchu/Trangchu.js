@@ -11,6 +11,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
@@ -118,9 +119,9 @@ function Trangchu({ route, navigation }) {
   const Chon_LoaiQuanLy = (page, doituong) => {
     // console.log(data.DoiTuong, doituong);
     if (data.DoiTuong != 4 && doituong == 4) {
-      alert("Chức năng này chỉ phục vụ cấp SỞ GD&ĐT");
+      Alert.alert("Thông báo !", "Chức năng này chỉ phục vụ cấp SỞ GD&ĐT");
     } else if (data.DoiTuong != 3 && doituong == 3) {
-      alert("Chức năng này chỉ phục vụ cấp Phòng GD&ĐT");
+      Alert.alert("Thông báo !", "Chức năng này chỉ phục vụ cấp Phòng GD&ĐT");
     } else {
       navigation.navigate(page, { ...data });
     }

@@ -127,7 +127,7 @@ const DataWithSearchBar = () => {
     // Function for click on an item
     Linking.openURL(item).catch((err) => {
       console.error("Không thể kết nối trang web bởi: ", err);
-      alert("Không tải được tệp");
+      Alert.alert("Thông báo !", "Không tải được tệp");
     });
   };
 
