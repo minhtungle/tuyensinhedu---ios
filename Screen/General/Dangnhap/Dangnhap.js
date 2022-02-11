@@ -79,7 +79,7 @@ export default function Dangnhap({ route, navigation }) {
     TenDangNhap: "",
     MatKhau: "",
   });
-  // console.log(thongtin);
+  console.log(thongtin);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [loading, setLoading] = useState(false);
 
@@ -164,9 +164,10 @@ export default function Dangnhap({ route, navigation }) {
       AsyncStorage.getItem("UserData").then((value) => {
         if (value != null) {
           let ASData = JSON.parse(value);
+          // console.log(ASData);
           // Chọn loại đơn vị
           Chon_DonVi(ASData.DoiTuong - 1);
-          // Nhập thông tin
+          // Nhập thông tin -- Bổ sung tự lấy danh sách quận xã theo tỉnh
           changeValuePicker({
             ...ASData,
             // Tinh: ASData.Tinh,
@@ -219,6 +220,7 @@ export default function Dangnhap({ route, navigation }) {
   const API_DangNhap = async (madonvisudung, doituong, data) => {
     let url = `${tenmienDonVi}/api/TSAPIService/login?username=${thongtin.TenDangNhap}&password=${thongtin.MatKhau}&madonvisudung=${madonvisudung}&captruong=${thongtin.Cap}`;
     // let url = `${tenmienDonVi}/api/TSAPIService/login?username=tkadmin&password=123456&madonvisudung=562`;
+    console.log(url);
     await fetch(url, {
       method: "POST",
       mode: "no-cors",
@@ -231,7 +233,6 @@ export default function Dangnhap({ route, navigation }) {
       .then((response) => response.json())
       .then((responseJson) => {
         // console.log(responseJson.Result);
-        console.log(url);
         let mess = "";
 
         if (doituong == 2) {
@@ -363,9 +364,9 @@ export default function Dangnhap({ route, navigation }) {
           ...prevState,
           Tinh: arrDataFail,
         }));
-        setLoading(false);
+        // setLoading(false);
       });
-    setLoading(false);
+    // setLoading(false);
   };
   const LayDanhSach_Huyen = () => {
     // console.log("Lấy huyện");
@@ -672,9 +673,6 @@ export default function Dangnhap({ route, navigation }) {
           };
           arrData.push(obj);
         });
-        console.log(
-          `${tenmienDonVi}/api/TSAPIService/getschoolbyaddress?idtinh=${tinh.ID}&idquanhuyen=${huyen.ID}&idphuongxa=${xa.ID}&cap=${thongtin.Cap}`
-        );
         setPicker((prevState) => ({
           ...prevState,
           Truong: arrData,
